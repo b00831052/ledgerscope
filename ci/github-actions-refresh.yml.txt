@@ -1,0 +1,47 @@
+name: Refresh & Deploy Ledgerscope
+
+# Rebuild la donnée on-chain et redéploie le Terminal.
+on:
+  schedule:
+    - cron: "0 6 * * *"        # tous les jours à 06:00 UTC (14:00 SGT)
+  workflow_dispatch:            # bouton "Run" manuel
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Fetch data & build terminal
+        run: python3 build.py
+
+      - name: Prepare site
+        run: |
+          mkdir -p _site
+          cp index.html _site/index.html
+          cp data.json _site/data.json || true
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - id: deploy
+        uses: actions/deploy-pages@v4

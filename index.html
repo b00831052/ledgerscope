@@ -1,0 +1,967 @@
+<title>Ledgerscope Terminal</title>
+<style>
+  /* Identité institutionnelle « agence de notation » : papier chaud, encre marine, accent oxblood, sidebar marine. */
+  :root{--ground:#f3f1ec;--panel:#ffffff;--panel-2:#faf8f3;--side:#0e2135;--ink:#182b40;--ink-soft:#4a5b6e;--ink-faint:#8a95a2;--line:#e3ded4;--line-soft:#eeeae1;--accent:#8a1c2b;--accent-soft:#f2e4e2;--up:#1a7a4c;--down:#b3231f;--gold:#9c7a1a;--chip:#efece4;--mono-bg:#f4f1ea;}
+  @media(prefers-color-scheme:dark){:root:not([data-theme=light]){--ground:#0b131d;--panel:#111d2b;--panel-2:#0e1826;--side:#081019;--ink:#e8ecf1;--ink-soft:#9aa7b6;--ink-faint:#657283;--line:#1f2c3b;--line-soft:#16202c;--accent:#cf6f77;--accent-soft:#2a1518;--up:#3ec37e;--down:#e5675a;--gold:#cba94a;--chip:#16202c;--mono-bg:#0f1926;}}
+  :root[data-theme=dark]{--ground:#0b131d;--panel:#111d2b;--panel-2:#0e1826;--side:#081019;--ink:#e8ecf1;--ink-soft:#9aa7b6;--ink-faint:#657283;--line:#1f2c3b;--line-soft:#16202c;--accent:#cf6f77;--accent-soft:#2a1518;--up:#3ec37e;--down:#e5675a;--gold:#cba94a;--chip:#16202c;--mono-bg:#0f1926;}
+  *{box-sizing:border-box;}
+  body{background:var(--ground);color:var(--ink);margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:14px;-webkit-font-smoothing:antialiased;}
+  .mono{font-family:"SF Mono","Menlo","Consolas",monospace;}
+  h1,h2,h3{margin:0;}
+
+  .app{display:grid;grid-template-columns:220px 1fr;min-height:100vh;}
+  /* sidebar */
+  .sidebar{background:var(--side);border-right:1px solid var(--line);padding:16px 12px;position:sticky;top:0;height:100vh;overflow-y:auto;}
+  .brand{display:flex;align-items:center;gap:9px;font-weight:700;font-size:17px;letter-spacing:-.02em;padding:6px 8px 18px;}
+  .brand .mk{width:24px;height:24px;border-radius:6px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:800;font-size:14px;}
+  :root:not([data-theme=light]) .brand .mk,:root[data-theme=dark] .brand .mk{color:#0a0d10;}
+  .brand em{font-style:normal;color:var(--accent);}
+  .navsec{font-family:"SF Mono",monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);padding:14px 8px 6px;}
+  .navsec.hl{color:var(--accent);}
+  .nav button{display:flex;align-items:center;gap:9px;width:100%;background:none;border:none;color:var(--ink-soft);font-size:13.5px;font-weight:500;padding:8px 8px;border-radius:7px;cursor:pointer;font-family:inherit;text-align:left;}
+  .nav button:hover{background:var(--chip);color:var(--ink);}
+  .nav button.on{background:var(--accent-soft);color:var(--accent);font-weight:600;}
+  .nav button .ic{width:15px;text-align:center;opacity:.8;}
+  .nav button .star{margin-left:auto;color:var(--accent);font-size:11px;}
+  .nav button .badge{margin-left:auto;background:var(--down);color:#fff;font-size:10px;font-weight:700;border-radius:9px;min-width:16px;height:16px;line-height:16px;text-align:center;padding:0 4px;}
+  :root:not([data-theme=light]) .nav button .badge,:root[data-theme=dark] .nav button .badge{color:#0a0d10;}
+  .sidefoot{margin-top:18px;border-top:1px solid var(--line);padding:14px 8px 0;font-size:11px;color:var(--ink-faint);line-height:1.5;}
+  .tag-new{margin-left:auto;font-family:"SF Mono",monospace;font-size:9px;font-weight:700;color:var(--accent);border:1px solid var(--accent);border-radius:4px;padding:1px 4px;letter-spacing:.05em;}
+  .nav button .csw{width:9px;height:9px;border-radius:2px;flex-shrink:0;}
+  .cards.five{grid-template-columns:repeat(5,1fr);}
+  @media(max-width:860px){.cards.five{grid-template-columns:1fr 1fr;}}
+
+  /* main */
+  .main{min-width:0;}
+  .ticker{display:flex;gap:0;overflow-x:auto;border-bottom:1px solid var(--line);background:var(--panel);scrollbar-width:none;}
+  .ticker::-webkit-scrollbar{display:none;}
+  .tk{display:flex;align-items:baseline;gap:8px;padding:11px 16px;border-right:1px solid var(--line-soft);white-space:nowrap;font-size:13px;}
+  .tk .s{font-weight:700;}
+  .tk .v{font-family:"SF Mono",monospace;color:var(--ink-soft);}
+  .tk .c{font-family:"SF Mono",monospace;font-size:12px;font-weight:600;}
+
+  .content{padding:24px 28px 80px;max-width:1200px;}
+  .view{display:none;}.view.on{display:block;}
+  .welcome{color:var(--ink-soft);font-size:13.5px;line-height:1.5;margin-bottom:22px;max-width:80ch;}
+  .welcome b{color:var(--ink);}
+  .crumb{font-size:12px;color:var(--ink-faint);margin-bottom:4px;letter-spacing:.02em;text-transform:uppercase;font-family:"SF Mono",monospace;}
+  .h-title{font-size:23px;font-weight:700;letter-spacing:-.02em;margin-bottom:2px;}
+  .h-sub{color:var(--ink-soft);margin-bottom:22px;font-size:13.5px;}
+
+  .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--line);margin-bottom:20px;}
+  .cards>div{background:var(--panel);padding:16px 18px;}
+  .card .k{font-size:12px;color:var(--ink-soft);margin-bottom:8px;}
+  .card .v{font-size:25px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums;}
+  .card .d{font-size:12px;margin-top:5px;font-weight:600;font-variant-numeric:tabular-nums;}
+  .up{color:var(--up);}.down{color:var(--down);}
+
+  .chartbox{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:20px 22px;margin-bottom:16px;position:relative;}
+  #chart{cursor:crosshair;}
+  .charttip{position:absolute;pointer-events:none;display:none;z-index:10;background:var(--ground);border:1px solid var(--line);border-radius:8px;padding:12px 14px;min-width:250px;box-shadow:0 8px 28px rgba(0,0,0,.35);font-size:12.5px;}
+  .charttip .th{display:flex;justify-content:space-between;align-items:baseline;gap:16px;margin-bottom:9px;padding-bottom:8px;border-bottom:1px solid var(--line-soft);}
+  .charttip .th .d{font-weight:700;font-size:14px;}
+  .charttip .th .t{font-family:"SF Mono",monospace;font-weight:700;color:var(--ink);}
+  .charttip .r{display:flex;align-items:center;gap:8px;justify-content:space-between;padding:2px 0;}
+  .charttip .r .lft{display:flex;align-items:center;gap:7px;color:var(--ink-soft);}
+  .charttip .r .cd{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+  .charttip .r .val{font-family:"SF Mono",monospace;color:var(--ink);}
+  .chartbox .bar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:16px;}
+  .chartbox h3{font-size:16px;font-weight:700;}
+  .seg{display:inline-flex;background:var(--chip);border-radius:7px;padding:2px;gap:2px;margin-left:auto;}
+  .seg button{background:none;border:none;color:var(--ink-soft);font-size:12px;font-weight:600;padding:5px 12px;border-radius:5px;cursor:pointer;font-family:inherit;}
+  .seg button.on{background:var(--panel);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08);}
+  canvas{width:100%;height:auto;display:block;}
+  .legend{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:16px;}
+  .legend .li{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--ink-soft);}
+  .legend .dot{width:9px;height:9px;border-radius:2px;}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .box{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px;}
+  .box h3{font-size:14px;font-weight:600;margin-bottom:2px;}
+  .box .hint{font-size:12px;color:var(--ink-faint);margin-bottom:14px;}
+  .barrow{display:grid;grid-template-columns:150px 1fr 84px;align-items:center;gap:12px;padding:7px 0;font-size:13px;}
+  .barrow .lbl{color:var(--ink-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .bartrack{height:8px;background:var(--line-soft);border-radius:6px;overflow:hidden;}
+  .barfill{height:100%;border-radius:6px;background:var(--accent);}
+  .barrow .amt{text-align:right;font-weight:600;font-variant-numeric:tabular-nums;}
+
+  .toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:14px;}
+  .search{flex:1;min-width:200px;display:flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px 12px;}
+  .search input{border:none;background:none;outline:none;color:var(--ink);font-size:14px;width:100%;font-family:inherit;}
+  select.filter{background:var(--panel);border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:8px 12px;font-size:13px;font-family:inherit;cursor:pointer;}
+  .count{font-size:12px;color:var(--ink-faint);margin-left:auto;}
+  .tablewrap{background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden;}
+  .scroll{overflow-x:auto;}
+  table{border-collapse:collapse;width:100%;min-width:720px;font-size:13px;}
+  th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--line-soft);white-space:nowrap;}
+  th{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-faint);font-weight:600;background:var(--panel-2);cursor:pointer;user-select:none;}
+  th.num,td.num{text-align:right;font-variant-numeric:tabular-nums;font-family:"SF Mono",monospace;}
+  tbody tr:hover{background:var(--panel-2);}
+  tr:last-child td{border-bottom:none;}
+  td.asset{font-weight:600;}
+  td .sub{color:var(--ink-faint);font-weight:400;font-size:12px;}
+  .chip{display:inline-block;font-size:11px;padding:2px 8px;border-radius:20px;background:var(--chip);color:var(--ink-soft);font-weight:600;}
+  .chip.credit{background:var(--accent-soft);color:var(--accent);}
+  .net{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:middle;}
+  .g-green{color:var(--up);}.g-amber{color:var(--gold);}.g-red{color:var(--down);}
+  .bg-green{background:var(--up);}.bg-amber{background:var(--gold);}.bg-red{background:var(--down);}
+  .score{display:inline-flex;align-items:center;gap:7px;font-weight:700;font-variant-numeric:tabular-nums;}
+  .score .lsdot{width:9px;height:9px;border-radius:50%;}
+  .stressflag{font-size:10px;font-weight:700;color:var(--down);border:1px solid var(--down);border-radius:4px;padding:1px 6px;margin-left:6px;}
+  .meter{display:inline-block;width:64px;height:6px;background:var(--line-soft);border-radius:4px;overflow:hidden;vertical-align:middle;}
+  .meter>i{display:block;height:100%;border-radius:4px;}
+  .methodbox{background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:16px;font-size:13px;color:var(--ink-soft);line-height:1.6;}
+  .methodbox b{color:var(--ink);}
+  .alert{background:var(--panel);border:1px solid var(--line);border-left-width:4px;border-radius:10px;padding:15px 18px;margin-bottom:10px;}
+  .alert.high{border-left-color:var(--down);}.alert.med{border-left-color:var(--gold);}.alert.low{border-left-color:var(--ink-faint);}
+  .alert .top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px;}
+  .alert .nm{font-weight:700;font-size:15px;}.alert .sym{color:var(--ink-faint);font-size:12px;font-weight:400;}
+  .alert .lvl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:2px 8px;border-radius:20px;}
+  .alert.high .lvl{background:color-mix(in srgb,var(--down) 15%,transparent);color:var(--down);}
+  .alert.med .lvl{background:color-mix(in srgb,var(--gold) 18%,transparent);color:var(--gold);}
+  .alert.low .lvl{background:var(--chip);color:var(--ink-soft);}
+  .alert .meta{margin-left:auto;font-size:12px;color:var(--ink-faint);font-family:"SF Mono",monospace;}
+  .alert ul{margin:0;padding-left:18px;}.alert li{font-size:13.5px;color:var(--ink-soft);margin-bottom:3px;}
+  .disc{margin-top:22px;font-size:11.5px;color:var(--ink-faint);line-height:1.5;font-style:italic;}
+  /* collapse */
+  .brand{justify-content:space-between;}
+  .collapse{background:none;border:none;color:var(--ink-faint);cursor:pointer;font-size:16px;padding:2px 6px;border-radius:5px;}
+  .collapse:hover{background:var(--chip);color:var(--ink);}
+  .app.mini{grid-template-columns:60px 1fr;}
+  .app.mini .bname,.app.mini .lbl,.app.mini .navsec,.app.mini .ss-t,.app.mini .kbd,.app.mini .sidefoot,.app.mini .tag-new,.app.mini .badge{display:none;}
+  .app.mini .nav button{justify-content:center;}
+  .app.mini .sidesearch{justify-content:center;}
+  /* side search */
+  .sidesearch{display:flex;align-items:center;gap:8px;width:100%;background:var(--panel-2);border:1px solid var(--line);border-radius:8px;padding:8px 10px;color:var(--ink-faint);font-size:13px;cursor:pointer;font-family:inherit;margin-bottom:8px;}
+  .sidesearch:hover{border-color:var(--accent);}
+  .sidesearch .kbd{margin-left:auto;font-family:"SF Mono",monospace;font-size:10px;border:1px solid var(--line);border-radius:4px;padding:1px 5px;}
+  /* panel header + csv */
+  .panelhd{display:flex;align-items:center;justify-content:space-between;margin:22px 0 10px;}
+  .panelhd h3{font-size:15px;font-weight:700;}
+  .csv,.btn-reg{background:var(--accent-soft);color:var(--accent);border:1px solid var(--accent);border-radius:7px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;}
+  .csv:hover,.btn-reg:hover{background:var(--accent);color:#fff;}
+  :root:not([data-theme=light]) .csv:hover,:root[data-theme=dark] .csv:hover,:root:not([data-theme=light]) .btn-reg:hover,:root[data-theme=dark] .btn-reg:hover{color:#070b14;}
+  /* overlay / modal */
+  .overlay{position:fixed;inset:0;background:rgba(4,8,16,.6);backdrop-filter:blur(3px);z-index:100;display:none;align-items:flex-start;justify-content:center;padding:60px 20px;}
+  .overlay.on{display:flex;}
+  .modal{background:var(--panel);border:1px solid var(--line);border-radius:14px;max-width:640px;width:100%;max-height:82vh;overflow-y:auto;box-shadow:0 24px 70px rgba(0,0,0,.5);}
+  .mhd{padding:22px 24px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--panel);}
+  .mhd .x{position:absolute;top:18px;right:20px;background:none;border:none;color:var(--ink-faint);font-size:20px;cursor:pointer;}
+  .mhd .nm{font-size:22px;font-weight:700;letter-spacing:-.02em;}
+  .mhd .sym{color:var(--ink-faint);font-size:14px;font-weight:400;margin-left:6px;}
+  .mhd .chips{margin-top:10px;display:flex;gap:6px;flex-wrap:wrap;}
+  .mbody{padding:18px 24px 24px;}
+  .mgrid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:9px;overflow:hidden;margin-bottom:16px;}
+  .mgrid>div{background:var(--panel);padding:13px 15px;}
+  .mgrid .k{font-size:11px;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px;}
+  .mgrid .v{font-size:17px;font-weight:700;font-variant-numeric:tabular-nums;}
+  .msec{font-family:"SF Mono",monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);font-weight:600;margin:16px 0 8px;}
+  .mrow{display:flex;justify-content:space-between;gap:16px;padding:6px 0;border-bottom:1px solid var(--line-soft);font-size:13.5px;}
+  .mrow .k{color:var(--ink-soft);}.mrow .v{font-weight:600;text-align:right;}
+  /* global search */
+  .searchbox{background:var(--panel);border:1px solid var(--line);border-radius:14px;max-width:560px;width:100%;box-shadow:0 24px 70px rgba(0,0,0,.5);overflow:hidden;}
+  .searchbox input{width:100%;border:none;background:none;outline:none;color:var(--ink);font-size:17px;padding:18px 20px;font-family:inherit;border-bottom:1px solid var(--line);}
+  .sresults{max-height:50vh;overflow-y:auto;}
+  .sresults .sr{display:flex;align-items:center;gap:10px;padding:11px 20px;cursor:pointer;border-bottom:1px solid var(--line-soft);}
+  .sresults .sr.sel,.sresults .sr:hover{background:var(--accent-soft);}
+  .sresults .sr .nm{font-weight:600;}.sresults .sr .sub{color:var(--ink-faint);font-size:12px;margin-left:auto;font-family:"SF Mono",monospace;}
+  .shint{padding:10px 20px;font-size:11px;color:var(--ink-faint);font-family:"SF Mono",monospace;}
+  /* pie */
+  #nwpie{max-width:300px;margin:0 auto;}
+  /* footer */
+  .sitefoot{margin-top:40px;border-top:1px solid var(--line);padding-top:22px;}
+  .regblock{display:flex;align-items:center;justify-content:space-between;gap:16px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 22px;margin-bottom:18px;flex-wrap:wrap;}
+  .regblock .sub{color:var(--ink-soft);font-size:13px;margin-top:3px;}
+  .footlinks{display:flex;flex-wrap:wrap;gap:8px 20px;font-size:12px;color:var(--ink-faint);}
+  .footlinks span{cursor:default;}.footlinks span:first-child{color:var(--ink-soft);font-weight:600;}
+  .chatw{position:fixed;bottom:22px;right:22px;width:48px;height:48px;border-radius:50%;background:var(--accent);border:none;font-size:22px;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.35);z-index:50;}
+  tbody tr[data-slug]{cursor:pointer;}
+  /* ===== Identité institutionnelle : sidebar marine + typographie research ===== */
+  .sidebar{background:var(--side);border-right:1px solid #05101c;}
+  .sidebar .brand{color:#fff;font-family:"Georgia","Times New Roman",serif;letter-spacing:0;}
+  .sidebar .brand em{color:#d99aa0;font-style:italic;}
+  .sidebar .brand .mk{background:var(--accent);color:#fff;border-radius:3px;font-family:-apple-system,sans-serif;}
+  .sidebar .tagline{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:#6f8194;font-family:"SF Mono",monospace;padding:0 8px 14px;margin-top:-12px;}
+  .sidebar .navsec{color:#67788c;}
+  .sidebar .navsec.hl{color:#d99aa0;}
+  .sidebar .nav button{color:#b9c5d3;}
+  .sidebar .nav button:hover{background:rgba(255,255,255,.07);color:#fff;}
+  .sidebar .nav button.on{background:var(--accent);color:#fff;}
+  .sidebar .sidesearch{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.13);color:#8b9bad;}
+  .sidebar .sidesearch:hover{border-color:#d99aa0;}
+  .sidebar .sidesearch .kbd{border-color:rgba(255,255,255,.2);}
+  .sidebar .sidefoot{color:#67788c;border-color:rgba(255,255,255,.1);}
+  .sidebar .tag-new{color:#d99aa0;border-color:#d99aa0;}
+  .sidebar .auth.ghost{color:#b9c5d3;border-color:rgba(255,255,255,.18);}
+  .sidebar .authrow .auth{background:var(--accent);border-color:var(--accent);color:#fff;}
+  /* titres serif (gravitas research) */
+  .h-title,.brand{font-family:"Georgia","Times New Roman",serif;letter-spacing:-.01em;}
+  .modal .nm,.memohd .nm,.h-title{font-family:"Georgia","Times New Roman",serif;}
+  .chartbox h3,.box h3,.panelhd h3{font-family:"Georgia","Times New Roman",serif;font-weight:700;letter-spacing:0;}
+  .welcome b{font-family:"Georgia",serif;}
+  /* rating badge formel */
+  .chip.g-green,.chip.g-amber{border:1px solid currentColor;background:transparent;font-family:"SF Mono",monospace;letter-spacing:.02em;}
+  /* stat values : chiffres élégants */
+  .card .v,.mgrid .v{font-family:"Georgia","Times New Roman",serif;letter-spacing:0;}
+  /* ticker plus sobre */
+  .ticker{background:var(--panel);}
+  .tk .s{font-weight:700;letter-spacing:.01em;}
+  /* rules research-grade */
+  .cards{border-radius:4px;}.card,.box,.chartbox,.tablewrap,.panel{border-radius:4px;}
+  th{background:var(--mono-bg);}
+  /* credit memo */
+  .memobtn{background:var(--accent-soft);color:var(--accent);border:1px solid var(--accent);border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;}
+  .memobtn:hover{background:var(--accent);color:#fff;}
+  :root:not([data-theme=light]) .memobtn:hover,:root[data-theme=dark] .memobtn:hover{color:#070b14;}
+  .memohd{display:flex;flex-direction:column;gap:4px;}
+  .memo-eyebrow{font-family:"SF Mono",monospace;font-size:10px;letter-spacing:.14em;color:var(--accent);font-weight:600;}
+  .memo p{font-size:14px;line-height:1.6;color:var(--ink-soft);margin:0 0 6px;}
+  .memo p b{color:var(--ink);}
+  .memo-reco{display:flex;justify-content:space-between;gap:16px;background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin-bottom:14px;}
+  .memo-reco .k{font-size:11px;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.05em;}
+  .memo-reco .reco{font-size:18px;font-weight:800;letter-spacing:-.01em;margin-top:3px;}
+  .memo-flags{margin:0;padding-left:18px;}
+  .memo-flags li{font-size:14px;color:var(--ink-soft);margin-bottom:5px;}
+  .memo-foot{margin-top:20px;padding-top:14px;border-top:1px solid var(--line);font-size:11px;color:var(--ink-faint);font-style:italic;line-height:1.5;}
+  @media print{.sidebar,.ticker,.chatw,.memobtn,.mhd .x{display:none!important;}.overlay{position:static;background:none;padding:0;}.modal{max-width:100%;box-shadow:none;border:none;}body{background:#fff;color:#000;}}
+  /* auth */
+  .authrow{display:flex;gap:6px;margin-bottom:12px;}
+  .auth{flex:1;background:var(--accent);color:#fff;border:1px solid var(--accent);border-radius:8px;padding:7px 10px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit;}
+  :root:not([data-theme=light]) .auth,:root[data-theme=dark] .auth{color:#070b14;}
+  .auth.ghost{background:none;color:var(--ink-soft);border-color:var(--line);}
+  .app.mini .authrow{flex-direction:column;}
+  /* league tabs */
+  .lgtabs{display:flex;gap:4px;flex-wrap:wrap;}
+  .lgtabs button{background:var(--chip);border:1px solid var(--line);color:var(--ink-soft);font-size:11.5px;font-weight:600;padding:5px 10px;border-radius:6px;cursor:pointer;font-family:inherit;}
+  .lgtabs button.on{background:var(--accent);color:#fff;border-color:var(--accent);}
+  :root:not([data-theme=light]) .lgtabs button.on,:root[data-theme=dark] .lgtabs button.on{color:#070b14;}
+  /* locked cell */
+  .lock{display:inline-flex;align-items:center;gap:5px;color:var(--ink-faint);font-size:12px;cursor:pointer;filter:blur(.2px);}
+  .lock:hover{color:var(--accent);}
+  th.prem{color:var(--gold);}
+  .lockbanner{display:flex;align-items:center;gap:10px;background:color-mix(in srgb,var(--gold) 10%,var(--panel));border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:13px;color:var(--ink-soft);}
+  .lockbanner b{color:var(--ink);}.lockbanner button{margin-left:auto;background:var(--gold);color:#111;border:none;border-radius:6px;padding:5px 12px;font-size:12px;font-weight:700;cursor:pointer;}
+  /* login box */
+  .loginbox{background:var(--panel);border:1px solid var(--line);border-radius:14px;max-width:400px;width:100%;padding:28px 26px;position:relative;box-shadow:0 24px 70px rgba(0,0,0,.5);}
+  .loginbox .x{position:absolute;top:16px;right:18px;background:none;border:none;color:var(--ink-faint);font-size:18px;cursor:pointer;}
+  .lg-brand{display:flex;align-items:center;gap:8px;font-weight:700;font-size:18px;margin-bottom:18px;}
+  .lg-brand .mk{width:24px;height:24px;border-radius:6px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:800;font-size:14px;}
+  :root:not([data-theme=light]) .lg-brand .mk,:root[data-theme=dark] .lg-brand .mk{color:#070b14;}
+  .lg-brand em{font-style:normal;color:var(--accent);}
+  .lg-t{font-size:19px;font-weight:700;margin-bottom:4px;}
+  .lg-sub{color:var(--ink-soft);font-size:13px;margin-bottom:16px;}
+  .lg-in{width:100%;background:var(--panel-2);border:1px solid var(--line);border-radius:8px;padding:11px 13px;color:var(--ink);font-size:14px;margin-bottom:10px;font-family:inherit;outline:none;}
+  .lg-in:focus{border-color:var(--accent);}
+  .lg-go{width:100%;padding:11px;font-size:14px;margin-top:4px;}
+  .lg-note{font-size:11px;color:var(--ink-faint);margin-top:12px;text-align:center;}
+  @media(max-width:860px){.app{grid-template-columns:1fr;}.sidebar{position:static;height:auto;display:none;}.cards{grid-template-columns:1fr 1fr;}.grid2{grid-template-columns:1fr;}.mgrid{grid-template-columns:1fr;}}
+</style>
+
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand"><span class="mk">L</span><span class="bname">Ledger<em>scope</em></span>
+      <button class="collapse" id="collapseBtn" title="Réduire">«</button></div>
+    <div class="tagline bname">Independent Credit Research</div>
+    <button class="sidesearch" id="sideSearch"><span>🔍</span><span class="ss-t">Rechercher…</span><span class="kbd">⌘K</span></button>
+    <div class="authrow" id="authRow">
+      <button class="auth ghost" id="loginBtn"><span class="lbl">Connexion</span></button>
+      <button class="auth" id="signupBtn"><span class="lbl">Inscription</span></button>
+    </div>
+    <div class="navsec">Latest</div>
+    <div class="nav">
+      <button data-v="credit" class="on"><span class="ic">▦</span><span class="lbl">Private Debt Desk</span></button>
+      <button data-v="home"><span class="ic">◧</span><span class="lbl">Market Overview</span></button>
+      <button data-v="screener"><span class="ic">▤</span><span class="lbl">Asset Screener</span></button>
+      <button data-v="monitor"><span class="ic">✦</span><span class="lbl">New Asset Monitor</span></button>
+    </div>
+    <div class="navsec hl">✦ Ledgerscope Signals</div>
+    <div class="nav">
+      <button data-v="alerts"><span class="ic">▲</span><span class="lbl">Alerts</span> <span class="badge" id="navalertn"></span></button>
+      <button data-v="analytics"><span class="ic">◈</span><span class="lbl">Credit Signals</span></button>
+      <button data-v="valuation"><span class="ic">⊟</span><span class="lbl">Valuation</span></button>
+    </div>
+    <div class="navsec">Market Intelligence</div>
+    <div class="nav">
+      <button data-v="networks"><span class="ic">🌐</span><span class="lbl">Networks</span></button>
+      <button data-v="platforms"><span class="ic">🏢</span><span class="lbl">Platforms</span></button>
+      <button data-v="managers"><span class="ic">👥</span><span class="lbl">Asset Managers</span></button>
+      <button data-v="apac"><span class="ic">🌏</span><span class="lbl">APAC</span></button>
+    </div>
+    <div class="navsec">Data &amp; API</div>
+    <div class="nav">
+      <button data-v="datacatalog"><span class="ic">🗂️</span><span class="lbl">Data Catalog</span></button>
+      <button class="apibtn"><span class="ic">⚡</span><span class="lbl">Enterprise API</span> <span class="tag-new">NEW</span></button>
+    </div>
+    <div class="navsec">Asset Classes</div>
+    <div class="nav" id="clsnav"></div>
+    <div class="sidefoot" id="sidefoot"></div>
+  </aside>
+
+  <div class="main">
+    <div class="ticker" id="ticker"></div>
+    <div class="content">
+
+      <!-- HOME -->
+      <div class="view" id="v-home">
+        <div class="welcome" id="welcome"></div>
+        <div class="cards five" id="ov-cards"></div>
+        <div class="chartbox">
+          <div class="bar">
+            <h3>Total RWA Value</h3>
+            <div class="seg" id="clsSeg">
+              <button data-k="all" class="on">All</button>
+              <button data-k="credit">Private Credit</button>
+            </div>
+          </div>
+          <canvas id="chart" width="1080" height="380"></canvas>
+          <div class="charttip" id="chartTip"></div>
+          <div class="legend" id="legend"></div>
+        </div>
+        <div class="grid2">
+          <div class="box"><h3>Value by asset class</h3><div class="hint">TVL on-chain live</div><div id="classbars"></div></div>
+          <div class="box"><h3>Net flows (7j)</h3><div class="hint">Variation nette de TVL par classe</div><div id="flowbars"></div></div>
+        </div>
+        <div class="chartbox">
+          <div class="bar"><h3>Performance par classe (croissance TVL indexée)</h3></div>
+          <canvas id="perfChart" width="1080" height="280"></canvas>
+          <div class="legend" id="perfLegend"></div>
+        </div>
+        <div class="panelhd"><h3>Croissance par classe d'actif</h3><button class="csv" data-csv="perf">⬇ CSV</button></div>
+        <div class="tablewrap"><div class="scroll"><table id="perftable">
+          <thead><tr><th data-s="cls">Classe</th><th class="num" data-s="tvl">TVL</th><th class="num" data-s="m1">1M</th><th class="num" data-s="m3">3M</th><th class="num" data-s="ytd">YTD</th><th class="num" data-s="y1">1A</th></tr></thead>
+          <tbody id="perfbody"></tbody></table></div></div>
+      </div>
+
+      <!-- SCREENER -->
+      <div class="view" id="v-screener">
+        <div class="crumb">Data</div><div class="h-title">Asset Screener</div>
+        <div class="h-sub">Base filtrable des actifs réels tokenisés — donnée on-chain live.</div>
+        <div class="toolbar">
+          <div class="search">🔍 <input id="q" placeholder="Rechercher protocole, ticker…"></div>
+          <select class="filter" id="fClass"><option value="">Toutes classes</option></select>
+          <select class="filter" id="fNet"><option value="">Tous réseaux</option></select>
+          <span class="count" id="scount"></span>
+        </div>
+        <div class="tablewrap"><div class="scroll"><table id="stable">
+          <thead><tr><th data-s="name">Protocol</th><th data-s="cls">Class</th><th data-s="net">Networks</th>
+          <th class="num" data-s="tvl">TVL (US$)</th><th class="num" data-s="chg7d">7d %</th><th class="num" data-s="chg1d">1d %</th></tr></thead>
+          <tbody id="sbody"></tbody></table></div></div>
+      </div>
+
+      <!-- MONITOR -->
+      <div class="view" id="v-monitor">
+        <div class="crumb">Latest</div><div class="h-title">New Asset Monitor</div>
+        <div class="h-sub">Protocoles RWA les plus récemment listés.</div>
+        <div class="tablewrap"><div class="scroll"><table>
+          <thead><tr><th>Protocol</th><th>Class</th><th>Networks</th><th class="num">TVL</th><th>Listed</th></tr></thead>
+          <tbody id="mbody"></tbody></table></div></div>
+      </div>
+
+      <!-- ALERTS -->
+      <div class="view" id="v-alerts">
+        <div class="crumb">✦ Ledgerscope Signals</div><div class="h-title">Alerts</div>
+        <div class="h-sub" id="al-sub"></div>
+        <div class="cards" id="al-cards"></div>
+        <div id="al-list" style="margin-top:16px;"></div>
+      </div>
+
+      <!-- CREDIT SIGNALS -->
+      <div class="view" id="v-analytics">
+        <div class="crumb">✦ Ledgerscope Signals</div><div class="h-title">Risk &amp; Value Signals</div>
+        <div class="h-sub" id="an-sub"></div>
+        <div class="cards" id="an-cards"></div>
+        <div class="methodbox" style="margin-top:16px;">
+          <b>Notation propriétaire, toutes classes d'actifs.</b> <b>① LS Score</b> (0–100) : taille 42% + stabilité TVL 40% + résilience multi-chaîne 18%. <span class="g-green">🟢≥68</span>/<span class="g-amber">🟡48–67</span>/<span class="g-red">🔴&lt;48</span>. <b>② NAV gap</b> : rendement juste = taux sans risque (<span id="rfval"></span>) + prime[2% + (1−LS/100)×10% + volatilité σ]. <span class="g-red">RICH</span>=survalorisé / <span class="g-green">CHEAP</span>=sous-valorisé. Clique une ligne pour la fiche détaillée.
+        </div>
+        <div class="toolbar">
+          <div class="search">🔍 <input id="anq" placeholder="Filtrer…"></div>
+          <select class="filter" id="anClass"><option value="">Toutes classes</option></select>
+          <select class="filter" id="anBand"><option value="">Toutes bandes</option><option value="green">🟢 Green</option><option value="amber">🟡 Amber</option><option value="red">🔴 Red</option></select>
+          <select class="filter" id="anVerd"><option value="">Tous verdicts</option><option value="rich">RICH</option><option value="fair">Fair</option><option value="cheap">CHEAP</option><option value="_y">Rendement matché</option></select>
+          <span class="count" id="ancount"></span>
+        </div>
+        <div class="tablewrap"><div class="scroll"><table id="antable">
+          <thead><tr><th data-s="name">Protocol</th><th data-s="cls">Class</th><th class="num" data-s="tvl">TVL</th><th class="num" data-s="ls">LS Score</th>
+          <th class="num" data-s="apy">APY</th><th class="num" data-s="fair">Fair yield</th><th class="num" data-s="gap">NAV gap ✦</th><th>Verdict</th></tr></thead>
+          <tbody id="anbody"></tbody></table></div></div>
+      </div>
+
+      <!-- VALUATION -->
+      <div class="view" id="v-valuation">
+        <div class="crumb">✦ Ledgerscope Valuation</div><div class="h-title">Fundamental Valuation</div>
+        <div class="h-sub" id="fv-sub"></div>
+        <div class="methodbox">
+          <b>Modèle fondamental, indépendant du signal on-chain.</b> Depuis une base de fondamentaux curés (rating, séniorité, collatéral, lockup, gérant) : <span class="mono">requis = sans risque + 2% + spread(rating) + ajust(séniorité/lockup/gérant)</span>. <b>NAV gap = offert − requis.</b> <b>Conf.</b> 🟢/🟡/🔴 = qualité de la donnée. La base curée (<span id="fv-count"></span> fonds) est l'actif de l'agence.
+        </div>
+        <div class="tablewrap"><div class="scroll"><table id="fvtable">
+          <thead><tr><th>Fund</th><th>Profil fondamental</th><th class="num">Offered</th><th class="num">Fair (fond.)</th><th class="num">NAV gap ✦</th><th>Verdict</th><th>Conf</th></tr></thead>
+          <tbody id="fvbody"></tbody></table></div></div>
+      </div>
+
+      <!-- APAC -->
+      <div class="view" id="v-apac">
+        <div class="crumb">🌏 Relocalisation</div><div class="h-title">APAC lens — Singapore-first</div>
+        <div class="h-sub" id="ap-sub"></div>
+        <div class="cards" id="ap-cards"></div>
+        <div class="methodbox" style="margin-top:16px;">
+          <b>La thèse.</b> L'exposition on-chain rattachée à l'APAC est encore mince — <span id="ap-inline"></span> — mais c'est l'opportunité : bâtir la couche data locale <b>maintenant</b>, alignée <b>MAS / Project Guardian</b>, avant que les fonds VCC tokenisés singapouriens passent à l'échelle.
+        </div>
+        <div class="tablewrap"><div class="scroll"><table>
+          <thead><tr><th>Protocol</th><th>Class</th><th>Rattachement APAC</th><th class="num">TVL</th><th class="num">LS</th><th>Networks</th></tr></thead>
+          <tbody id="apbody"></tbody></table></div></div>
+      </div>
+
+      <!-- ASSET CLASS DETAIL -->
+      <div class="view" id="v-class">
+        <div class="crumb" id="cl-crumb">Asset Classes</div><div class="h-title" id="cl-title"></div>
+        <div class="h-sub" id="cl-sub"></div>
+        <div class="cards" id="cl-cards"></div>
+        <div class="grid2">
+          <div class="box">
+            <div class="lgtabs" id="cl-tabs">
+              <button data-lg="platform" class="on">By platform</button>
+              <button data-lg="manager">By manager</button>
+              <button data-lg="network">By network</button>
+              <button data-lg="jurisdiction">By jurisdiction 🔒</button>
+            </div>
+            <div class="tablewrap" style="margin-top:12px"><div class="scroll"><table id="lgtable">
+              <thead><tr><th>#</th><th id="lg-h">League</th><th class="num">Value</th><th class="num">Assets</th></tr></thead>
+              <tbody id="lgbody"></tbody></table></div></div>
+          </div>
+          <div class="box"><h3>Network breakdown</h3><div class="hint">Répartition de la classe par chaîne</div><div id="clnw"></div></div>
+        </div>
+        <div class="panelhd"><h3>Assets in class</h3><button class="csv" data-csv="cl">⬇ CSV</button></div>
+        <div class="tablewrap"><div class="scroll"><table id="cltable">
+          <thead><tr><th>Asset</th><th>Networks</th><th class="num">TVL</th><th class="num">7d %</th><th class="num prem">Rating 🔒</th><th class="num prem">Regulator 🔒</th></tr></thead>
+          <tbody id="clbody"></tbody></table></div></div>
+      </div>
+
+      <!-- PRIVATE CREDIT -->
+      <div class="view on" id="v-credit">
+        <div class="crumb">Ledgerscope · Private Debt Desk</div><div class="h-title">Tokenized Private Debt</div>
+        <div class="h-sub" id="cr-sub"></div>
+        <div class="cards" id="cr-cards"></div>
+        <div class="panelhd"><h3>Private credit funds</h3><button class="csv" data-csv="cr">⬇ CSV</button></div>
+        <div class="tablewrap"><div class="scroll"><table>
+          <thead><tr><th>Fund</th><th>Networks</th><th class="num">TVL</th><th class="num">7d %</th><th class="num">LS Score</th><th class="num">NAV gap</th></tr></thead>
+          <tbody id="crbody"></tbody></table></div></div>
+      </div>
+
+      <!-- NETWORKS -->
+      <div class="view" id="v-networks">
+        <div class="crumb">Market Intelligence</div><div class="h-title">Networks</div>
+        <div class="h-sub" id="nw-sub"></div>
+        <div class="cards" id="nw-cards"></div>
+        <div class="grid2">
+          <div class="box"><h3>Value by network</h3><div class="hint">TVL RWA agrégée par chaîne</div><div id="nwbars"></div></div>
+          <div class="box"><h3>Network share</h3><div class="hint">Répartition</div><canvas id="nwpie" width="360" height="300"></canvas></div>
+        </div>
+        <div class="panelhd"><h3>Network ranking</h3><button class="csv" data-csv="nw">⬇ CSV</button></div>
+        <div class="tablewrap"><div class="scroll"><table id="nwtable">
+          <thead><tr><th>#</th><th>Network</th><th class="num">RWA value</th><th class="num">Assets</th><th class="num">Share</th></tr></thead>
+          <tbody id="nwbody"></tbody></table></div></div>
+      </div>
+
+      <!-- PLATFORMS -->
+      <div class="view" id="v-platforms">
+        <div class="crumb">Market Intelligence</div><div class="h-title">Platforms</div>
+        <div class="h-sub" id="pf-sub"></div>
+        <div class="cards" id="pf-cards"></div>
+        <div class="panelhd"><h3>Platform ranking (distribution)</h3><button class="csv" data-csv="pf">⬇ CSV</button></div>
+        <div class="tablewrap"><div class="scroll"><table id="pftable">
+          <thead><tr><th>#</th><th>Platform / protocol</th><th>Primary class</th><th class="num">Value</th><th class="num">Networks</th><th class="num">7d %</th></tr></thead>
+          <tbody id="pfbody"></tbody></table></div></div>
+      </div>
+
+      <!-- ASSET MANAGERS -->
+      <div class="view" id="v-managers">
+        <div class="crumb">Market Intelligence</div><div class="h-title">Asset Managers</div>
+        <div class="h-sub" id="mg-sub"></div>
+        <div class="cards" id="mg-cards"></div>
+        <div class="grid2">
+          <div class="box"><h3>Top managers by value</h3><div class="hint">Encours tokenisé agrégé</div><div id="mgbars"></div></div>
+          <div class="box"><h3>Manager concentration</h3><div class="hint">Part des 5 plus gros</div><canvas id="mgpie" width="360" height="300"></canvas></div>
+        </div>
+        <div class="panelhd"><h3>Manager ranking</h3><button class="csv" data-csv="mg">⬇ CSV</button></div>
+        <div class="tablewrap"><div class="scroll"><table id="mgtable">
+          <thead><tr><th>#</th><th>Asset manager</th><th class="num">Value</th><th class="num">Assets</th><th>Classes</th><th class="num">Networks</th></tr></thead>
+          <tbody id="mgbody"></tbody></table></div></div>
+      </div>
+
+      <!-- DATA CATALOG -->
+      <div class="view" id="v-datacatalog">
+        <div class="crumb">Data &amp; API</div><div class="h-title">Data Catalog</div>
+        <div class="h-sub" id="dc-sub"></div>
+        <div id="dc-groups"></div>
+        <div class="methodbox" style="margin-top:16px;">Contact données &amp; API : <b>data@ledgerscope.io</b> · Accès Enterprise API sur demande. Couverture rafraîchie quotidiennement via pipeline on-chain.</div>
+      </div>
+
+      <div class="disc" id="footdisc"></div>
+
+      <!-- footer -->
+      <div class="sitefoot">
+        <div class="regblock">
+          <div><b>Pour les émetteurs &amp; plateformes</b><div class="sub">Faites indexer et analyser vos fonds tokenisés par Ledgerscope.</div></div>
+          <button class="btn-reg">Enregistrer vos actifs →</button>
+        </div>
+        <div class="footlinks">
+          <span>Ledgerscope · Singapore</span><span>Documentation</span><span>Research</span><span>API</span><span>Press &amp; Citations</span><span>Confidentialité</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ASSET DETAIL MODAL -->
+  <div class="overlay" id="detailOverlay"><div class="modal" id="detailModal"></div></div>
+  <!-- GLOBAL SEARCH -->
+  <div class="overlay" id="searchOverlay"><div class="searchbox">
+    <input id="gSearch" placeholder="Rechercher un actif, protocole, ticker…" autocomplete="off">
+    <div class="sresults" id="sResults"></div>
+    <div class="shint">↑↓ naviguer · ↵ ouvrir · Esc fermer</div>
+  </div></div>
+  <!-- LOGIN MODAL -->
+  <div class="overlay" id="loginOverlay"><div class="loginbox">
+    <button class="x" id="loginX">✕</button>
+    <div class="lg-brand"><span class="mk">L</span>Ledger<em>scope</em></div>
+    <div class="lg-t" id="lg-title">Se connecter</div>
+    <div class="lg-sub">Débloquez les colonnes premium : notation, régulateur, juridiction, league tables complètes.</div>
+    <input class="lg-in" id="lgEmail" placeholder="email@institution.com" autocomplete="off">
+    <input class="lg-in" id="lgPwd" type="password" placeholder="Mot de passe">
+    <button class="auth lg-go" id="lgGo">Continuer</button>
+    <div class="lg-note">Démo — aucune donnée n'est envoyée. « Continuer » débloque le contenu premium localement.</div>
+  </div></div>
+  <!-- chat widget -->
+  <button class="chatw" title="Support">💬</button>
+</div>
+
+<script>
+window.DATA = {"generated": "2026-10-17 08:52 UTC", "source": "DefiLlama public API (live)", "n_assets": 101, "total_tvl": 4048533418.263647, "pc_total": 416826241.936369, "n_pc": 16, "byclass": [["Other RWA", 1315802728.4560232], ["Other (carbon/insurance/art)", 736477288.4224343], ["Cash / yield stablecoin", 722749040.3501292], ["U.S. Treasuries", 484119829.59487975], ["Private credit", 416826241.936369], ["Real estate", 326607832.72604185], ["Commodities", 45925979.103536546], ["Tokenized stocks / equity", 24477.674233766495]], "flows": [["Other RWA", -49841934.60911548], ["Other (carbon/insurance/art)", 36706794.7128136], ["U.S. Treasuries", -7678175.876718533], ["Private credit", 2127002.5010289163], ["Cash / yield stablecoin", 2051444.6444734097], ["Commodities", -298387.6657710751], ["Real estate", 197278.38261030082], ["Tokenized stocks / equity", -33.67122872680804]], "assets": [{"name": "Ethena USDtb", "symbol": "ENA", "slug": "ethena-usdtb", "cls": "Cash / yield stablecoin", "chains": ["Ethereum"], "tvl": 475819338.176689, "chg7d": 1.1942224556913175, "chg1d": 0.031394280151658904, "listedAt": 1734350466, "url": "https://usdtb.money", "sig": {"ls": 83, "band": "green", "stress": false, "size": 0.93, "stability": 0.95, "resil": 0.33, "note": "taille solide, stable"}, "yg": null, "fv": {"rating": "A", "seniority": "senior", "liquidity": "daily", "manager_tier": 2, "jurisdiction": "Web3 (Ethena)", "note": "Digital dollar adossé RWA", "conf": "med", "req": 5.47, "offered": null, "gap_bps": null, "verdict": null}, "apac": null, "manager": "Ethena USDtb", "gapu": null, "gaprel": null}, {"name": "Re", "symbol": "RE", "slug": "re", "cls": "Other (carbon/insurance/art)", "chains": ["Ethereum", "Base", "Arbitrum", "Avalanche"], "tvl": 441075652.7063942, "chg7d": 8.805519517808193, "chg1d": 1.310472852134751, "listedAt": 1766447067, "url": "https://app.re.xyz", "sig": {"ls": 83, "band": "green", "stress": false, "size": 0.93, "stability": 0.65, "resil": 1.0, "note": "taille solide, volatilité modérée, multi-chaîne"}, "yg": {"apy": 7.35, "sigma": 0.081, "volpen": 1.62, "rf": 3.67, "fair": 8.99, "spread": 3.68, "gap_bps": -164, "verdict": "rich"}, "fv": null, "apac": null, "manager": "Re", "gapu": {"apy": 7.35, "fair": 8.99, "gap_bps": -164, "verdict": "rich", "src": "signal"}, "gaprel": null}, {"name": "Huma", "symbol": "HUMA", "slug": "huma", "cls": "Other RWA", "chains": ["Solana", "Ethereum", "Stellar", "Monad"], "tvl": 405682858.12851155, "chg7d": 1.186105626834859, "chg1d": -0.18474500071017985, "listedAt": 1779853635, "url": "https://app.huma.finance", "sig": {"ls": 95, "band": "green", "stress": false, "size": 0.93, "stability": 0.95, "resil": 1.0, "note": "taille solide, stable, multi-chaîne"}, "yg": null, "fv": null, "apac": null, "manager": "Huma", "gapu": null, "gaprel": null}, {"name": "Anemoy Capital", "symbol": "-", "slug": "anemoy-capital", "cls": "Private credit", "chains": ["Ethereum", "Base", "Celo"], "tvl": 333030207.4954452, "chg7d": -0.14063660465374994, "chg1d": -0.18902572512645577, "listedAt": 1733763997, "url": "https://www.anemoy.io", "sig": {"ls": 96, "band": "green", "stress": false, "size": 0.92, "stability": 0.99, "resil": 1.0, "note": "taille solide, stable, multi-chaîne"}, "yg": null, "fv": {"rating": "AAA", "seniority": "senior_secured", "liquidity": "daily", "manager_tier": 1, "jurisdiction": "Web3 (Anemoy/Centrifuge)", "note": "Adossé fonds CLO AAA (JAAA) / trésorerie liquide", "conf": "med", "req": 3.37, "offered": null, "gap_bps": null, "verdict": null}, "apac": null, "manager": "Anemoy", "gapu": null, "gaprel": null}, {"name": "OnRe", "symbol": "-", "slug": "onre", "cls": "Other (carbon/insurance/art)", "chains": ["Solana"], "tvl": 293393807.1255017, "chg7d": 0.2483543460819675, "chg1d": 0.32744898396315136, "listedAt": 1752511417, "url": "https://app.onre.finance", "sig": {"ls": 84, "band": "green", "stress": false, "size": 0.91, "stability": 0.99, "resil": 0.33, "note": "taille solide, stable"}, "yg": {"apy": 11.02, "sigma": 0.027, "volpen": 0.54, "rf": 3.67, "fair": 7.81, "spread": 7.35, "gap_bps": 321, "verdict": "cheap"}, "fv": null, "apac": null, "manager": "OnRe", "gapu": {"apy": 11.02, "fair": 7.81, "gap_bps": 321, "verdict": "cheap", "src": "signal"}, "gaprel": null}, {"name": "USD AI", "symbol": "CHIP", "slug": "usd-ai", "cls": "Other RWA", "chains": ["Arbitrum"], "tvl": 262895909.14409328, "chg7d": -23.794244063750654, "chg1d": -1.204875071567173, "listedAt": 1747659245, "url": "https://usd.ai/", "sig": {"ls": 46, "band": "red", "stress": true, "size": 0.91, "stability": 0.05, "resil": 0.33, "note": "taille solide, volatil, ⚠ sorties nettes 7j"}, "yg": {"apy": 6.24, "sigma": 0.04, "volpen": 0.79, "rf": 3.67, "fair": 11.86, "spread": 2.57, "gap_bps": -562, "verdict": "rich"}, "fv": null, "apac": null, "manager": "USD AI", "gapu": {"apy": 6.24, "fair": 11.86, "gap_bps": -562, "verdict": "rich", "src": "signal"}, "gaprel": {"pctile": 33, "z": -0.45, "peer_med": -92, "rv": "in-line", "n": 6}}, {"name": "OpenTrade", "symbol": "-", "slug": "opentrade", "cls": "U.S. Treasuries", "chains": ["Avalanche", "Ethereum", "Plume Mainnet"], "tvl": 247792341.28814086, "chg7d": -1.341301345401078, "chg1d": 0.3895474152207328, "listedAt": 1733496042, "url": "https://www.opentrade.io", "sig": {"ls": 94, "band": "green", "stress": false, "size": 0.9, "stability": 0.95, "resil": 1.0, "note": "taille solide, stable, multi-chaîne"}, "yg": null, "fv": null, "apac": null, "manager": "OpenTrade", "gapu": null, "gaprel": null}, {"name": "Plume Vaults", "symbol": "-", "slug": "plume-vaults", "cls": "Other RWA", "chains": ["Ethereum", "Plume Mainnet", "Binance", "Solana", "Avalanche"], "tvl": 234985199.93620765, "chg7d": 1.160508458653993, "chg1d": -1.4950909377609065, "listedAt": 1729962607, "url": "https://app.plume.org/vaults", "sig": {"ls": 94, "band": "green", "stress": false, "size": 0.9, "stability": 0.95, "resil": 1.0, "note": "taille solide, stable, multi-chaîne"}, "yg": {"apy": 9.52, "sigma": 0.111, "volpen": 2.21, "rf": 3.67, "fair": 8.48, "spread": 5.85, "gap_bps": 104, "verdict": "fair"}, "fv": null, "apac": null, "manager": "Plume Vaults", "gapu": {"apy": 9.52, "fair": 8.48, "gap_bps": 104, "verdict": "fair", "src": "signal"}, "gaprel": {"pctile": 67, "z": 0.19, "peer_med": -92, "rv": "in-line", "n": 6}}, {"name": "R25", "symbol": "-", "slug": "r25", "cls": "Other RWA", "chains": ["Pharos", "Sui"], "tvl": 169042254.6596159, "chg7d": 17.91569562248307, "chg1d": 6.427211481570993, "listedAt": 1777489095, "url": "https://www.r25.xyz/", "sig": {"ls": 60, "band": "amber", "stress": false, "size": 0.88, "stability": 0.28, "resil": 0.67, "note": "taille solide, volatil"}, "yg": null, "fv": null, "apac": null, "manager": "R25", "gapu": null, "gaprel": null}, {"name": "RealT Tokens", "symbol": "REG", "slug": "realt-tokens", "cls": "Real estate", "chains": ["xDai"], "tvl": 155045919.35358816, "chg7d": -0.020505138614808516, "chg1d": -0.018608957649306035, "listedAt": 1635878880, "url": "", "sig": {"ls": 83, "band": "green", "stress": false, "size": 0.88, "stability": 1.0, "resil": 0.33, "note": "taille solide, stable"}, "yg": null, "fv": {"rating": "NR", "seniority": "physical", "liquidity": "locked", "manager_tier": 3, "jurisdiction": "US (RealT)", "note": "Immobilier locatif fractionné", "conf": "low", "req": 12.87, "offered": null, "gap_bps": null, "verdict": null}, "apac": null, "manager": "RealT Tokens", "gapu": null, "gaprel": null}, {"name": "Theo Network thUSD", "symbol": "-", "slug": "theo-network-thusd", "cls": "U.S. Treasuries", "chains": ["Ethereum"], "tvl": 132040142.95102292, "chg7d": -0.11704939615206911, "chg1d": -0.042899609998826804, "listedAt": 1789001313, "url": "https://app.theo.xyz/", "sig": {"ls": 82, "band": "green", "stress": false, "size": 0.87, "stability": 1.0, "resil": 0.33, "note": "taille solide, stable"}, "yg": null, "fv": null, "apac": null, "manager": "Theo Network thUSD", "gapu": null, "gaprel": null}, {"name": "Valos", "symbol": "-", "slug": "valos", "cls": "Other RWA", "chains": ["Monad"], "tvl": 105785835.08405472, "chg7d": 0.0971549748588103, "chg1d": 0.005576642604239623, "listedAt": 1784854075, "url": "https://valos.io/", "sig": {"ls": 82, "band": "green", "stress": false, "size": 0.86, "stability": 1.0, "resil": 0.33, "note": "taille solide, stable"}, "yg": null, "fv": null, "apac": null, "manager": "Valos", "gapu": null, "gaprel": null}, {"name": "Frax USD", "symbol": "FRAX", "slug": "frax-usd", "cls": "Cash / yield stablecoin", "chains": ["Ethereum"], "tvl": 103938108.0108263, "chg7d": -2.5816825695868886, "chg1d": -0.6503463587216203, "listedAt": 1755567417, "url": "https://frax.com/", "sig": {"ls": 78, "band": "green", "stress": false, "size": 0.86, "stability": 0.9, "resil": 0.33, "note": "taille solide, stable"}, "yg": null, "fv": {"rating": "A", "seniority": "senior", "liquidity": "daily", "manager_tier": 2, "jurisdiction": "Web3 (Frax)", "note": "Stable collatéralisé", "conf": "low", "req": 5.47, "offered": null, "gap_bps": null, "verdict": null}, "apac": null, "manager": "Frax USD", "gapu": null, "gaprel": null}, {"name": "Lofty", "symbol": "-", "slug": "lofty", "cls": "Real estate", "chains": ["Algorand"], "tvl": 101124782.3623806, "chg7d": -0.0384469416919444, "chg1d": -0.031433321748977505, "listedAt": 1659609505, "url": "https://www.lofty.ai", "sig": {"ls": 82, "band": "green", "stress": false, "size": 0.86, "stability": 1.0, "resil": 0.33, "note": "taille solide, stable"}, "yg": null, "fv": {"rating": "NR", "seniority": "physical", "liquidity": "locked", "manager_tier": 3, "jurisdiction": "US (Lofty, Algorand)", "note": "Immobilier fractionné", "conf": "low", "req": 12.87, "offered": null, "gap_bps": null, "verdict": null}, "apac": null, "manager": "Lofty", "gapu": null, "gaprel": null}, {"name": "Usual USD0", "symbol": "USUAL", "slug": "usual-usd0", "cls": "Cash / yield stablecoin", "chains": ["Ethereum"], "tvl": 83237088.46405406, "chg7d": -0.9954560633258183, "chg1d": -0.023701602217300888, "listedAt": 1721046229, "url": "https://usual.money", "sig": {"ls": 80, "band": "green", "stress": false, "size": 0.85, "stability": 0.96, "resil": 0.33, "note": "taille solide, stable"}, "yg": {"apy": 5.62, "sigma": 0.528, "volpen": 3.0, "rf": 3.67, "fair": 10.67, "spread": 1.96, "gap_bps": -504, "verdict": "rich"}, "fv": {"rating": "A", "seniority": "senior", "liquidity": "daily", "manager_tier": 2, "jurisdiction": "Web3 (Usual)", "note": "Stable adossé T-bills", "conf": "low", "req": 5.47, "offered": 5.62, "gap_bps": 15, "verdict": "fair"}, "apac": null, "manager": "Usual USD0", "gapu": {"apy": 5.62, "fair": 5.47, "gap_bps": 15, "verdict": "fair", "src": "fond."}, "gaprel": null}, {"name": "Sky RWA", "symbol": "SKY", "slug": "sky-rwa", "cls": "U.S. Treasuries", "chains": ["Ethereum"], "tvl": 69654823.69074509, "chg7d": -5.682856778396655, "chg1d": -0.9380495431668692, "listedAt": 1697730940, "url": "https://sky.money/", "sig": {"ls": 72, "band": "green", "stress": false, "size": 0.84, "stability": 0.77, "resil": 0.33, "note": "taille solide, stable"}, "yg": null, "fv": null, "apac": null, "manager": "Sky RWA", "gapu": null, "gaprel": null}, {"name": "stUSDT", "symbol": "STUSDT", "slug": "stusdt", "cls": "Cash / yield stablecoin", "chains": ["Tron", "Ethereum"], "tvl": 56325828.2028742, "chg7d": 0.02175388065133177, "chg1d": -0.021739705021602163, "listedAt": 1688472910, "url": "https://stusdt.io/#/home", "sig": {"ls": 87, "band": "green", "stress": false, "size": 0.83, "stability": 1.0, "resil": 0.67, "note": "taille solide, stable"}, "yg": {"apy": 3.65, "sigma": 0.032, "volpen": 0.65, "rf": 3.67, "fair": 7.62, "spread": -0.01, "gap_bps": -396, "verdict": "rich"}, "fv": null, "apac": null, "manager": "stUSDT", "gapu": {"apy": 3.65, "fair": 7.62, "gap_bps": -396, "verdict": "rich", "src": "signal"}, "gaprel": null}, {"name": "Brickken", "symbol": "BKN", "slug": "brickken", "cls": "Other RWA", "chains": ["Binance", "Ethereum", "Base", "Avalanche", "Polygon"], "tvl": 42353651.862368055, "chg7d": -0.02282566775410544, "chg1d": -0.008255061220424409, "listedAt": 1706108852, "url": "https://www.brickken.com", "sig": {"ls": 92, "band": "green", "stress": false, "size": 0.82, "stability": 1.0, "resil": 1.0, "note": "taille solide, stable, multi-chaîne"}, "yg": null, "fv": null, "apac": null, "manager": "Brickken", "gapu": null, "gaprel": null}, {"name": "Tangible RWA", "symbol": "TNGBL", "slug": "tangible-rwa", "cls": "Real estate", "chains": ["Polygon", "Arbitrum", "Optimism", "Ethereum", "Base", "re.al"], "tvl": 41802392.59439945, "chg7d": 0.6537448905512946, "chg1d": 0.13749430652445938, "listedAt": 1666883108, "url": "https://www.tangible.store", "sig": {"ls": 91, "band": "green", "stress": false, "size": 0.82, "stability": 0.97, "resil": 1.0, "note": "taille solide, stable, multi-chaîne"}, "yg": null, "fv": null, "apac": null, "manager": "Tangible RWA", "gapu": null, "gaprel": null}, {"name": "KAIO", "symbol": "KAIO", "slug": "kaio", "cls": "Private credit", "chains": ["Sei", "Aptos", "Immutable zkEVM", "Sui", "Near", "Avalanche", "Solana", "Polygon", "Ethereum", "Injective", "Mantra", "Hedera", "Cardano", "XDC"], "tvl": 39639824.94312733, "chg7d": -0.016504880911199393, "chg1d": -0.022681050244017342, "listedAt": 1738172664, "url": "https://www.kaio.xyz/", "sig": {"ls": 92, "band": "green", "stress": false, "size": 0.82, "stability": 1.0, "resil": 1.0, "note": "taille solide, stable, multi-chaîne"}, "yg": null, "fv": {"rating": "NR", "seniority": "senior", "liquidity": "quarterly", "manager_tier": 1, "jurisdiction": "Singapour/ADGM (ex-Libre)", "note": "Feeder vers fonds institutionnels régulés", "conf": "med", "req": 10.17, "offered": null, "gap_bps": null, "verdict": null}, "apac": "Singapour / ADGM (ex-Libre Capital)", "manager": "Libre / KAIO", "gapu": null, "gaprel": null}, {"name": "Clearpool TPOOL", "symbol": "CPOOL", "slug": "clearpool-tpool", "cls": "Private credit", "chains": ["Flare", "Ethereum"], "tvl": 23535204.725723494, "chg7d": 12.377117833466485, "chg1d": 11.774002090341071, "listedAt": 1720786477, "url": "https://vaults.clearpool.finance/", "sig": {"ls": 65, "band": "amber", "stress": false, "size": 0.79, "stability": 0.5, "resil": 0.67, "note": "taille solide, volatilité modérée"}, "yg": null, "fv": {"rating": "NR", "seniority": "senior", "liquidity": "daily", "manager_tier": 2, "jurisdiction": "Web3 (Clearpool)", "note": "Pool orienté treasuries/crédit", "conf": "low", "req": 9.17, "offered": null, "gap_bps": null, "verdict": null}, "apac": null, "manager": "Clearpool TPOOL", "gapu": null, "gaprel": null}, {"name": "GoldFinger", "symbol": "ART", "slug": "goldfinger", "cls": "Commodities", "chains": ["Binance"], "tvl": 23526403.615959123, "chg7d": -0.04289314188805804, "chg1d": -0.03826286254520994, "listedAt": 1764702135, "url": "https://goldfinger.finance/", "sig": {"ls": 79, "band": "green", "stress": false, "size": 0.79, "stability": 1.0, "resil": 0.33, "note": "taille solide, stable"}, "yg": null, "fv": null, "apac": null, "manager": "GoldFinger", "gapu": null, "gaprel": null}, {"name": "T RIZE", "symbol": "RIZE", "slug": "t-rize", "cls": "Other RWA", "chains": ["Base"], "tvl": 23000000, "chg7d": 0, "chg1d": 0, "listedAt": 1743588008, "url": "https://www.t-rize.io", "sig": {"ls": 79, "band": "green", "stress": false, "size": 0.79, "stability": 1.0, "resil": 0.33, "note": "taille solide, stable"}, "yg": null, "fv": null, "apac": null, "manager": "T RIZE", "gapu": null, "gaprel": null}, {"name": "Sygnum FIUSD Liquidity Fund", "symbol": "-", "slug": "sygnum-fiusd-liquidity-fund", "cls": "U.S. Treasuries", "chains": ["zkSync Era"], "tvl": 18313284.5114, "chg7d": 0.06335438235696245, "chg1d": 0.031667159911691556, "listedAt": 1727294988, "url": "https://www.sygnum.com/", "sig": {"ls": 79, "band": "green", "stress": false, "size": 0.78, "stability": 1.0, "resil": 0.33, "note": "taille solide, stable"}, "yg": null, "fv": null, "apac": "Singapour/Suisse (Sygnum, hub SG)", "manager": "Sygnum", "gapu": null, "gaprel": null}, {"name": "Paimon", "symbol": "-", "slug": "paimon", "cls": "Other RWA", "chains": ["Binance"], "tvl": 14073141.077248244, "chg7d": 0.5112866751884297, "chg1d": -0.02105214006866163, "listedAt": 1771346975, "url": "https://paimon.finance/", "sig": {"ls": 77, "band": "green", "stress": false, "size": 0.77, "stability": 0.98, "resil": 0.33, "note": "taille solide, stable"}, "yg": null, "fv": null, "apac": null, "manager": "Paimon", "gapu": null, "gaprel": null}, {"name": "Estate Protocol", "symbol": "-", "slug": "estate-protocol", "cls": "Real estate", "chains": ["Arbitrum"], "tvl": 13946411.447652115, "chg7d": -0.019981923689542214, "chg1d": -0.012466302191995737, "listedAt": 1728469824, "url": "https://www.estateprotocol.com", "sig": {"ls": 78, "band": "green", "stress": false, "size": 0.77, "stability": 1.0, "resil": 0.33, "note": "taille solide, stable"}, "yg": null, "fv": null, "apac": null, "manager": "Estate Protocol", "gapu": null, "gaprel": null}, {"name": "Republic Note", "symbol": "NOTE", "slug": "republic-note", "cls": "Other RWA", "chains": ["Avalanche"], "tvl": 12149941.113895297, "chg7d": -4.009551027518853, "chg1d": -0.014797402099020474, "listedAt": 1736775042, "url": "https://republic.com/note", "sig": {"ls": 72, "band": "green", "stress": false, "size": 0.76, "stability": 0.84, "resil": 0.33, "note": "taille solide, stable"}, "yg": null, "fv": null, "apac": null, "manager": "Republic Note", "gapu": null, "gaprel": null}, {"name": "Theo Network thBill", "symbol": "-", "slug": "theo-network-thbill", "cls": "U.S. Treasuries", "chains": ["Monad", "Stable", "Arbitrum", "Ethereum", "Base", "Solana"], "tvl": 11222900.218952345, "chg7d": 0.07853974105964312, "chg1d": -0.0016973352297071642, "listedAt": 1757469154, "url": "https://app.theo.xyz/", "sig": {"ls": 90, "band": "green", "stress": false, "size": 0.76, "stability": 1.0, "resil": 1.0, "note": "taille solide, stable, multi-chaîne"}, "yg": {"apy": 3.08, "sigma": 0.029, "volpen": 0.58, "rf": 3.67, "fair": 7.25, "spread": -0.59, "gap_bps": -417, "verdict": "rich"}, "fv": {"rating": "NR", "seniority": "senior", "liquidity": "daily", "manager_tier": 3, "jurisdiction": "Web3", "note": "Panier de T-bills tokenisés", "conf": "low", "req": 10.37, "offered": 3.08, "gap_bps": -729, "verdict": "rich"}, "apac": null, "manager": "Theo Network thBill", "gapu": {"apy": 3.08, "fair": 10.37, "gap_bps": -729, "verdict": "rich", "src": "fond."}, "gaprel": null}, {"name": "Solv RWA", "symbol": "SOLV", "slug": "solv-rwa", "cls": "Other RWA", "chains": ["Binance", "Mantle"], "tvl": 9296552.878106406, "chg7d": -1.294753260914959, "chg1d": -0.6632991774205408, "listedAt": 1695959397, "url": "https://solv.finance/", "sig": {"ls": 81, "band": "green", "stress": false, "size": 0.75, "stability": 0.95, "resil": 0.67, "note": "taille solide, stable"}, "yg": null, "fv": null, "apac": null, "manager": "Solv RWA", "gapu": null, "gaprel": null}, {"name": "Binaryx Platform", "symbol": "-", "slug": "binaryx-platform", "cls": "Real estate", "chains": ["Polygon"], "tvl": 8987864.07367839, "chg7d": -0.01817560232390747, "chg1d": -0.013483487176713993, "listedAt": 1706795799, "url": "https://www.binaryx.com", "sig": {"ls": 77, "band": "green", "stress": false, "size": 0.75, "stability": 1.0, "resil": 0.33, "note": "taille solide, stable"}, "yg": null, "fv": null, "apac": null, "manager": "Binaryx Platform", "gapu": null, "gaprel": null}, {"name": "Uranium.io", "symbol": "XU3O8", "slug": "uranium.io", "cls": "Commodities", "chains": ["Etherlink"], "tvl": 7591176.264979465, "chg7d": 0.17696935684980986, "chg1d": -0.050927326595882505, "listedAt": 1744378473, "url": "https://uranium.io/en", "sig": {"ls": 77, "band": "green", "stress": false, "size": 0.74, "stability": 0.99, "resil": 0.33, "note": "taille solide, stable"}, "yg": null, "fv": null, "apac": null, "manager": "Uranium.io", "gapu": null, "gaprel": null}, {"name": "Vault Street", "symbol": "-", "slug": "vault-street", "cls": "Other RWA", "chains": ["Ethereum"], "tvl": 7412873.950926906, "chg7d": 0.43725426229414666, "chg1d": 0.015805724609947447, "listedAt": 1783704951, "url": "https://www.vaultstreet.com/", "sig": {"ls": 76, "band": "green", "stress": false, "size": 0.74, "stability": 0.98, "resil": 0.33, "note": "taille solide, stable"}, "yg": {"apy": 6.2, "sigma": 0.051, "volpen": 1.02, "rf": 3.67, "fair": 9.09, "spread": 2.53, "gap_bps": -289, "verdict": "rich"}, "fv": null, "apac": null, "manager": "Vault Street", "gapu": {"apy": 6.2, "fair": 9.09, "gap_bps": -289, "verdict": "rich", "src": "signal"}, "gaprel": {"pctile": 50, "z": -0.19, "peer_med": -92, "rv": "in-line", "n": 6}}, {"name": "Defa By InvoiceMate", "symbol": "-", "slug": "defa-by-invoicemate", "cls": "Private credit", "chains": ["Stellar", "ZIGChain", "Starknet"], "tvl": 7186863.389588017, "chg7d": -0.016504880911199393, "chg1d": -0.022681050244031553, "listedAt": 1772047122, "url": "https://imdefa.com/", "sig": {"ls": 89, "band": "green", "stress": false, "size": 0.74, "stability": 1.0, "resil": 1.0, "note": "taille solide, stable, multi-chaîne"}, "yg": null, "fv": {"rating": "NR", "seniority": "asset_backed", "liquidity": "monthly", "manager_tier": 3, "jurisdiction": "Web3", "note": "Affacturage / financement de factures", "conf": "low", "req": 11.17, "offered": null, "gap_bps": null, "verdict": null}, "apac": null, "manager": "Defa By InvoiceMate", "gapu": null, "gaprel": null}, {"name": "NaraUSD", "symbol": "-", "slug": "narausd", "cls": "Other RWA", "chains": ["Ethereum"], "tvl": 6817442.727674306, "chg7d": 0.06563812580679951, "chg1d": -0.028805062900133294, "listedAt": 1788455243, "url": "https://www.nara.io", "sig": {"ls": 77, "band": "green", "stress": false, "size": 0.73, "stability": 1.0, "resil": 0.33, "note": "taille solide, stable"}, "yg": null, "fv": null, "apac": null, "manager": "NaraUSD", "gapu": null, "gaprel": null}, {"name": "Digital Gold", "symbol": "-", "slug": "digital-gold", "cls": "Commodities", "chains": ["Ethereum"], "tvl": 6700722.851646733, "chg7d": -0.11065886547845594, "chg1d": -0.04713140901327506, "listedAt": 1769220971, "url": "https://dgld.ch/", "sig": {"ls": 77, "band": "green", "stress": false, "size": 0.73, "stability": 1.0, "resil": 0.33, "note": "taille solide, stable"}, "yg": null, "fv": null, "apac": null, "manager": "Digital Gold", "gapu": null, "gaprel": null}, {"name": "Mansory", "symbol": "MNSRY", "slug": "mansory", "cls": "Other RWA", "chains": ["Binance", "Solana"], "tvl": 6353650.710341502, "chg7d": -4.461159533645727, "chg1d": -0.02314237324834778, "listedAt": 1757348655, "url": "https://www.mansory.com/", "sig": {"ls": 76, "band": "green", "stress": false, "size": 0.73, "stability": 0.82, "resil": 0.67, "note": "taille solide, stable"}, "yg": null, "fv": null, "apac": null, "manager": "Mansory", "gapu": null, "gaprel": null}, {"name": "eva Markets", "symbol": "-", "slug": "eva-markets", "cls": "Other RWA", "chains": ["Ethereum"], "tvl": 5281974.657891411, "chg7d": -0.14608383724898033, "chg1d": -0.018239942842441792, "listedAt": 1777136758, "url": "https://www.eva.markets", "sig": {"ls": 76, "band": "green", "stress": false, "size": 0.72, "stability": 0.99, "resil": 0.33, "note": "taille solide, stable"}, "yg": null, "fv": null, "apac": null, "manager": "eva Markets", "gapu": null, "gaprel": null}, {"name": "Meld Gold", "symbol": "-", "slug": "meld-gold", "cls": "Commodities", "chains": ["Algorand"], "tvl": 4550788.349484944, "chg7d": -5.069160525128311, "chg1d": -1.0988924350878477, "listedAt": 1683800481, "url": "https://meld.gold", "sig": {"ls": 68, "band": "green", "stress": false, "size": 0.72, "stability": 0.8, "resil": 0.33, "note": "taille solide, stable"}, "yg": null, "fv": null, "apac": null, "manager": "Meld Gold", "gapu": null, "gaprel": null}, {"name": "Lista RWA", "symbol": "LISTA", "slug": "lista-rwa", "cls": "Other RWA", "chains": ["Binance", "Ethereum"], "tvl": 4403979.069988119, "chg7d": -0.06551701074751293, "chg1d": -0.05946942930054888, "listedAt": 1765393199, "url": "https://lista.org/rwa", "sig": {"ls": 82, "band": "green", "stress": false, "size": 0.71, "stability": 1.0, "resil": 0.67, "note": "taille solide, stable"}, "yg": null, "fv": null, "apac": null, "manager": "Lista RWA", "gapu": null, "gaprel": null}, {"name": "Nawa Protocol", "symbol": "-", "slug": "nawa-protocol", "cls": "Private credit", "chains": ["ZIGChain", "Ethereum", "CORE"], "tvl": 4015851.257383829, "chg7d": 0.15835656134362353, "chg1d": 0.010500437195901213, "listedAt": 1745590867, "url": "https://nawa.finance/", "sig": {"ls": 88, "band": "green", "stress": false, "size": 0.71, "stability": 0.99, "resil": 1.0, "note": "taille solide, stable, multi-chaîne"}, "yg": {"apy": 9.32, "sigma": 0.182, "volpen": 3.0, "rf": 3.67, "fair": 9.87, "spread": 5.66, "gap_bps": -54, "verdict": "fair"}, "fv": {"rating": "NR", "seniority": "unsecured", "liquidity": "daily", "manager_tier": 3, "jurisdiction": "Web3 (Shariah)", "note": "Yield shariah-compliant, petite taille", "conf": "low", "req": 11.57, "offered": 9.32, "gap_bps": -225, "verdict": "rich"}, "apac": null, "manager": "Nawa Protocol", "gapu": {"apy": 9.32, "fair": 11.57, "gap_bps": -225, "verdict": "rich", "src": "fond."}, "gaprel": null}, {"name": "KUMA Protocol", "symbol": "-", "slug": "kuma-protocol", "cls": "U.S. Treasuries", "chains": ["Ethereum", "Linea", "Polygon", "Telos"], "tvl": 3077875.064792584, "chg7d": 0.501516990642088, "chg1d": 0.05651157201069168, "listedAt": 1704837198, "url": "https://kuma.bond", "sig": {"ls": 86, "band": "green", "stress": false, "size": 0.7, "stability": 0.98, "resil": 1.0, "note": "taille moyenne, stable, multi-chaîne"}, "yg": null, "fv": null, "apac": null, "manager": "KUMA Protocol", "gapu": null, "gaprel": null}, {"name": "Kea Credit", "symbol": "-", "slug": "kea-credit", "cls": "Private credit", "chains": ["Hedera"], "tvl": 2975875, "chg7d": 0, "chg1d": 0, "listedAt": 1757692694, "url": "https://kea.credit", "sig": {"ls": 75, "band": "green", "stress": false, "size": 0.7, "stability": 1.0, "resil": 0.33, "note": "taille moyenne, stable"}, "yg": null, "fv": {"rating": "NR", "seniority": "unsecured", "liquidity": "daily", "manager_tier": 3, "jurisdiction": "Web3", "note": "Protocole DeFi de crédit, petite taille", "conf": "low", "req": 11.57, "offered": null, "gap_bps": null, "verdict": null}, "apac": null, "manager": "Kea Credit", "gapu": null, "gaprel": null}, {"name": "Kamui", "symbol": "-", "slug": "kamui", "cls": "Other RWA", "chains": ["Ethereum"], "tvl": 2867123.5992644373, "chg7d": -6.480280835627781, "chg1d": -6.551257001331294, "listedAt": 1789412282, "url": "", "sig": {"ls": 65, "band": "amber", "stress": false, "size": 0.69, "stability": 0.74, "resil": 0.33, "note": "taille moyenne, stable"}, "yg": null, "fv": null, "apac": null, "manager": "Kamui", "gapu": null, "gaprel": null}, {"name": "International Stable Currency", "symbol": "-", "slug": "international-stable-currency", "cls": "Cash / yield stablecoin", "chains": ["Solana"], "tvl": 2419794.3329098094, "chg7d": 0.505873436933399, "chg1d": -0.13907219808071147, "listedAt": 1714244597, "url": "https://www.isc.money", "sig": {"ls": 74, "band": "green", "stress": false, "size": 0.69, "stability": 0.98, "resil": 0.33, "note": "taille moyenne, stable"}, "yg": null, "fv": null, "apac": null, "manager": "International Stable Currency", "gapu": null, "gaprel": null}, {"name": "Oro Finance", "symbol": "-", "slug": "oro-finance", "cls": "Commodities", "chains": ["Solana"], "tvl": 2403212.337475942, "chg7d": -0.20358181816078513, "chg1d": 0.6440208635892191, "listedAt": 1760378121, "url": "https://app.oro.finance/", "sig": {"ls": 74, "band": "green", "stress": false, "size": 0.69, "stability": 0.99, "resil": 0.33, "note": "taille moyenne, stable"}, "yg": null, "fv": null, "apac": null, "manager": "Oro Finance", "gapu": null, "gaprel": null}, {"name": "ZTLN-P", "symbol": "-", "slug": "ztln-p", "cls": "Private credit", "chains": ["Ethereum"], "tvl": 2198081.2698546895, "chg7d": -0.02988057321699955, "chg1d": -0.029044976445845805, "listedAt": 1737640913, "url": "https://zoth.io/", "sig": {"ls": 75, "band": "green", "stress": false, "size": 0.68, "stability": 1.0, "resil": 0.33, "note": "taille moyenne, stable"}, "yg": null, "fv": {"rating": "NR", "seniority": "asset_backed", "liquidity": "daily", "manager_tier": 3, "jurisdiction": "Web3 (Zoth)", "note": "Ecosystème RWAFi / restaking", "conf": "low", "req": 10.37, "offered": null, "gap_bps": null, "verdict": null}, "apac": null, "manager": "ZTLN-P", "gapu": null, "gaprel": null}, {"name": "Byzanlink RWA Markets", "symbol": "BYZAN", "slug": "byzanlink-rwa-markets", "cls": "Private credit", "chains": ["Hedera", "Solana", "Ethereum"], "tvl": 2090003.36830492, "chg7d": 0.2318628164380101, "chg1d": -0.01647071805456335, "listedAt": 1783536377, "url": "https://markets.byzanlink.com", "sig": {"ls": 86, "band": "green", "stress": false, "size": 0.68, "stability": 0.99, "resil": 1.0, "note": "taille moyenne, stable, multi-chaîne"}, "yg": null, "fv": {"rating": "NR", "seniority": "asset_backed", "liquidity": "daily", "manager_tier": 3, "jurisdiction": "Web3", "note": "Plateforme RWA non-custodiale, yield", "conf": "low", "req": 10.37, "offered": null, "gap_bps": null, "verdict": null}, "apac": null, "manager": "Byzanlink RWA Markets", "gapu": null, "gaprel": null}, {"name": "HiYield", "symbol": "-", "slug": "hiyield", "cls": "Private credit", "chains": ["Avalanche", "Canto"], "tvl": 1723342.793478, "chg7d": 0.05892553807731815, "chg1d": 0.008794246711900655, "listedAt": 1710944068, "url": "https://www.hiyield.xyz", "sig": {"ls": 80, "band": "green", "stress": false, "size": 0.67, "stability": 1.0, "resil": 0.67, "note": "taille moyenne, stable"}, "yg": null, "fv": {"rating": "NR", "seniority": "senior", "liquidity": "monthly", "manager_tier": 2, "jurisdiction": "Web3", "note": "Accès aux marchés de capitaux traditionnels pour natifs web3", "conf": "low", "req": 9.97, "offered": null, "gap_bps": null, "verdict": null}, "apac": null, "manager": "HiYield", "gapu": null, "gaprel": null}, {"name": "LandX Finance", "symbol": "LNDX", "slug": "landx-finance", "cls": "Real estate", "chains": ["Ethereum"], "tvl": 1645098.86109988, "chg7d": 0.24918067681647926, "chg1d": -0.0040444840105067215, "listedAt": 1703552397, "url": "", "sig": {"ls": 74, "band": "green", "stress": false, "size": 0.67, "stability": 0.99, "resil": 0.33, "note": "taille moyenne, stable"}, "yg": {"apy": 13.7, "sigma": 0.079, "volpen": 1.58, "rf": 3.67, "fair": 9.85, "spread": 10.03, "gap_bps": 385, "verdict": "cheap"}, "fv": null, "apac": null, "manager": "LandX Finance", "gapu": {"apy": 13.7, "fair": 9.85, "gap_bps": 385, "verdict": "cheap", "src": "signal"}, "gaprel": null}, {"name": "Mountain Protocol", "symbol": "USDM", "slug": "mountain-protocol", "cls": "U.S. Treasuries", "chains": ["Ethereum", "zkSync Era", "Arbitrum", "Optimism", "Base", "Polygon"], "tvl": 1404880.0010728512, "chg7d": 0.4704228588517054, "chg1d": 0.9865045432348154, "listedAt": 1696533115, "url": "https://mountainprotocol.com", "sig": {"ls": 85, "band": "green", "stress": false, "size": 0.66, "stability": 0.98, "resil": 1.0, "note": "taille moyenne, stable, multi-chaîne"}, "yg": null, "fv": null, "apac": null, "manager": "Mountain Protocol", "gapu": null, "gaprel": null}, {"name": "Propbase", "symbol": "PROPS", "slug": "propbase", "cls": "Real estate", "chains": ["Aptos"], "tvl": 1387374.4323594298, "chg7d": -0.2561346537733016, "chg1d": -0.10357976945249447, "listedAt": 1757960244, "url": "https://www.propbase.app/", "sig": {"ls": 73, "band": "green", "stress": false, "size": 0.66, "stability": 0.99, "resil": 0.33, "note": "taille moyenne, stable"}, "yg": null, "fv": null, "apac": null, "manager": "Propbase", "gapu": null, "gaprel": null}, {"name": "CHATEAU", "symbol": "-", "slug": "chateau", "cls": "Real estate", "chains": ["Plasma"], "tvl": 1024251.6907527759, "chg7d": -0.01859904229455367, "chg1d": -0.022681050244017342, "listedAt": 1765948711, "url": "", "sig": {"ls": 73, "band": "green", "stress": false, "size": 0.65, "stability": 1.0, "resil": 0.33, "note": "taille moyenne, stable"}, "yg": null, "fv": null, "apac": null, "manager": "CHATEAU", "gapu": null, "gaprel": null}, {"name": "RealtyX", "symbol": "-", "slug": "realtyx", "cls": "Real estate", "chains": ["Base", "Plume Mainnet"], "tvl": 1017469.2152706073, "chg7d": -0.26740785399219646, "chg1d": -0.3970939499231747, "listedAt": 1749485401, "url": "https://realtyx.co/", "sig": {"ls": 79, "band": "green", "stress": false, "size": 0.65, "stability": 0.99, "resil": 0.67, "note": "taille moyenne, stable"}, "yg": null, "fv": null, "apac": null, "manager": "RealtyX", "gapu": null, "gaprel": null}, {"name": "Isle Finance", "symbol": "-", "slug": "isle-finance", "cls": "Other RWA", "chains": ["Hedera"], "tvl": 947690.0479144584, "chg7d": 0.2827951049322053, "chg1d": 0.014594554994999953, "listedAt": 1761266487, "url": "https://app.isle.finance/", "sig": {"ls": 73, "band": "green", "stress": false, "size": 0.64, "stability": 0.99, "resil": 0.33, "note": "taille moyenne, stable"}, "yg": {"apy": 30.55, "sigma": 0.322, "volpen": 3.0, "rf": 3.67, "fair": 11.37, "spread": 26.88, "gap_bps": 1918, "verdict": "cheap"}, "fv": null, "apac": null, "manager": "Isle Finance", "gapu": {"apy": 30.55, "fair": 11.37, "gap_bps": 1918, "verdict": "cheap", "src": "signal"}, "gaprel": {"pctile": 100, "z": 1.94, "peer_med": -92, "rv": "cheap", "n": 6}}, {"name": "Travessia Credit", "symbol": "-", "slug": "travessia-credit", "cls": "Other RWA", "chains": ["Ethereum", "Monad"], "tvl": 896888.2148669126, "chg7d": 20.00807599186463, "chg1d": -0.31779992791788914, "listedAt": 1776278881, "url": "https://www.travessiacredit.com/", "sig": {"ls": 47, "band": "red", "stress": false, "size": 0.64, "stability": 0.2, "resil": 0.67, "note": "taille moyenne, volatil"}, "yg": {"apy": 17.16, "sigma": 0, "volpen": 0, "rf": 3.67, "fair": 10.97, "spread": 13.5, "gap_bps": 620, "verdict": "cheap"}, "fv": null, "apac": null, "manager": "Travessia Credit", "gapu": {"apy": 17.16, "fair": 10.97, "gap_bps": 620, "verdict": "cheap", "src": "signal"}, "gaprel": {"pctile": 83, "z": 0.69, "peer_med": -92, "rv": "cheap", "n": 6}}, {"name": "CANA Holdings California Carbon Credits", "symbol": "CANA", "slug": "cana-holdings-california-carbon-credits", "cls": "Other (carbon/insurance/art)", "chains": ["Ethereum"], "tvl": 893976.7415455879, "chg7d": 47.04418162111904, "chg1d": 42.597978952395465, "listedAt": 1756916937, "url": "https://maseer.finance/", "sig": {"ls": 33, "band": "red", "stress": false, "size": 0.64, "stability": 0.0, "resil": 0.33, "note": "taille moyenne, volatil"}, "yg": null, "fv": null, "apac": null, "manager": "CANA Holdings California Carbon Credits", "gapu": null, "gaprel": null}, {"name": "Solayer USD", "symbol": "LAYER", "slug": "solayer-usd", "cls": "Cash / yield stablecoin", "chains": ["Solana"], "tvl": 668541.5241442876, "chg7d": 0.19901518908160654, "chg1d": -0.5538773022173729, "listedAt": 1731623194, "url": "https://solayer.org", "sig": {"ls": 72, "band": "green", "stress": false, "size": 0.63, "stability": 0.99, "resil": 0.33, "note": "taille moyenne, stable"}, "yg": null, "fv": null, "apac": null, "manager": "Solayer USD", "gapu": null, "gaprel": null}, {"name": "Landshare", "symbol": "LAND", "slug": "landshare", "cls": "Real estate", "chains": ["Binance"], "tvl": 621293.24, "chg7d": 0, "chg1d": 0, "listedAt": 1720574321, "url": "https://landshare.io", "sig": {"ls": 72, "band": "green", "stress": false, "size": 0.62, "stability": 1.0, "resil": 0.33, "note": "taille moyenne, stable"}, "yg": null, "fv": null, "apac": null, "manager": "Landshare", "gapu": null, "gaprel": null}, {"name": "8lends", "symbol": "8LNDS", "slug": "8lends", "cls": "Other RWA", "chains": ["Base"], "tvl": 610564.4620016944, "chg7d": 37.162023558926876, "chg1d": 40.07687565204179, "listedAt": 1754371223, "url": "https://app.8lends.io", "sig": {"ls": 32, "band": "red", "stress": false, "size": 0.62, "stability": 0.0, "resil": 0.33, "note": "taille moyenne, volatil"}, "yg": null, "fv": null, "apac": null, "manager": "8lends", "gapu": null, "gaprel": null}, {"name": "GOLDSTATION RWA", "symbol": "-", "slug": "goldstation-rwa", "cls": "Commodities", "chains": ["Klaytn", "Avalanche"], "tvl": 582082.3517031276, "chg7d": -6.715297024590129, "chg1d": -5.822658215865985, "listedAt": 1729647602, "url": "https://goldstation.io", "sig": {"ls": 67, "band": "amber", "stress": false, "size": 0.62, "stability": 0.73, "resil": 0.67, "note": "taille moyenne, stable"}, "yg": null, "fv": null, "apac": null, "manager": "GOLDSTATION RWA", "gapu": null, "gaprel": null}, {"name": "Toucan Protocol", "symbol": "-", "slug": "toucan-protocol", "cls": "Other (carbon/insurance/art)", "chains": ["Polygon", "Celo", "Base", "Regen"], "tvl": 547724.9623925698, "chg7d": -0.2905620967310938, "chg1d": -0.029157306487363144, "listedAt": 1659621481, "url": "", "sig": {"ls": 83, "band": "green", "stress": false, "size": 0.62, "stability": 0.99, "resil": 1.0, "note": "taille moyenne, stable, multi-chaîne"}, "yg": null, "fv": null, "apac": null, "manager": "Toucan Protocol", "gapu": null, "gaprel": null}, {"name": "CACHE.Gold", "symbol": "CGT", "slug": "cache.gold", "cls": "Commodities", "chains": ["Ethereum"], "tvl": 535311.0168598702, "chg7d": -0.7893914165853886, "chg1d": -0.29682363427352243, "listedAt": 1661139252, "url": "", "sig": {"ls": 71, "band": "green", "stress": false, "size": 0.62, "stability": 0.97, "resil": 0.33, "note": "taille moyenne, stable"}, "yg": null, "fv": null, "apac": null, "manager": "CACHE.Gold", "gapu": null, "gaprel": null}, {"name": "HARVEST FLOW", "symbol": "-", "slug": "harvest-flow", "cls": "Other RWA", "chains": ["Plume Mainnet", "Polygon"], "tvl": 519835.16227296315, "chg7d": -0.5546965524900571, "chg1d": -0.845658758231778, "listedAt": 1752609742, "url": "https://www.harvestflow.io/?lng=en", "sig": {"ls": 77, "band": "green", "stress": false, "size": 0.61, "stability": 0.98, "resil": 0.67, "note": "taille moyenne, stable"}, "yg": null, "fv": null, "apac": null, "manager": "HARVEST FLOW", "gapu": null, "gaprel": null}, {"name": "Arca Labs ArCoin", "symbol": "RCOIN", "slug": "arca-labs-arcoin", "cls": "U.S. Treasuries", "chains": ["Ethereum"], "tvl": 455232.3851132551, "chg7d": -0.01859904229453946, "chg1d": -0.012466302191981526, "listedAt": 1720292689, "url": "https://www.arcalabs.com/", "sig": {"ls": 72, "band": "green", "stress": false, "size": 0.61, "stability": 1.0, "resil": 0.33, "note": "taille moyenne, stable"}, "yg": null, "fv": null, "apac": null, "manager": "Arca Labs ArCoin", "gapu": null, "gaprel": null}, {"name": "Boson Protocol", "symbol": "BOSON", "slug": "boson-protocol", "cls": "Other (carbon/insurance/art)", "chains": ["Polygon", "Ethereum", "Base", "Optimism", "Arbitrum"], "tvl": 229743.2351734382, "chg7d": -0.11221703166101804, "chg1d": -0.042800980268154376, "listedAt": 1721821003, "url": "https://www.bosonprotocol.io", "sig": {"ls": 82, "band": "green", "stress": false, "size": 0.58, "stability": 1.0, "resil": 1.0, "note": "taille moyenne, stable, multi-chaîne"}, "yg": null, "fv": null, "apac": null, "manager": "Boson Protocol", "gapu": null, "gaprel": null}, {"name": "Usual EUR0", "symbol": "USUAL", "slug": "usual-eur0", "cls": "Cash / yield stablecoin", "chains": ["Ethereum"], "tvl": 229333.7857533641, "chg7d": 0.35842150272789297, "chg1d": 0.13443035698227845, "listedAt": 1772047388, "url": "https://usual.money", "sig": {"ls": 70, "band": "green", "stress": false, "size": 0.58, "stability": 0.99, "resil": 0.33, "note": "taille moyenne, stable"}, "yg": {"apy": 3.56, "sigma": 0, "volpen": 0, "rf": 3.67, "fair": 8.67, "spread": -0.1, "gap_bps": -510, "verdict": "rich"}, "fv": null, "apac": null, "manager": "Usual EUR0", "gapu": {"apy": 3.56, "fair": 8.67, "gap_bps": -510, "verdict": "rich", "src": "signal"}, "gaprel": null}, {"name": "Frigg.eco", "symbol": "ATT", "slug": "frigg.eco", "cls": "Other (carbon/insurance/art)", "chains": ["Ethereum"], "tvl": 182532.150863, "chg7d": 0, "chg1d": 0, "listedAt": 1665676731, "url": "https://www.frigg.eco/", "sig": {"ls": 70, "band": "green", "stress": false, "size": 0.57, "stability": 1.0, "resil": 0.33, "note": "taille moyenne, stable"}, "yg": {"apy": 4.0, "sigma": 0, "volpen": 0, "rf": 3.67, "fair": 8.67, "spread": 0.33, "gap_bps": -467, "verdict": "rich"}, "fv": null, "apac": null, "manager": "Frigg.eco", "gapu": {"apy": 4.0, "fair": 8.67, "gap_bps": -467, "verdict": "rich", "src": "signal"}, "gaprel": null}, {"name": "Bondlink Finance", "symbol": "-", "slug": "bondlink-finance", "cls": "Private credit", "chains": ["Ethereum"], "tvl": 151991.52420435377, "chg7d": 0, "chg1d": 0, "listedAt": 1738233515, "url": "", "sig": {"ls": 69, "band": "green", "stress": false, "size": 0.56, "stability": 1.0, "resil": 0.33, "note": "taille moyenne, stable"}, "yg": null, "fv": {"rating": "NR", "seniority": "senior", "liquidity": "monthly", "manager_tier": 3, "jurisdiction": "Web3", "note": "Infra omnichain agrégeant du private lending", "conf": "low", "req": 11.17, "offered": null, "gap_bps": null, "verdict": null}, "apac": null, "manager": "Bondlink Finance", "gapu": null, "gaprel": null}, {"name": "Untangled RWA", "symbol": "-", "slug": "untangled-rwa", "cls": "Private credit", "chains": ["Stellar"], "tvl": 151497.79549281162, "chg7d": -0.0055602393831151176, "chg1d": 0.012249127182428765, "listedAt": 1779964244, "url": "https://untangled.finance/", "sig": {"ls": 69, "band": "green", "stress": false, "size": 0.56, "stability": 1.0, "resil": 0.33, "note": "taille moyenne, stable"}, "yg": null, "fv": {"rating": "NR", "seniority": "asset_backed", "liquidity": "monthly", "manager_tier": 2, "jurisdiction": "Web3/Singapour", "note": "Crédit institutionnel pour fintechs — trade/invoice finance", "conf": "med", "req": 9.97, "offered": null, "gap_bps": null, "verdict": null}, "apac": null, "manager": "Untangled RWA", "gapu": null, "gaprel": null}, {"name": "Solv Vesting", "symbol": "SOLV", "slug": "solv-vesting", "cls": "Other RWA", "chains": ["Ethereum", "Binance", "Polygon", "Arbitrum"], "tvl": 146903.17684700398, "chg7d": -3.088842852003367, "chg1d": -6.74094610440001, "listedAt": 1650458739, "url": "https://solv.finance/", "sig": {"ls": 76, "band": "green", "stress": false, "size": 0.56, "stability": 0.88, "resil": 1.0, "note": "taille moyenne, stable, multi-chaîne"}, "yg": null, "fv": null, "apac": null, "manager": "Solv Vesting", "gapu": null, "gaprel": null}, {"name": "Fortunafi", "symbol": "-", "slug": "fortunafi", "cls": "U.S. Treasuries", "chains": ["Ethereum", "Arbitrum", "Blast", "Canto"], "tvl": 144321.67760986675, "chg7d": 0, "chg1d": 0, "listedAt": 1701812512, "url": "https://fortunafi.com/", "sig": {"ls": 81, "band": "green", "stress": false, "size": 0.55, "stability": 1.0, "resil": 1.0, "note": "taille moyenne, stable, multi-chaîne"}, "yg": null, "fv": null, "apac": null, "manager": "Fortunafi", "gapu": null, "gaprel": null}, {"name": "Credible Finance", "symbol": "CRED", "slug": "credible-finance", "cls": "Other RWA", "chains": ["Solana", "0G"], "tvl": 134092.71775311616, "chg7d": -66.55163724425923, "chg1d": 293.7828501851659, "listedAt": 1761584407, "url": "https://credible.finance/", "sig": {"ls": 35, "band": "red", "stress": true, "size": 0.55, "stability": 0.0, "resil": 0.67, "note": "taille moyenne, volatil, ⚠ sorties nettes 7j"}, "yg": null, "fv": null, "apac": null, "manager": "Credible Finance", "gapu": null, "gaprel": null}, {"name": "Verified Network", "symbol": "-", "slug": "verified-network", "cls": "Other RWA", "chains": ["Ethereum", "Base"], "tvl": 126689.9265610821, "chg7d": -0.00450757958749648, "chg1d": 0.012047971988991435, "listedAt": 1754418921, "url": "https://www.verified.network/", "sig": {"ls": 75, "band": "green", "stress": false, "size": 0.55, "stability": 1.0, "resil": 0.67, "note": "taille moyenne, stable"}, "yg": null, "fv": null, "apac": null, "manager": "Verified Network", "gapu": null, "gaprel": null}, {"name": "wstGBP", "symbol": "-", "slug": "wstgbp", "cls": "Cash / yield stablecoin", "chains": ["Ethereum"], "tvl": 110926.7118053366, "chg7d": 0.8149099200527274, "chg1d": 0.40914351619944966, "listedAt": 1784750567, "url": "https://wstgbp.com", "sig": {"ls": 67, "band": "amber", "stress": false, "size": 0.54, "stability": 0.97, "resil": 0.33, "note": "taille moyenne, stable"}, "yg": null, "fv": null, "apac": null, "manager": "wstGBP", "gapu": null, "gaprel": null}, {"name": "LiveArt", "symbol": "ART", "slug": "liveart", "cls": "Other (carbon/insurance/art)", "chains": ["Binance", "Base"], "tvl": 96081.84831376528, "chg7d": -0.016736156679641567, "chg1d": -0.015210040181798945, "listedAt": 1763415671, "url": "https://www.liveart.ai/", "sig": {"ls": 74, "band": "green", "stress": false, "size": 0.54, "stability": 1.0, "resil": 0.67, "note": "taille moyenne, stable"}, "yg": null, "fv": null, "apac": null, "manager": "LiveArt", "gapu": null, "gaprel": null}, {"name": "TProtocol V1", "symbol": "TPS", "slug": "tprotocol-v1", "cls": "Private credit", "chains": ["Ethereum"], "tvl": 72819.0684215956, "chg7d": 0.06879816221865553, "chg1d": 0.012598379524604297, "listedAt": 1683044490, "url": "https://legacy.tprotocol.io/", "sig": {"ls": 68, "band": "green", "stress": false, "size": 0.52, "stability": 1.0, "resil": 0.33, "note": "taille moyenne, stable"}, "yg": null, "fv": {"rating": "NR", "seniority": "asset_backed", "liquidity": "daily", "manager_tier": 3, "jurisdiction": "Web3", "note": "Lending RWA adossé T-bills/MMF (v1)", "conf": "low", "req": 10.37, "offered": null, "gap_bps": null, "verdict": null}, "apac": null, "manager": "TProtocol V1", "gapu": null, "gaprel": null}, {"name": "NewrlRWA", "symbol": "-", "slug": "newrlrwa", "cls": "Other (carbon/insurance/art)", "chains": ["Aptos"], "tvl": 57769.65225, "chg7d": 0, "chg1d": 0, "listedAt": 1764374343, "url": "https://newrl.net/", "sig": {"ls": 68, "band": "green", "stress": false, "size": 0.51, "stability": 1.0, "resil": 0.33, "note": "taille moyenne, stable"}, "yg": null, "fv": null, "apac": null, "manager": "NewrlRWA", "gapu": null, "gaprel": null}, {"name": "TProtocol V2", "symbol": "TPS", "slug": "tprotocol-v2", "cls": "Private credit", "chains": ["Ethereum"], "tvl": 32815.67612672151, "chg7d": 0.07014603609106018, "chg1d": 0.012565121391247658, "listedAt": 1695705821, "url": "https://www.tprotocol.io", "sig": {"ls": 66, "band": "amber", "stress": false, "size": 0.49, "stability": 1.0, "resil": 0.33, "note": "taille moyenne, stable"}, "yg": null, "fv": {"rating": "NR", "seniority": "asset_backed", "liquidity": "daily", "manager_tier": 3, "jurisdiction": "Web3", "note": "Lending RWA décentralisé (v2)", "conf": "low", "req": 10.37, "offered": null, "gap_bps": null, "verdict": null}, "apac": null, "manager": "TProtocol V2", "gapu": null, "gaprel": null}, {"name": "ASA.Gold", "symbol": "-", "slug": "asa.gold", "cls": "Commodities", "chains": ["Algorand"], "tvl": 29142.758548874088, "chg7d": -0.7512333014613972, "chg1d": 0.35590702109675476, "listedAt": 1718187369, "url": "https://www.asa.gold", "sig": {"ls": 65, "band": "amber", "stress": false, "size": 0.48, "stability": 0.97, "resil": 0.33, "note": "taille moyenne, stable"}, "yg": null, "fv": null, "apac": null, "manager": "ASA.Gold", "gapu": null, "gaprel": null}, {"name": "Unblock Equity", "symbol": "-", "slug": "unblock-equity", "cls": "Tokenized stocks / equity", "chains": ["Base"], "tvl": 23549.29633860932, "chg7d": 0.205752572740181, "chg1d": 0.030487282290209805, "listedAt": 1778006088, "url": "https://app.unblockequity.com/earn", "sig": {"ls": 65, "band": "amber", "stress": false, "size": 0.47, "stability": 0.99, "resil": 0.33, "note": "taille moyenne, stable"}, "yg": {"apy": 12.36, "sigma": 0.197, "volpen": 3.0, "rf": 3.67, "fair": 12.17, "spread": 8.69, "gap_bps": 19, "verdict": "fair"}, "fv": null, "apac": null, "manager": "Unblock Equity", "gapu": {"apy": 12.36, "fair": 12.17, "gap_bps": 19, "verdict": "fair", "src": "signal"}, "gaprel": null}, {"name": "NAOS Finance", "symbol": "NAOS", "slug": "naos-finance", "cls": "Private credit", "chains": ["Binance", "Ethereum"], "tvl": 18780.39331381669, "chg7d": 0.005575627532778071, "chg1d": 0.30922277948445753, "listedAt": null, "url": "", "sig": {"ls": 71, "band": "green", "stress": false, "size": 0.46, "stability": 1.0, "resil": 0.67, "note": "taille moyenne, stable"}, "yg": null, "fv": {"rating": "NR", "seniority": "unsecured", "liquidity": "locked", "manager_tier": 3, "jurisdiction": "Web3", "note": "Prêts PME", "conf": "low", "req": 14.37, "offered": null, "gap_bps": null, "verdict": null}, "apac": null, "manager": "NAOS Finance", "gapu": null, "gaprel": null}, {"name": "TruCore", "symbol": "-", "slug": "trucore", "cls": "U.S. Treasuries", "chains": ["Solana"], "tvl": 11124.86846252623, "chg7d": 0.0377323336928157, "chg1d": 0.01437373534210451, "listedAt": 1779908019, "url": "https://app.truyields.com", "sig": {"ls": 64, "band": "amber", "stress": false, "size": 0.44, "stability": 1.0, "resil": 0.33, "note": "taille moyenne, stable"}, "yg": null, "fv": null, "apac": null, "manager": "TruCore", "gapu": null, "gaprel": null}, {"name": "Sweep", "symbol": "SWEEPR", "slug": "sweep", "cls": "Other RWA", "chains": ["Ethereum", "Arbitrum", "Base", "Polygon", "Avalanche", "Optimism", "Binance"], "tvl": 8205.078061799866, "chg7d": 0.026381397898390446, "chg1d": 0.04590653709249182, "listedAt": 1700083684, "url": "https://sweepr.finance", "sig": {"ls": 76, "band": "green", "stress": false, "size": 0.42, "stability": 1.0, "resil": 1.0, "note": "taille moyenne, stable, multi-chaîne"}, "yg": null, "fv": null, "apac": null, "manager": "Sweep", "gapu": null, "gaprel": null}, {"name": "GemSwap by Golden Swan Solutions", "symbol": "-", "slug": "gemswap-by-golden-swan-solutions", "cls": "Commodities", "chains": ["Sei"], "tvl": 7139.556878472361, "chg7d": 0.1489974487332404, "chg1d": 0.21875336365988574, "listedAt": 1747867109, "url": "https://goldenasset.org", "sig": {"ls": 63, "band": "amber", "stress": false, "size": 0.41, "stability": 0.99, "resil": 0.33, "note": "taille moyenne, stable"}, "yg": null, "fv": null, "apac": null, "manager": "GemSwap by Golden Swan Solutions", "gapu": null, "gaprel": null}, {"name": "Tokeshare", "symbol": "-", "slug": "tokeshare", "cls": "Other RWA", "chains": ["Base", "Ethereum", "Polygon"], "tvl": 5457.352444319009, "chg7d": -1.5631444913500587, "chg1d": -0.5388244179828234, "listedAt": 1787016905, "url": "https://tokeshare.co/", "sig": {"ls": 72, "band": "green", "stress": false, "size": 0.4, "stability": 0.94, "resil": 1.0, "note": "taille moyenne, stable, multi-chaîne"}, "yg": null, "fv": null, "apac": null, "manager": "Tokeshare", "gapu": null, "gaprel": null}, {"name": "Tokeniza", "symbol": "-", "slug": "tokeniza", "cls": "Real estate", "chains": ["Ethereum", "Polygon", "Moonbeam"], "tvl": 3973.4778501157416, "chg7d": 472.3153593887473, "chg1d": -0.2965557073245293, "listedAt": 1744905680, "url": "https://tokeniza.com.br/", "sig": {"ls": 34, "band": "red", "stress": false, "size": 0.39, "stability": 0.0, "resil": 1.0, "note": "petite taille, volatil, multi-chaîne"}, "yg": null, "fv": null, "apac": null, "manager": "Tokeniza", "gapu": null, "gaprel": null}, {"name": "Zivoe", "symbol": "ZVE", "slug": "zivoe", "cls": "Private credit", "chains": ["Ethereum"], "tvl": 3044.0305822560567, "chg7d": -0.004043796167479741, "chg1d": 0.014075377748085316, "listedAt": null, "url": "https://zivoe.com/", "sig": {"ls": 62, "band": "amber", "stress": false, "size": 0.37, "stability": 1.0, "resil": 0.33, "note": "petite taille, stable"}, "yg": null, "fv": {"rating": "NR", "seniority": "first_loss", "liquidity": "locked", "manager_tier": 3, "jurisdiction": "Web3", "note": "Crédit conso, tranche junior/first-loss", "conf": "low", "req": 16.17, "offered": null, "gap_bps": null, "verdict": null}, "apac": null, "manager": "Zivoe", "gapu": null, "gaprel": null}, {"name": "Tangible USTB", "symbol": "TNGBL", "slug": "tangible-ustb", "cls": "U.S. Treasuries", "chains": ["Ethereum"], "tvl": 2902.9375675614137, "chg7d": 0.4704228588517054, "chg1d": 0.9865045432348296, "listedAt": 1718915196, "url": "https://www.tangible.store", "sig": {"ls": 61, "band": "amber", "stress": false, "size": 0.37, "stability": 0.98, "resil": 0.33, "note": "petite taille, stable"}, "yg": null, "fv": null, "apac": null, "manager": "Tangible USTB", "gapu": null, "gaprel": null}, {"name": "Catch Exchange", "symbol": "CATCH", "slug": "catch-exchange", "cls": "Other RWA", "chains": ["Robinhood Chain"], "tvl": 2501.064794546531, "chg7d": -1.267894569230208, "chg1d": -0.5724138913903545, "listedAt": 1790195931, "url": "https://catch.exchange/", "sig": {"ls": 59, "band": "amber", "stress": false, "size": 0.37, "stability": 0.95, "resil": 0.33, "note": "petite taille, stable"}, "yg": null, "fv": null, "apac": null, "manager": "Catch Exchange", "gapu": null, "gaprel": null}, {"name": "SPICE Protocol", "symbol": "-", "slug": "spice-protocol", "cls": "Other RWA", "chains": ["Plume Mainnet"], "tvl": 1099.7148141938999, "chg7d": -2.8762529419507246, "chg1d": -2.7332894088306574, "listedAt": 1747867094, "url": "http://spiceprotocol.xyz/", "sig": {"ls": 55, "band": "amber", "stress": false, "size": 0.33, "stability": 0.88, "resil": 0.33, "note": "petite taille, stable"}, "yg": null, "fv": null, "apac": null, "manager": "SPICE Protocol", "gapu": null, "gaprel": null}, {"name": "Solon Stocks", "symbol": "-", "slug": "solon-stocks", "cls": "Tokenized stocks / equity", "chains": ["Robinhood Chain"], "tvl": 923.5373175958129, "chg7d": -8.157028344355467, "chg1d": -0.7343660355708579, "listedAt": 1791234702, "url": "https://solonpad.fun", "sig": {"ls": 46, "band": "red", "stress": true, "size": 0.32, "stability": 0.67, "resil": 0.33, "note": "petite taille, volatilité modérée, ⚠ sorties nettes 7j"}, "yg": null, "fv": null, "apac": null, "manager": "Solon Stocks", "gapu": null, "gaprel": null}, {"name": "WorldEs", "symbol": "-", "slug": "worldes", "cls": "Real estate", "chains": ["Arbitrum"], "tvl": 567.296697796826, "chg7d": -0.04170568928601881, "chg1d": -0.008622564759278362, "listedAt": 1729685962, "url": "https://www.worldes.io", "sig": {"ls": 58, "band": "amber", "stress": false, "size": 0.3, "stability": 1.0, "resil": 0.33, "note": "petite taille, stable"}, "yg": null, "fv": null, "apac": null, "manager": "WorldEs", "gapu": null, "gaprel": null}, {"name": "Subunit", "symbol": "-", "slug": "subunit", "cls": "Real estate", "chains": ["Base"], "tvl": 434.68031251719395, "chg7d": 0.010398610140811115, "chg1d": 0.023850247956687554, "listedAt": 1746099238, "url": "https://www.subunit.xyz", "sig": {"ls": 58, "band": "amber", "stress": false, "size": 0.28, "stability": 1.0, "resil": 0.33, "note": "petite taille, stable"}, "yg": null, "fv": null, "apac": null, "manager": "Subunit", "gapu": null, "gaprel": null}, {"name": "EthicHub", "symbol": "ETHIX", "slug": "ethichub", "cls": "Other RWA", "chains": ["Ethereum", "Celo", "xDai"], "tvl": 249.02580562516, "chg7d": 0.02696125100618474, "chg1d": 0.017286519720016713, "listedAt": 1663349441, "url": "https://ethichub.com", "sig": {"ls": 69, "band": "green", "stress": false, "size": 0.26, "stability": 1.0, "resil": 1.0, "note": "petite taille, stable, multi-chaîne"}, "yg": null, "fv": null, "apac": null, "manager": "EthicHub", "gapu": null, "gaprel": null}, {"name": "BasaFish", "symbol": "-", "slug": "basafish", "cls": "Other RWA", "chains": ["Base"], "tvl": 99.96619997998974, "chg7d": -0.007940246305352616, "chg1d": 0.0031763047552146872, "listedAt": 1773153603, "url": "", "sig": {"ls": 55, "band": "amber", "stress": false, "size": 0.22, "stability": 1.0, "resil": 0.33, "note": "petite taille, stable"}, "yg": null, "fv": null, "apac": null, "manager": "BasaFish", "gapu": null, "gaprel": null}, {"name": "Qiro Finance", "symbol": "-", "slug": "qiro-finance", "cls": "Cash / yield stablecoin", "chains": ["Ethereum"], "tvl": 81.14107274681696, "chg7d": 801.213955596989, "chg1d": -0.009021562307012232, "listedAt": 1789518875, "url": "https://qiro.fi", "sig": {"ls": 15, "band": "red", "stress": false, "size": 0.21, "stability": 0.0, "resil": 0.33, "note": "petite taille, volatil"}, "yg": null, "fv": null, "apac": null, "manager": "Qiro Finance", "gapu": null, "gaprel": null}, {"name": "SukukFi", "symbol": "-", "slug": "sukukfi", "cls": "Other RWA", "chains": ["Berachain"], "tvl": 54.19266146604748, "chg7d": -0.11500610453964555, "chg1d": 0.07927158490090846, "listedAt": 1783401477, "url": "https://sukuk.fi", "sig": {"ls": 54, "band": "amber", "stress": false, "size": 0.19, "stability": 1.0, "resil": 0.33, "note": "petite taille, stable"}, "yg": null, "fv": null, "apac": null, "manager": "SukukFi", "gapu": null, "gaprel": null}, {"name": "ELYFI", "symbol": "ELFI", "slug": "elyfi", "cls": "Private credit", "chains": ["Ethereum", "Binance", "Klaytn"], "tvl": 39.20532197006545, "chg7d": 0.0432396546657543, "chg1d": 0.03477798182693448, "listedAt": 1645646372, "url": "", "sig": {"ls": 65, "band": "amber", "stress": false, "size": 0.17, "stability": 1.0, "resil": 1.0, "note": "petite taille, stable, multi-chaîne"}, "yg": null, "fv": {"rating": "NR", "seniority": "asset_backed", "liquidity": "locked", "manager_tier": 3, "jurisdiction": "Web3", "note": "Prêts crypto adossés à de l'immobilier", "conf": "low", "req": 13.17, "offered": null, "gap_bps": null, "verdict": null}, "apac": null, "manager": "ELYFI", "gapu": null, "gaprel": null}, {"name": "Fractit Fleet", "symbol": "FLEET", "slug": "fractit-fleet", "cls": "Other RWA", "chains": ["Plume Mainnet", "Botanix"], "tvl": 8.752873782366748, "chg7d": -2.7160160716662034, "chg1d": -2.7300271245481014, "listedAt": 1758815161, "url": "", "sig": {"ls": 52, "band": "amber", "stress": false, "size": 0.1, "stability": 0.89, "resil": 0.67, "note": "petite taille, stable"}, "yg": null, "fv": null, "apac": null, "manager": "Fractit Fleet", "gapu": null, "gaprel": null}, {"name": "OpenStock", "symbol": "-", "slug": "openstock", "cls": "Tokenized stocks / equity", "chains": ["Mantle"], "tvl": 4.840577561362418, "chg7d": -0.022882302634201324, "chg1d": -0.005198022191322593, "listedAt": 1788459471, "url": "https://opn.st/", "sig": {"ls": 49, "band": "amber", "stress": false, "size": 0.07, "stability": 1.0, "resil": 0.33, "note": "petite taille, stable"}, "yg": null, "fv": null, "apac": null, "manager": "OpenStock", "gapu": null, "gaprel": null}, {"name": "Credix", "symbol": "-", "slug": "credix", "cls": "Other RWA", "chains": ["Solana"], "tvl": 0.9999620697586706, "chg7d": -0.10192848069436877, "chg1d": 0.0225062871424484, "listedAt": 1653591974, "url": "https://credix.finance", "sig": {"ls": 46, "band": "red", "stress": false, "size": 0.0, "stability": 1.0, "resil": 0.33, "note": "petite taille, stable"}, "yg": {"apy": 0.03, "sigma": 0.274, "volpen": 3.0, "rf": 3.67, "fair": 14.07, "spread": -3.64, "gap_bps": -1404, "verdict": "rich"}, "fv": null, "apac": null, "manager": "Credix", "gapu": {"apy": 0.03, "fair": 14.07, "gap_bps": -1404, "verdict": "rich", "src": "signal"}, "gaprel": {"pctile": 17, "z": -1.27, "peer_med": -92, "rv": "rich", "n": 6}}], "recent": [{"name": "Solon Stocks", "symbol": "-", "slug": "solon-stocks", "cls": "Tokenized stocks / equity", "chains": ["Robinhood Chain"], "tvl": 923.5373175958129, "chg7d": -8.157028344355467, "chg1d": -0.7343660355708579, "listedAt": 1791234702, "url": "https://solonpad.fun", "sig": {"ls": 46, "band": "red", "stress": true, "size": 0.32, "stability": 0.67, "resil": 0.33, "note": "petite taille, volatilité modérée, ⚠ sorties nettes 7j"}, "yg": null, "fv": null, "apac": null, "manager": "Solon Stocks", "gapu": null, "gaprel": null}, {"name": "Catch Exchange", "symbol": "CATCH", "slug": "catch-exchange", "cls": "Other RWA", "chains": ["Robinhood Chain"], "tvl": 2501.064794546531, "chg7d": -1.267894569230208, "chg1d": -0.5724138913903545, "listedAt": 1790195931, "url": "https://catch.exchange/", "sig": {"ls": 59, "band": "amber", "stress": false, "size": 0.37, "stability": 0.95, "resil": 0.33, "note": "petite taille, stable"}, "yg": null, "fv": null, "apac": null, "manager": "Catch Exchange", "gapu": null, "gaprel": null}, {"name": "Qiro Finance", "symbol": "-", "slug": "qiro-finance", "cls": "Cash / yield stablecoin", "chains": ["Ethereum"], "tvl": 81.14107274681696, "chg7d": 801.213955596989, "chg1d": -0.009021562307012232, "listedAt": 1789518875, "url": "https://qiro.fi", "sig": {"ls": 15, "band": "red", "stress": false, "size": 0.21, "stability": 0.0, "resil": 0.33, "note": "petite taille, volatil"}, "yg": null, "fv": null, "apac": null, "manager": "Qiro Finance", "gapu": null, "gaprel": null}, {"name": "Kamui", "symbol": "-", "slug": "kamui", "cls": "Other RWA", "chains": ["Ethereum"], "tvl": 2867123.5992644373, "chg7d": -6.480280835627781, "chg1d": -6.551257001331294, "listedAt": 1789412282, "url": "", "sig": {"ls": 65, "band": "amber", "stress": false, "size": 0.69, "stability": 0.74, "resil": 0.33, "note": "taille moyenne, stable"}, "yg": null, "fv": null, "apac": null, "manager": "Kamui", "gapu": null, "gaprel": null}, {"name": "Theo Network thUSD", "symbol": "-", "slug": "theo-network-thusd", "cls": "U.S. Treasuries", "chains": ["Ethereum"], "tvl": 132040142.95102292, "chg7d": -0.11704939615206911, "chg1d": -0.042899609998826804, "listedAt": 1789001313, "url": "https://app.theo.xyz/", "sig": {"ls": 82, "band": "green", "stress": false, "size": 0.87, "stability": 1.0, "resil": 0.33, "note": "taille solide, stable"}, "yg": null, "fv": null, "apac": null, "manager": "Theo Network thUSD", "gapu": null, "gaprel": null}, {"name": "OpenStock", "symbol": "-", "slug": "openstock", "cls": "Tokenized stocks / equity", "chains": ["Mantle"], "tvl": 4.840577561362418, "chg7d": -0.022882302634201324, "chg1d": -0.005198022191322593, "listedAt": 1788459471, "url": "https://opn.st/", "sig": {"ls": 49, "band": "amber", "stress": false, "size": 0.07, "stability": 1.0, "resil": 0.33, "note": "petite taille, stable"}, "yg": null, "fv": null, "apac": null, "manager": "OpenStock", "gapu": null, "gaprel": null}, {"name": "NaraUSD", "symbol": "-", "slug": "narausd", "cls": "Other RWA", "chains": ["Ethereum"], "tvl": 6817442.727674306, "chg7d": 0.06563812580679951, "chg1d": -0.028805062900133294, "listedAt": 1788455243, "url": "https://www.nara.io", "sig": {"ls": 77, "band": "green", "stress": false, "size": 0.73, "stability": 1.0, "resil": 0.33, "note": "taille solide, stable"}, "yg": null, "fv": null, "apac": null, "manager": "NaraUSD", "gapu": null, "gaprel": null}, {"name": "Tokeshare", "symbol": "-", "slug": "tokeshare", "cls": "Other RWA", "chains": ["Base", "Ethereum", "Polygon"], "tvl": 5457.352444319009, "chg7d": -1.5631444913500587, "chg1d": -0.5388244179828234, "listedAt": 1787016905, "url": "https://tokeshare.co/", "sig": {"ls": 72, "band": "green", "stress": false, "size": 0.4, "stability": 0.94, "resil": 1.0, "note": "taille moyenne, stable, multi-chaîne"}, "yg": null, "fv": null, "apac": null, "manager": "Tokeshare", "gapu": null, "gaprel": null}, {"name": "Valos", "symbol": "-", "slug": "valos", "cls": "Other RWA", "chains": ["Monad"], "tvl": 105785835.08405472, "chg7d": 0.0971549748588103, "chg1d": 0.005576642604239623, "listedAt": 1784854075, "url": "https://valos.io/", "sig": {"ls": 82, "band": "green", "stress": false, "size": 0.86, "stability": 1.0, "resil": 0.33, "note": "taille solide, stable"}, "yg": null, "fv": null, "apac": null, "manager": "Valos", "gapu": null, "gaprel": null}, {"name": "wstGBP", "symbol": "-", "slug": "wstgbp", "cls": "Cash / yield stablecoin", "chains": ["Ethereum"], "tvl": 110926.7118053366, "chg7d": 0.8149099200527274, "chg1d": 0.40914351619944966, "listedAt": 1784750567, "url": "https://wstgbp.com", "sig": {"ls": 67, "band": "amber", "stress": false, "size": 0.54, "stability": 0.97, "resil": 0.33, "note": "taille moyenne, stable"}, "yg": null, "fv": null, "apac": null, "manager": "wstGBP", "gapu": null, "gaprel": null}, {"name": "Vault Street", "symbol": "-", "slug": "vault-street", "cls": "Other RWA", "chains": ["Ethereum"], "tvl": 7412873.950926906, "chg7d": 0.43725426229414666, "chg1d": 0.015805724609947447, "listedAt": 1783704951, "url": "https://www.vaultstreet.com/", "sig": {"ls": 76, "band": "green", "stress": false, "size": 0.74, "stability": 0.98, "resil": 0.33, "note": "taille solide, stable"}, "yg": {"apy": 6.2, "sigma": 0.051, "volpen": 1.02, "rf": 3.67, "fair": 9.09, "spread": 2.53, "gap_bps": -289, "verdict": "rich"}, "fv": null, "apac": null, "manager": "Vault Street", "gapu": {"apy": 6.2, "fair": 9.09, "gap_bps": -289, "verdict": "rich", "src": "signal"}, "gaprel": {"pctile": 50, "z": -0.19, "peer_med": -92, "rv": "in-line", "n": 6}}, {"name": "Byzanlink RWA Markets", "symbol": "BYZAN", "slug": "byzanlink-rwa-markets", "cls": "Private credit", "chains": ["Hedera", "Solana", "Ethereum"], "tvl": 2090003.36830492, "chg7d": 0.2318628164380101, "chg1d": -0.01647071805456335, "listedAt": 1783536377, "url": "https://markets.byzanlink.com", "sig": {"ls": 86, "band": "green", "stress": false, "size": 0.68, "stability": 0.99, "resil": 1.0, "note": "taille moyenne, stable, multi-chaîne"}, "yg": null, "fv": {"rating": "NR", "seniority": "asset_backed", "liquidity": "daily", "manager_tier": 3, "jurisdiction": "Web3", "note": "Plateforme RWA non-custodiale, yield", "conf": "low", "req": 10.37, "offered": null, "gap_bps": null, "verdict": null}, "apac": null, "manager": "Byzanlink RWA Markets", "gapu": null, "gaprel": null}], "pc_bands": {"green": 12, "amber": 4, "red": 0}, "pc_stress": [], "pc_avg_ls": 76, "rf": 3.67, "pc_yield_n": 1, "pc_rich": [], "pc_cheap": [], "alerts": [{"name": "USD AI", "symbol": "CHIP", "tvl": 262895909.14409328, "slug": "usd-ai", "cls": "Other RWA", "ls": 46, "band": "red", "level": "high", "sev": 9.0, "reasons": ["Sorties nettes 7j (-23.8%) — pression de rachat", "Survalorisé (signal) : offre 6.2% vs juste 11.9% (-562 bps)", "Score qualité faible (46/100)"]}, {"name": "stUSDT", "symbol": "STUSDT", "tvl": 56325828.2028742, "slug": "stusdt", "cls": "Cash / yield stablecoin", "ls": 87, "band": "green", "level": "med", "sev": 3.3, "reasons": ["Survalorisé (signal) : offre 3.6% vs juste 7.6% (-396 bps)"]}, {"name": "Re", "symbol": "RE", "tvl": 441075652.7063942, "slug": "re", "cls": "Other (carbon/insurance/art)", "ls": 83, "band": "green", "level": "low", "sev": 1.4, "reasons": ["Survalorisé (signal) : offre 7.3% vs juste 9.0% (-164 bps)"]}, {"name": "Plume Vaults", "symbol": "-", "tvl": 234985199.93620765, "slug": "plume-vaults", "cls": "Other RWA", "ls": 94, "band": "green", "level": "low", "sev": 1.0, "reasons": ["Rendement instable (σ=0.11)"]}, {"name": "Usual USD0", "symbol": "USUAL", "tvl": 83237088.46405406, "slug": "usual-usd0", "cls": "Cash / yield stablecoin", "ls": 80, "band": "green", "level": "low", "sev": 1.0, "reasons": ["Rendement instable (σ=0.53)"]}, {"name": "OnRe", "symbol": "-", "tvl": 293393807.1255017, "slug": "onre", "cls": "Other (carbon/insurance/art)", "ls": 84, "band": "green", "level": "low", "sev": 0.8, "reasons": ["Rendement excédentaire (+321 bps) — vérifier risque caché"]}], "apac_n": 2, "apac_tvl": 57953109.454527326, "fv_n": 16, "networks": [{"chain": "Ethereum", "value": 1927731163.638755, "n": 51}, {"chain": "Solana", "value": 619802289.0547813, "n": 13}, {"chain": "Arbitrum", "value": 277690122.5117993, "n": 11}, {"chain": "Avalanche", "value": 191154950.3265132, "n": 9}, {"chain": "Pharos", "value": 160768899.3920969, "n": 1}, {"chain": "xDai", "value": 155046002.36219004, "n": 2}, {"chain": "Binance", "value": 120103606.02520289, "n": 13}, {"chain": "Monad", "value": 115092654.1779358, "n": 4}, {"chain": "Plume Mainnet", "value": 108947968.3008924, "n": 6}, {"chain": "Algorand", "value": 105704713.47041442, "n": 3}, {"chain": "Tron", "value": 54496699.246540256, "n": 1}, {"chain": "Polygon", "value": 51616958.085626304, "n": 13}, {"chain": "Base", "value": 40252173.72327653, "n": 18}, {"chain": "Flare", "value": 23386337.72337983, "n": 1}, {"chain": "zkSync Era", "value": 18372105.261136662, "n": 2}, {"chain": "Sei", "value": 14682780.99894349, "n": 2}, {"chain": "Sui", "value": 12332989.833488662, "n": 2}, {"chain": "Aptos", "value": 8056161.875249536, "n": 3}, {"chain": "Etherlink", "value": 7591176.264979465, "n": 1}, {"chain": "Stellar", "value": 6890831.970838975, "n": 3}, {"chain": "Immutable zkEVM", "value": 6266982.512555727, "n": 1}, {"chain": "ZIGChain", "value": 5555495.827666937, "n": 2}, {"chain": "Hedera", "value": 5114600.673589778, "n": 4}, {"chain": "Stable", "value": 4021392.434830103, "n": 1}, {"chain": "Near", "value": 3995412.8451777385, "n": 1}, {"chain": "Starknet", "value": 1074532.9309165343, "n": 1}, {"chain": "Plasma", "value": 1024251.6907527759, "n": 1}, {"chain": "Mantle", "value": 947268.77270058, "n": 2}, {"chain": "Klaytn", "value": 582082.3517031276, "n": 2}, {"chain": "Celo", "value": 158787.94413986756, "n": 3}, {"chain": "Linea", "value": 33881.33321068874, "n": 1}, {"chain": "Regen", "value": 29299.769228066503, "n": 1}, {"chain": "Optimism", "value": 5277.177942577954, "n": 4}, {"chain": "Robinhood Chain", "value": 3424.602112142344, "n": 2}, {"chain": "Telos", "value": 171.86546023953304, "n": 1}, {"chain": "Berachain", "value": 54.19266146604748, "n": 1}, {"chain": "CORE", "value": 0.0935630239657432, "n": 1}, {"chain": "0G", "value": 0.009997226851895549, "n": 1}, {"chain": "Blast", "value": 2.0672330000000004e-12, "n": 1}, {"chain": "re.al", "value": 0.0, "n": 1}, {"chain": "Injective", "value": 0.0, "n": 1}, {"chain": "Mantra", "value": 0.0, "n": 1}, {"chain": "Cardano", "value": 0.0, "n": 1}, {"chain": "XDC", "value": 0.0, "n": 1}, {"chain": "Canto", "value": 0.0, "n": 2}, {"chain": "Moonbeam", "value": 0.0, "n": 1}, {"chain": "Botanix", "value": 0.0, "n": 1}], "managers": [{"name": "Ethena USDtb", "value": 475819338.176689, "n": 1, "classes": ["Cash / yield stablecoin"], "nchains": 1}, {"name": "Re", "value": 441075652.7063942, "n": 1, "classes": ["Other (carbon/insurance/art)"], "nchains": 4}, {"name": "Huma", "value": 405682858.12851155, "n": 1, "classes": ["Other RWA"], "nchains": 4}, {"name": "Anemoy", "value": 333030207.4954452, "n": 1, "classes": ["Private credit"], "nchains": 3}, {"name": "OnRe", "value": 293393807.1255017, "n": 1, "classes": ["Other (carbon/insurance/art)"], "nchains": 1}, {"name": "USD AI", "value": 262895909.14409328, "n": 1, "classes": ["Other RWA"], "nchains": 1}, {"name": "OpenTrade", "value": 247792341.28814086, "n": 1, "classes": ["U.S. Treasuries"], "nchains": 3}, {"name": "Plume Vaults", "value": 234985199.93620765, "n": 1, "classes": ["Other RWA"], "nchains": 5}, {"name": "R25", "value": 169042254.6596159, "n": 1, "classes": ["Other RWA"], "nchains": 2}, {"name": "RealT Tokens", "value": 155045919.35358816, "n": 1, "classes": ["Real estate"], "nchains": 1}, {"name": "Theo Network thUSD", "value": 132040142.95102292, "n": 1, "classes": ["U.S. Treasuries"], "nchains": 1}, {"name": "Valos", "value": 105785835.08405472, "n": 1, "classes": ["Other RWA"], "nchains": 1}, {"name": "Frax USD", "value": 103938108.0108263, "n": 1, "classes": ["Cash / yield stablecoin"], "nchains": 1}, {"name": "Lofty", "value": 101124782.3623806, "n": 1, "classes": ["Real estate"], "nchains": 1}, {"name": "Usual USD0", "value": 83237088.46405406, "n": 1, "classes": ["Cash / yield stablecoin"], "nchains": 1}, {"name": "Sky RWA", "value": 69654823.69074509, "n": 1, "classes": ["U.S. Treasuries"], "nchains": 1}, {"name": "stUSDT", "value": 56325828.2028742, "n": 1, "classes": ["Cash / yield stablecoin"], "nchains": 2}, {"name": "Brickken", "value": 42353651.862368055, "n": 1, "classes": ["Other RWA"], "nchains": 5}, {"name": "Tangible RWA", "value": 41802392.59439945, "n": 1, "classes": ["Real estate"], "nchains": 6}, {"name": "Libre / KAIO", "value": 39639824.94312733, "n": 1, "classes": ["Private credit"], "nchains": 14}, {"name": "Clearpool TPOOL", "value": 23535204.725723494, "n": 1, "classes": ["Private credit"], "nchains": 2}, {"name": "GoldFinger", "value": 23526403.615959123, "n": 1, "classes": ["Commodities"], "nchains": 1}, {"name": "T RIZE", "value": 23000000.0, "n": 1, "classes": ["Other RWA"], "nchains": 1}, {"name": "Sygnum", "value": 18313284.5114, "n": 1, "classes": ["U.S. Treasuries"], "nchains": 1}, {"name": "Paimon", "value": 14073141.077248244, "n": 1, "classes": ["Other RWA"], "nchains": 1}, {"name": "Estate Protocol", "value": 13946411.447652115, "n": 1, "classes": ["Real estate"], "nchains": 1}, {"name": "Republic Note", "value": 12149941.113895297, "n": 1, "classes": ["Other RWA"], "nchains": 1}, {"name": "Theo Network thBill", "value": 11222900.218952345, "n": 1, "classes": ["U.S. Treasuries"], "nchains": 6}, {"name": "Solv RWA", "value": 9296552.878106406, "n": 1, "classes": ["Other RWA"], "nchains": 2}, {"name": "Binaryx Platform", "value": 8987864.07367839, "n": 1, "classes": ["Real estate"], "nchains": 1}, {"name": "Uranium.io", "value": 7591176.264979465, "n": 1, "classes": ["Commodities"], "nchains": 1}, {"name": "Vault Street", "value": 7412873.950926906, "n": 1, "classes": ["Other RWA"], "nchains": 1}, {"name": "Defa By InvoiceMate", "value": 7186863.389588017, "n": 1, "classes": ["Private credit"], "nchains": 3}, {"name": "NaraUSD", "value": 6817442.727674306, "n": 1, "classes": ["Other RWA"], "nchains": 1}, {"name": "Digital Gold", "value": 6700722.851646733, "n": 1, "classes": ["Commodities"], "nchains": 1}, {"name": "Mansory", "value": 6353650.710341502, "n": 1, "classes": ["Other RWA"], "nchains": 2}, {"name": "eva Markets", "value": 5281974.657891411, "n": 1, "classes": ["Other RWA"], "nchains": 1}, {"name": "Meld Gold", "value": 4550788.349484944, "n": 1, "classes": ["Commodities"], "nchains": 1}, {"name": "Lista RWA", "value": 4403979.069988119, "n": 1, "classes": ["Other RWA"], "nchains": 2}, {"name": "Nawa Protocol", "value": 4015851.257383829, "n": 1, "classes": ["Private credit"], "nchains": 3}, {"name": "KUMA Protocol", "value": 3077875.064792584, "n": 1, "classes": ["U.S. Treasuries"], "nchains": 4}, {"name": "Kea Credit", "value": 2975875.0, "n": 1, "classes": ["Private credit"], "nchains": 1}, {"name": "Kamui", "value": 2867123.5992644373, "n": 1, "classes": ["Other RWA"], "nchains": 1}, {"name": "International Stable Currency", "value": 2419794.3329098094, "n": 1, "classes": ["Cash / yield stablecoin"], "nchains": 1}, {"name": "Oro Finance", "value": 2403212.337475942, "n": 1, "classes": ["Commodities"], "nchains": 1}, {"name": "ZTLN-P", "value": 2198081.2698546895, "n": 1, "classes": ["Private credit"], "nchains": 1}, {"name": "Byzanlink RWA Markets", "value": 2090003.36830492, "n": 1, "classes": ["Private credit"], "nchains": 3}, {"name": "HiYield", "value": 1723342.793478, "n": 1, "classes": ["Private credit"], "nchains": 2}, {"name": "LandX Finance", "value": 1645098.86109988, "n": 1, "classes": ["Real estate"], "nchains": 1}, {"name": "Mountain Protocol", "value": 1404880.0010728512, "n": 1, "classes": ["U.S. Treasuries"], "nchains": 6}, {"name": "Propbase", "value": 1387374.4323594298, "n": 1, "classes": ["Real estate"], "nchains": 1}, {"name": "CHATEAU", "value": 1024251.6907527759, "n": 1, "classes": ["Real estate"], "nchains": 1}, {"name": "RealtyX", "value": 1017469.2152706073, "n": 1, "classes": ["Real estate"], "nchains": 2}, {"name": "Isle Finance", "value": 947690.0479144584, "n": 1, "classes": ["Other RWA"], "nchains": 1}, {"name": "Travessia Credit", "value": 896888.2148669126, "n": 1, "classes": ["Other RWA"], "nchains": 2}, {"name": "CANA Holdings California Carbon Credits", "value": 893976.7415455879, "n": 1, "classes": ["Other (carbon/insurance/art)"], "nchains": 1}, {"name": "Solayer USD", "value": 668541.5241442876, "n": 1, "classes": ["Cash / yield stablecoin"], "nchains": 1}, {"name": "Landshare", "value": 621293.24, "n": 1, "classes": ["Real estate"], "nchains": 1}, {"name": "8lends", "value": 610564.4620016944, "n": 1, "classes": ["Other RWA"], "nchains": 1}, {"name": "GOLDSTATION RWA", "value": 582082.3517031276, "n": 1, "classes": ["Commodities"], "nchains": 2}, {"name": "Toucan Protocol", "value": 547724.9623925698, "n": 1, "classes": ["Other (carbon/insurance/art)"], "nchains": 4}, {"name": "CACHE.Gold", "value": 535311.0168598702, "n": 1, "classes": ["Commodities"], "nchains": 1}, {"name": "HARVEST FLOW", "value": 519835.16227296315, "n": 1, "classes": ["Other RWA"], "nchains": 2}, {"name": "Arca Labs ArCoin", "value": 455232.3851132551, "n": 1, "classes": ["U.S. Treasuries"], "nchains": 1}, {"name": "Boson Protocol", "value": 229743.2351734382, "n": 1, "classes": ["Other (carbon/insurance/art)"], "nchains": 5}, {"name": "Usual EUR0", "value": 229333.7857533641, "n": 1, "classes": ["Cash / yield stablecoin"], "nchains": 1}, {"name": "Frigg.eco", "value": 182532.150863, "n": 1, "classes": ["Other (carbon/insurance/art)"], "nchains": 1}, {"name": "Bondlink Finance", "value": 151991.52420435377, "n": 1, "classes": ["Private credit"], "nchains": 1}, {"name": "Untangled RWA", "value": 151497.79549281162, "n": 1, "classes": ["Private credit"], "nchains": 1}, {"name": "Solv Vesting", "value": 146903.17684700398, "n": 1, "classes": ["Other RWA"], "nchains": 4}, {"name": "Fortunafi", "value": 144321.67760986675, "n": 1, "classes": ["U.S. Treasuries"], "nchains": 4}, {"name": "Credible Finance", "value": 134092.71775311616, "n": 1, "classes": ["Other RWA"], "nchains": 2}, {"name": "Verified Network", "value": 126689.9265610821, "n": 1, "classes": ["Other RWA"], "nchains": 2}, {"name": "wstGBP", "value": 110926.7118053366, "n": 1, "classes": ["Cash / yield stablecoin"], "nchains": 1}, {"name": "LiveArt", "value": 96081.84831376528, "n": 1, "classes": ["Other (carbon/insurance/art)"], "nchains": 2}, {"name": "TProtocol V1", "value": 72819.0684215956, "n": 1, "classes": ["Private credit"], "nchains": 1}, {"name": "NewrlRWA", "value": 57769.65225, "n": 1, "classes": ["Other (carbon/insurance/art)"], "nchains": 1}, {"name": "TProtocol V2", "value": 32815.67612672151, "n": 1, "classes": ["Private credit"], "nchains": 1}, {"name": "ASA.Gold", "value": 29142.758548874088, "n": 1, "classes": ["Commodities"], "nchains": 1}, {"name": "Unblock Equity", "value": 23549.29633860932, "n": 1, "classes": ["Tokenized stocks / equity"], "nchains": 1}, {"name": "NAOS Finance", "value": 18780.39331381669, "n": 1, "classes": ["Private credit"], "nchains": 2}, {"name": "TruCore", "value": 11124.86846252623, "n": 1, "classes": ["U.S. Treasuries"], "nchains": 1}, {"name": "Sweep", "value": 8205.078061799866, "n": 1, "classes": ["Other RWA"], "nchains": 7}, {"name": "GemSwap by Golden Swan Solutions", "value": 7139.556878472361, "n": 1, "classes": ["Commodities"], "nchains": 1}, {"name": "Tokeshare", "value": 5457.352444319009, "n": 1, "classes": ["Other RWA"], "nchains": 3}, {"name": "Tokeniza", "value": 3973.4778501157416, "n": 1, "classes": ["Real estate"], "nchains": 3}, {"name": "Zivoe", "value": 3044.0305822560567, "n": 1, "classes": ["Private credit"], "nchains": 1}, {"name": "Tangible USTB", "value": 2902.9375675614137, "n": 1, "classes": ["U.S. Treasuries"], "nchains": 1}, {"name": "Catch Exchange", "value": 2501.064794546531, "n": 1, "classes": ["Other RWA"], "nchains": 1}, {"name": "SPICE Protocol", "value": 1099.7148141938999, "n": 1, "classes": ["Other RWA"], "nchains": 1}, {"name": "Solon Stocks", "value": 923.5373175958129, "n": 1, "classes": ["Tokenized stocks / equity"], "nchains": 1}, {"name": "WorldEs", "value": 567.296697796826, "n": 1, "classes": ["Real estate"], "nchains": 1}, {"name": "Subunit", "value": 434.68031251719395, "n": 1, "classes": ["Real estate"], "nchains": 1}, {"name": "EthicHub", "value": 249.02580562516, "n": 1, "classes": ["Other RWA"], "nchains": 3}, {"name": "BasaFish", "value": 99.96619997998974, "n": 1, "classes": ["Other RWA"], "nchains": 1}, {"name": "Qiro Finance", "value": 81.14107274681696, "n": 1, "classes": ["Cash / yield stablecoin"], "nchains": 1}, {"name": "SukukFi", "value": 54.19266146604748, "n": 1, "classes": ["Other RWA"], "nchains": 1}, {"name": "ELYFI", "value": 39.20532197006545, "n": 1, "classes": ["Private credit"], "nchains": 3}, {"name": "Fractit Fleet", "value": 8.752873782366748, "n": 1, "classes": ["Other RWA"], "nchains": 2}, {"name": "OpenStock", "value": 4.840577561362418, "n": 1, "classes": ["Tokenized stocks / equity"], "nchains": 1}, {"name": "Credix", "value": 0.9999620697586706, "n": 1, "classes": ["Other RWA"], "nchains": 1}], "history": {"labels": ["07/24", "08/24", "09/24", "10/24", "11/24", "12/24", "01/25", "02/25", "03/25", "04/25", "05/25", "06/25", "07/25", "08/25", "09/25", "10/25", "11/25", "12/25", "01/26", "02/26", "03/26", "04/26", "05/26", "06/26", "07/26", "08/26", "09/26", "10/26"], "series": [{"cls": "Other RWA", "values": [10444443.0, 11917557.0, 12026215.0, 12126054.0, 50135449.0, 76542764.0, 100618353.0, 89789700.0, 81088378.0, 98876050.0, 119329789.0, 143933024.0, 204925815.0, 251888178.0, 630841042.0, 717680684.0, 792196538.0, 818434451.0, 766398009.0, 570996335.0, 460885429.0, 469644660.0, 688724875.0, 626133538.0, 819921014.0, 903802393.0, 1159533117.0, 1269968788.0]}, {"cls": "Other (carbon/insurance/art)", "values": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 18375192.0, 24224206.0, 29134177.0, 34735714.0, 41145854.0, 176291685.0, 211017098.0, 242741585.0, 323411046.0, 395801538.0, 471162542.0, 456529505.0, 504928697.0, 613753766.0, 685150578.0, 734469459.0]}, {"cls": "Cash / yield stablecoin", "values": [380300985.0, 456134518.0, 517404989.0, 600782450.0, 541851495.0, 1910824921.0, 1357594542.0, 1207098212.0, 2137112293.0, 1943216777.0, 1877771937.0, 1852105715.0, 1820327832.0, 1840832603.0, 2232834602.0, 2200324175.0, 1637580316.0, 1117291130.0, 1121588328.0, 1063546200.0, 1169333575.0, 882215165.0, 1353390846.0, 1005969890.0, 622608031.0, 749659758.0, 746132549.0, 719320362.0]}, {"cls": "U.S. Treasuries", "values": [2071639392.0, 2069634116.0, 1314369341.0, 1837029560.0, 792073146.0, 334117946.0, 1335701891.0, 1889957888.0, 942920639.0, 142394658.0, 138605120.0, 132132396.0, 133732340.0, 192358550.0, 257064867.0, 285732149.0, 351536021.0, 254633294.0, 263431327.0, 266387122.0, 265003257.0, 241914888.0, 407445651.0, 412057761.0, 432476179.0, 420548566.0, 507638362.0, 479023490.0]}, {"cls": "Private credit", "values": [150076.0, 15731911.0, 16551676.0, 17910865.0, 19176898.0, 60382684.0, 142739330.0, 145249319.0, 165076483.0, 364979256.0, 564829576.0, 567303842.0, 574698349.0, 537957864.0, 499229343.0, 426065736.0, 417698915.0, 401794818.0, 681780843.0, 699565648.0, 1223178361.0, 1444525269.0, 952195434.0, 956666568.0, 934775073.0, 929663180.0, 393660996.0, 396205235.0]}, {"cls": "Real estate", "values": [188312395.0, 194289241.0, 200231808.0, 207697312.0, 217851913.0, 223473065.0, 225657789.0, 228153453.0, 235941894.0, 264245007.0, 269567733.0, 281089829.0, 291224506.0, 302285145.0, 303369627.0, 304179674.0, 306306371.0, 309637256.0, 312205720.0, 310654176.0, 311547256.0, 312376141.0, 312497537.0, 311928310.0, 312646355.0, 312013896.0, 311688807.0, 311919504.0]}, {"cls": "Commodities", "values": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 22258061.0, 22572601.0, 22586102.0, 23904924.0, 23918438.0, 0.0, 23885249.0, 23784800.0, 23804098.0, 23547328.0, 23526403.0]}]}, "stbl_tvl": 305963223062.4168, "stbl_n": 423};
+const D=window.DATA;
+const fmt=n=>{n=n||0;const a=Math.abs(n);return a>=1e9?'$'+(n/1e9).toFixed(2)+'B':a>=1e6?'$'+(n/1e6).toFixed(1)+'M':a>=1e3?'$'+(n/1e3).toFixed(0)+'K':'$'+n.toFixed(0);};
+const pct=v=>v==null?'—':(v>=0?'+':'')+v.toFixed(1)+'%';
+const CLR={'U.S. Treasuries':'#3b82f6','Private credit':'#22b8a6','Commodities':'#d0a84a','Tokenized stocks / equity':'#a855f7','Cash / yield stablecoin':'#38bdf8','Real estate':'#ef5a56','Other (carbon/insurance/art)':'#64748b','Other RWA':'#94a3b8'};
+const clr=c=>CLR[c]||'#8b929b';
+
+/* welcome + footer */
+document.getElementById('welcome').innerHTML=`<b>Bienvenue sur Ledgerscope.</b> La couche de données et d'analytique indépendante sur le crédit privé tokenisé — indexation on-chain, notation du risque et écart de valorisation que les agrégateurs n'offrent pas. Source : ${D.source}. Snapshot ${D.generated}.`;
+document.getElementById('sidefoot').innerHTML=`✦ = analytique propriétaire<br>Données ${D.generated}<br>APAC · Singapore-first`;
+document.getElementById('footdisc').innerHTML=`Ledgerscope Terminal · données réelles via DefiLlama public API (${D.generated}). TVL on-chain vérifiable ; classification &amp; modèles propriétaires. <b>Limites méthodologiques :</b> le graphique historique ne couvre que les protocoles vivants aujourd'hui (biais de survivance) ; le NAV gap absolu est calibré prudemment — la <i>valorisation relative aux pairs</i> (fiche détail) le neutralise. Ni conseil d'investissement, ni notation officielle. Méthodo complète : <span class="mono">METHODOLOGY.md</span>. Rafraîchir : <span class="mono">python3 build.py</span>.`;
+
+/* ticker : top actifs */
+document.getElementById('ticker').innerHTML=D.assets.slice(0,10).map(a=>`<div class="tk"><span class="s">${a.symbol!=='-'?a.symbol:a.name.split(' ')[0]}</span><span class="v">${fmt(a.tvl)}</span><span class="c ${(a.chg7d||0)>=0?'up':'down'}">${pct(a.chg7d)}</span></div>`).join('');
+
+/* overview cards (5, façon rwa.xyz) */
+document.getElementById('ov-cards').innerHTML=[
+  ['Total RWA Value',fmt(D.total_tvl)],
+  ['Total Tokenized Value',fmt(D.total_tvl+(D.stbl_tvl||0))],
+  ['Total Stablecoin Value',fmt(D.stbl_tvl||0)],
+  ['Tracked RWA Assets',D.n_assets.toLocaleString()],
+  ['Private Credit TVL',fmt(D.pc_total)],
+].map(c=>`<div class="card"><div class="k">${c[0]}</div><div class="v">${c[1]}</div></div>`).join('');
+
+/* class bars */
+const maxC=Math.max(...D.byclass.map(c=>c[1]));
+document.getElementById('classbars').innerHTML=D.byclass.map(c=>`<div class="barrow"><div class="lbl">${c[0]}</div><div class="bartrack"><div class="barfill" style="width:${Math.max(2,c[1]/maxC*100)}%;background:${clr(c[0])}"></div></div><div class="amt">${fmt(c[1])}</div></div>`).join('');
+/* flow bars */
+const maxF=Math.max(...D.flows.map(f=>Math.abs(f[1])))||1;
+document.getElementById('flowbars').innerHTML=D.flows.map(f=>`<div class="barrow"><div class="lbl">${f[0]}</div><div class="bartrack"><div class="barfill" style="width:${Math.abs(f[1])/maxF*100}%;background:${f[1]>=0?'var(--up)':'var(--down)'}"></div></div><div class="amt ${f[1]>=0?'up':'down'}">${f[1]>=0?'+':''}${fmt(f[1])}</div></div>`).join('');
+
+/* ===== STACKED AREA CHART (vrai historique + survol interactif) ===== */
+const HIST=D.history||{labels:[],series:[]};
+const cv=document.getElementById('chart'),ctx=cv.getContext('2d'),tip=document.getElementById('chartTip');
+let GEO=null,MODE='all';const HIDDEN=new Set();
+function drawChart(mode,hoverIdx){
+  MODE=mode;
+  const W=cv.width,H=cv.height,padL=54,padR=14,padT=14,padB=28;
+  const css=getComputedStyle(document.documentElement);
+  const line=css.getPropertyValue('--line').trim(),faint=css.getPropertyValue('--ink-faint').trim(),accent=css.getPropertyValue('--accent').trim();
+  const labels=HIST.labels,N=labels.length||1;
+  const fullSeries=mode==='credit'?HIST.series.filter(s=>s.cls==='Private credit'):HIST.series;
+  let series=fullSeries.filter(s=>!HIDDEN.has(s.cls));
+  let maxY=0;
+  for(let i=0;i<N;i++){let s=0;series.forEach(sr=>s+=sr.values[i]||0);if(s>maxY)maxY=s;}
+  maxY=maxY*1.08||1;
+  const X=i=>padL+i*(W-padL-padR)/(N-1);
+  const Y=v=>padT+(1-v/maxY)*(H-padT-padB);
+  ctx.clearRect(0,0,W,H);
+  ctx.strokeStyle=line;ctx.fillStyle=faint;ctx.font='11px -apple-system,sans-serif';ctx.lineWidth=1;
+  for(let g=0;g<=5;g++){const y=padT+g*(H-padT-padB)/5;ctx.beginPath();ctx.moveTo(padL,y);ctx.lineTo(W-padR,y);ctx.stroke();
+    ctx.fillText('$'+(maxY*(1-g/5)/1e9).toFixed(0)+'B',8,y+4);}
+  const ord=series.slice().reverse();
+  let baseArr=new Array(N).fill(0);
+  const tops={}; // cls -> topArr (pour points au survol)
+  ord.forEach(sr=>{
+    const col=clr(sr.cls);
+    const topArr=baseArr.map((b,i)=>b+(sr.values[i]||0));
+    tops[sr.cls]=topArr;
+    ctx.beginPath();ctx.moveTo(X(0),Y(baseArr[0]));
+    for(let i=0;i<N;i++)ctx.lineTo(X(i),Y(topArr[i]));
+    for(let i=N-1;i>=0;i--)ctx.lineTo(X(i),Y(baseArr[i]));
+    ctx.closePath();ctx.fillStyle=col+'d9';ctx.fill();
+    ctx.beginPath();for(let i=0;i<N;i++){const p=Y(topArr[i]);i?ctx.lineTo(X(i),p):ctx.moveTo(X(i),p);}
+    ctx.strokeStyle=col;ctx.lineWidth=1.2;ctx.stroke();
+    baseArr=topArr;
+  });
+  ctx.fillStyle=faint;const step=Math.max(1,Math.floor(N/8));
+  for(let i=0;i<N;i+=step){ctx.fillText(labels[i],X(i)-12,H-8);}
+  // crosshair + points au survol
+  if(hoverIdx!=null&&hoverIdx>=0&&hoverIdx<N){
+    const hx=X(hoverIdx);
+    ctx.strokeStyle=accent;ctx.lineWidth=1;ctx.setLineDash([4,4]);
+    ctx.beginPath();ctx.moveTo(hx,padT);ctx.lineTo(hx,H-padB);ctx.stroke();ctx.setLineDash([]);
+    series.forEach(sr=>{const yv=Y(tops[sr.cls][hoverIdx]);
+      ctx.beginPath();ctx.arc(hx,yv,3.5,0,7);ctx.fillStyle=clr(sr.cls);ctx.fill();
+      ctx.lineWidth=1.5;ctx.strokeStyle=css.getPropertyValue('--panel').trim();ctx.stroke();});
+  }
+  GEO={W,H,padL,padR,padT,padB,N,series,labels};
+  document.getElementById('legend').innerHTML=fullSeries.map(sr=>`<div class="li" data-cls="${sr.cls}" title="Masquer/afficher" style="cursor:pointer;opacity:${HIDDEN.has(sr.cls)?.35:1}"><span class="dot" style="background:${clr(sr.cls)}"></span>${sr.cls} · ${fmt(sr.values[N-1]||0)}</div>`).join('');
+}
+document.getElementById('legend').addEventListener('click',e=>{const li=e.target.closest('.li[data-cls]');if(!li)return;const c=li.dataset.cls;HIDDEN.has(c)?HIDDEN.delete(c):HIDDEN.add(c);drawChart(MODE,null);});
+function showTip(idx,clientX){
+  const {series,labels,N}=GEO;
+  const rows=series.map(sr=>[sr.cls,sr.values[idx]||0]).sort((a,b)=>b[1]-a[1]);
+  const total=rows.reduce((s,r)=>s+r[1],0);
+  tip.innerHTML=`<div class="th"><span class="d">${labels[idx]}</span><span class="t">${fmt(total)}</span></div>`+
+    rows.map(r=>`<div class="r"><span class="lft"><span class="cd" style="background:${clr(r[0])}"></span>${r[0]}</span><span class="val">${fmt(r[1])}</span></div>`).join('');
+  tip.style.display='block';
+  const box=cv.parentElement.getBoundingClientRect();
+  const rel=clientX-box.left;
+  const tw=tip.offsetWidth;
+  let left=rel+18; if(left+tw>box.width-8)left=rel-tw-18; if(left<8)left=8;
+  tip.style.left=left+'px'; tip.style.top='58px';
+}
+function hoverAt(e){
+  if(!GEO)return;
+  const rect=cv.getBoundingClientRect();
+  const x=(e.clientX-rect.left)*(cv.width/rect.width);
+  const {padL,padR,W,N}=GEO;
+  let i=Math.round((x-padL)/((W-padL-padR)/(N-1)));
+  i=Math.max(0,Math.min(N-1,i));
+  drawChart(MODE,i);showTip(i,e.clientX);
+}
+cv.addEventListener('mousemove',hoverAt);
+cv.addEventListener('mouseleave',()=>{tip.style.display='none';drawChart(MODE,null);});
+drawChart('all');
+
+/* ===== PERFORMANCE PAR CLASSE (croissance TVL, vrai historique) ===== */
+const PL=HIST.labels,PN=PL.length;
+const yr=PL.length?PL[PN-1].split('/')[1]:'';
+let ytdIdx=PL.findIndex(l=>l.split('/')[1]===yr); if(ytdIdx<0)ytdIdx=0;
+const gr=(v,base)=>base>0?(v/base-1)*100:null;
+const perf=HIST.series.map(s=>{const v=s.values,last=v[PN-1];return {
+  cls:s.cls, tvl:last,
+  m1:PN>=2?gr(last,v[PN-2]):null, m3:PN>=4?gr(last,v[PN-4]):null,
+  ytd:gr(last,v[ytdIdx]), y1:PN>=13?gr(last,v[PN-13]):null };});
+const pcell=x=>x==null?'<span class="sub">—</span>':`<span class="${x>=0?'up':'down'}">${x>=0?'+':''}${x.toFixed(1)}%</span>`;
+let pk='tvl',pd=-1;
+function perfRender(){
+  const r=perf.slice().sort((a,b)=>{const A=a[pk],B=b[pk];if(typeof A==='string')return (A||'').localeCompare(B||'')*pd;return ((A??-1e9)-(B??-1e9))*pd;});
+  document.getElementById('perfbody').innerHTML=r.map(p=>`<tr><td class="asset"><span class="csw" style="display:inline-block;width:9px;height:9px;border-radius:2px;background:${clr(p.cls)};margin-right:7px"></span>${p.cls}</td><td class="num">${fmt(p.tvl)}</td><td class="num">${pcell(p.m1)}</td><td class="num">${pcell(p.m3)}</td><td class="num">${pcell(p.ytd)}</td><td class="num">${pcell(p.y1)}</td></tr>`).join('');
+}
+document.querySelectorAll('#perftable th').forEach(th=>th.addEventListener('click',()=>{const k=th.dataset.s;if(pk===k)pd*=-1;else{pk=k;pd=k==='cls'?1:-1;}perfRender();}));
+perfRender();
+/* comparison chart : indexé base-100 il y a 12 mois (classes existantes) */
+(function(){
+  const cvp=document.getElementById('perfChart'),c=cvp.getContext('2d');const W=cvp.width,H=cvp.height,pL=48,pR=14,pT=12,pB=26;
+  const base=Math.max(0,PN-13);const series=HIST.series.filter(s=>s.values[base]>0);
+  const css=getComputedStyle(document.documentElement),line=css.getPropertyValue('--line').trim(),faint=css.getPropertyValue('--ink-faint').trim();
+  const idx=s=>s.values.slice(base).map(v=>v/s.values[base]*100);
+  let maxY=100;series.forEach(s=>idx(s).forEach(v=>{if(v>maxY)maxY=v;}));maxY=Math.min(maxY*1.05,600);
+  const M=PN-base;const X=i=>pL+i*(W-pL-pR)/(M-1);const Y=v=>pT+(1-(v-80)/(maxY-80))*(H-pT-pB);
+  c.clearRect(0,0,W,H);c.strokeStyle=line;c.fillStyle=faint;c.font='11px -apple-system,sans-serif';c.lineWidth=1;
+  for(let g=0;g<=4;g++){const y=pT+g*(H-pT-pB)/4;c.beginPath();c.moveTo(pL,y);c.lineTo(W-pR,y);c.stroke();c.fillText(Math.round(maxY-(maxY-80)*g/4)+'',10,y+4);}
+  series.forEach(s=>{const d=idx(s);c.beginPath();d.forEach((v,i)=>{const p=Y(v);i?c.lineTo(X(i),p):c.moveTo(X(i),p);});c.strokeStyle=clr(s.cls);c.lineWidth=2;c.stroke();});
+  c.fillStyle=faint;const st=Math.max(1,Math.floor(M/6));for(let i=0;i<M;i+=st)c.fillText(PL[base+i],X(i)-12,H-8);
+  document.getElementById('perfLegend').innerHTML=series.map(s=>{const d=idx(s);const g=d[d.length-1]-100;return `<div class="li"><span class="dot" style="background:${clr(s.cls)}"></span>${s.cls} · ${g>=0?'+':''}${g.toFixed(0)}%</div>`;}).join('');
+})();
+document.querySelectorAll('#clsSeg button').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('#clsSeg button').forEach(x=>x.classList.remove('on'));b.classList.add('on');drawChart(b.dataset.k);}));
+
+/* screener */
+const netColors={Ethereum:'#627eea',Solana:'#14f195',Stellar:'#3b82c4',Polygon:'#8247e5',Base:'#0052ff',Avalanche:'#e84142',Aptos:'#4b9e91',Sei:'#c0362c',Arbitrum:'#28a0f0'};
+const fClass=document.getElementById('fClass'),fNet=document.getElementById('fNet');
+[...new Set(D.assets.map(a=>a.cls))].sort().forEach(c=>fClass.add(new Option(c,c)));
+[...new Set(D.assets.flatMap(a=>a.chains))].sort().forEach(n=>fNet.add(new Option(n,n)));
+let sk='tvl',sd=-1;
+function scr(){
+  const q=document.getElementById('q').value.toLowerCase(),fc=fClass.value,fn=fNet.value;
+  let r=D.assets.filter(a=>(!q||(a.name+a.symbol).toLowerCase().includes(q))&&(!fc||a.cls===fc)&&(!fn||a.chains.includes(fn)));
+  r.sort((a,b)=>{let x,y;if(sk==='net'){x=a.chains.join();y=b.chains.join();}else{x=a[sk];y=b[sk];}
+    if(typeof x==='string')return (x||'').localeCompare(y||'')*sd;return ((x??-1e18)-(y??-1e18))*sd;});
+  document.getElementById('sbody').innerHTML=r.map(a=>`<tr data-slug="${a.slug}"><td class="asset">${a.name} <span class="sub">${a.symbol}</span></td><td><span class="chip ${a.cls==='Private credit'?'credit':''}">${a.cls}</span></td><td class="sub">${a.chains.slice(0,3).join(', ')}</td><td class="num">${fmt(a.tvl)}</td><td class="num ${a.chg7d>=0?'up':'down'}">${pct(a.chg7d)}</td><td class="num ${a.chg1d>=0?'up':'down'}">${pct(a.chg1d)}</td></tr>`).join('');
+  document.getElementById('scount').textContent=r.length+' assets';
+}
+['q','fClass','fNet'].forEach(id=>document.getElementById(id).addEventListener('input',scr));
+document.querySelectorAll('#stable th').forEach(th=>th.addEventListener('click',()=>{const k=th.dataset.s;if(sk===k)sd*=-1;else{sk=k;sd=(k==='name'||k==='cls'||k==='net')?1:-1;}scr();}));
+scr();
+
+/* monitor */
+const dt=t=>t?new Date(t*1000).toISOString().slice(0,10):'—';
+document.getElementById('mbody').innerHTML=D.recent.map(a=>`<tr data-slug="${a.slug}"><td class="asset">${a.name} <span class="sub">${a.symbol}</span></td><td><span class="chip ${a.cls==='Private credit'?'credit':''}">${a.cls}</span></td><td class="sub">${a.chains.slice(0,3).join(', ')}</td><td class="num">${fmt(a.tvl)}</td><td class="sub">${dt(a.listedAt)}</td></tr>`).join('');
+
+const pc=D.assets.filter(a=>a.cls==='Private credit');
+const scoreCell=s=>`<span class="score g-${s.band}"><span class="lsdot bg-${s.band}"></span>${s.ls}</span>${s.stress?'<span class="stressflag">STRESS</span>':''}`;
+
+/* risk & value signals — TOUTES CLASSES */
+const sigAssets=D.assets.filter(a=>a.tvl>=2e6);
+document.getElementById('rfval').textContent=(D.rf!=null?D.rf.toFixed(2):'—')+'%';
+const allRich=sigAssets.filter(a=>a.gapu&&a.gapu.verdict==='rich').length;
+const allCheap=sigAssets.filter(a=>a.gapu&&a.gapu.verdict==='cheap').length;
+const allStress=sigAssets.filter(a=>a.sig.stress).length;
+document.getElementById('an-sub').textContent=`LS Score + NAV gap sur ${sigAssets.length} actifs (toutes classes) · ${sigAssets.filter(a=>a.gapu).length} avec valorisation · taux sans risque ${D.rf}% · ${D.generated}`;
+document.getElementById('an-cards').innerHTML=[['On-chain risk-free',D.rf+'%'],['🔴 RICH',allRich],['🟢 CHEAP',allCheap],['⚠ Stress',allStress]].map(c=>`<div class="card"><div class="k">${c[0]}</div><div class="v">${c[1]}</div></div>`).join('');
+const anClass=document.getElementById('anClass');
+[...new Set(sigAssets.map(a=>a.cls))].sort().forEach(c=>anClass.add(new Option(c,c)));
+const gapCell=yg=>{if(!yg)return '<span class="sub">no yield</span>';const cl=yg.gap_bps<=-75?'g-red':yg.gap_bps>=150?'g-green':'';return `<span class="${cl}" style="font-weight:700">${yg.gap_bps>=0?'+':''}${yg.gap_bps} bps</span>`;};
+const verdCell=yg=>{if(!yg)return '<span class="sub">—</span>';const m={rich:['RICH','g-red'],cheap:['CHEAP','g-green'],fair:['Fair','']};const[t,c]=m[yg.verdict];return `<span class="${c}" style="font-weight:700">${t}</span>`;};
+let ank='gap',and_=1;
+function anRender(){
+  const q=document.getElementById('anq').value.toLowerCase(),fc=anClass.value,fb=document.getElementById('anBand').value,fv=document.getElementById('anVerd').value;
+  let r=sigAssets.filter(a=>(!q||(a.name+a.symbol).toLowerCase().includes(q))&&(!fc||a.cls===fc)&&(!fb||a.sig.band===fb)&&(!fv||(fv==='_y'?a.gapu:(a.gapu&&a.gapu.verdict===fv))));
+  const gv=a=>a.gapu?a.gapu.gap_bps:9e9;
+  r.sort((x,y)=>{let A,B;if(ank==='gap'){A=gv(x);B=gv(y);}else if(ank==='apy'){A=x.gapu?x.gapu.apy:-1;B=y.gapu?y.gapu.apy:-1;}else if(ank==='fair'){A=x.gapu?x.gapu.fair:-1;B=y.gapu?y.gapu.fair:-1;}else if(ank==='ls'){A=x.sig.ls;B=y.sig.ls;}else if(ank==='name'){A=x.name;B=y.name;}else if(ank==='cls'){A=x.cls;B=y.cls;}else{A=x.tvl;B=y.tvl;}
+    if(typeof A==='string')return A.localeCompare(B)*and_;return (A-B)*and_;});
+  document.getElementById('anbody').innerHTML=r.map(a=>`<tr data-slug="${a.slug}"><td class="asset">${a.name} <span class="sub">${a.symbol}</span></td><td><span class="chip ${a.cls==='Private credit'?'credit':''}">${a.cls}</span></td><td class="num">${fmt(a.tvl)}</td><td class="num">${scoreCell(a.sig)}</td><td class="num">${a.gapu?a.gapu.apy.toFixed(2)+'%':'<span class=sub>—</span>'}</td><td class="num">${a.gapu?a.gapu.fair.toFixed(2)+'%'+(a.gapu.src==='fond.'?'':' <span class="sub" style="font-size:9px">sig</span>'):'<span class=sub>—</span>'}</td><td class="num">${gapCell(a.gapu)}</td><td>${verdCell(a.gapu)}</td></tr>`).join('');
+  document.getElementById('ancount').textContent=r.length+' actifs';
+}
+['anq','anClass','anBand','anVerd'].forEach(id=>document.getElementById(id).addEventListener('input',anRender));
+document.querySelectorAll('#antable th').forEach(th=>th.addEventListener('click',()=>{const k=th.dataset.s;if(!k)return;if(ank===k)and_*=-1;else{ank=k;and_=(k==='name'||k==='cls')?1:-1;}anRender();}));
+anRender();
+
+/* valuation */
+const fvAssets=D.assets.filter(a=>a.fv);
+document.getElementById('fv-sub').textContent=`Rendement requis fondamental sur ${fvAssets.length} actifs curés (toutes classes) · ${fvAssets.filter(a=>a.fv.gap_bps!=null).length} avec rendement · ${D.generated}`;
+document.getElementById('fv-count').textContent=fvAssets.length;
+const confDot={high:'🟢',med:'🟡',low:'🔴'};
+const ratingChip=r=>{const g=r&&['AAA','AA','A'].includes(r)?'g-green':r==='NR'?'':'g-amber';return `<span class="chip ${g}" style="font-weight:700">${r||'NR'}</span>`;};
+const fvGap=fv=>{if(fv.gap_bps==null)return '<span class="sub">no yield</span>';const cl=fv.gap_bps<=-75?'g-red':fv.gap_bps>=150?'g-green':'';return `<span class="${cl}" style="font-weight:700">${fv.gap_bps>=0?'+':''}${fv.gap_bps} bps</span>`;};
+const fvVerd=fv=>{if(!fv.verdict)return '<span class="sub">—</span>';const m={rich:['RICH','g-red'],cheap:['CHEAP','g-green'],fair:['Fair','']};const[t,c]=m[fv.verdict];return `<span class="${c}" style="font-weight:700">${t}</span>`;};
+document.getElementById('fvbody').innerHTML=fvAssets.slice().sort((a,b)=>(a.fv.gap_bps==null?9e9:a.fv.gap_bps)-(b.fv.gap_bps==null?9e9:b.fv.gap_bps)).map(a=>{const f=a.fv;return `<tr data-slug="${a.slug}"><td class="asset">${a.name} <span class="sub">${a.symbol}</span><br><span class="sub" style="font-weight:400">${f.jurisdiction||''}</span></td><td style="font-size:12px;color:var(--ink-soft);white-space:normal;max-width:250px">${ratingChip(f.rating)} ${(f.seniority||'').replace('_',' ')} · ${f.liquidity} · T${f.manager_tier}<br>${f.note||''}</td><td class="num">${f.offered!=null?f.offered.toFixed(1)+'%':'<span class=sub>—</span>'}</td><td class="num">${f.req.toFixed(1)}%</td><td class="num">${fvGap(f)}</td><td>${fvVerd(f)}</td><td>${confDot[f.conf]||'🔴'}</td></tr>`;}).join('');
+
+/* apac */
+const apac=D.assets.filter(a=>a.apac);
+const apShare=D.total_tvl?(D.apac_tvl/D.total_tvl*100):0;
+document.getElementById('ap-sub').textContent=`${D.apac_n} protocoles rattachés à l'APAC · ${fmt(D.apac_tvl)} on-chain · vue de relocalisation Singapour.`;
+document.getElementById('ap-inline').textContent=`${D.apac_n} émetteurs, ${fmt(D.apac_tvl)}, ${apShare.toFixed(1)}% du total`;
+document.getElementById('ap-cards').innerHTML=[['Émetteurs APAC',D.apac_n],['TVL APAC',fmt(D.apac_tvl)],['Part du RWA',apShare.toFixed(1)+'%'],['Cadre','MAS·Guardian']].map(c=>`<div class="card"><div class="k">${c[0]}</div><div class="v" style="font-size:${(''+c[1]).length>9?'19px':'25px'}">${c[1]}</div></div>`).join('');
+document.getElementById('apbody').innerHTML=apac.sort((a,b)=>b.tvl-a.tvl).map(a=>`<tr data-slug="${a.slug}"><td class="asset">${a.name} <span class="sub">${a.symbol}</span></td><td><span class="chip ${a.cls==='Private credit'?'credit':''}">${a.cls}</span></td><td class="sub" style="color:var(--accent)">${a.apac}</td><td class="num">${fmt(a.tvl)}</td><td class="num">${scoreCell(a.sig)}</td><td class="sub">${a.chains.slice(0,3).join(', ')}</td></tr>`).join('');
+
+/* alerts */
+const AL=D.alerts||[];
+document.getElementById('navalertn').textContent=AL.length||'';
+if(!AL.length)document.getElementById('navalertn').style.display='none';
+document.getElementById('al-sub').textContent=`${AL.length} signaux actionnables (toutes classes, TVL ≥ $20M) · triés par sévérité · clique pour la fiche · ${D.generated}`;
+document.getElementById('al-cards').innerHTML=[['Signaux',AL.length],['🔴 Haute',AL.filter(a=>a.level==='high').length],['🟡 Moyenne',AL.filter(a=>a.level==='med').length],['Classes touchées',new Set(AL.map(a=>a.cls)).size]].map(c=>`<div class="card"><div class="k">${c[0]}</div><div class="v">${c[1]}</div></div>`).join('');
+document.getElementById('al-list').innerHTML=AL.length?AL.map(a=>`<div class="alert ${a.level}" data-slug="${a.slug}" style="cursor:pointer"><div class="top"><span class="nm">${a.name} <span class="sym">${a.symbol}</span></span><span class="chip ${a.cls==='Private credit'?'credit':''}" style="font-size:10px">${a.cls}</span><span class="lvl">${a.level==='high'?'Haute':a.level==='med'?'Moyenne':'Info'}</span><span class="meta">LS ${a.ls} · ${fmt(a.tvl)} · sev ${a.sev}</span></div><ul>${a.reasons.map(r=>`<li>${r}</li>`).join('')}</ul></div>`).join(''):'<div class="disc">Aucun signal actif.</div>';
+document.getElementById('al-list').addEventListener('click',e=>{const el=e.target.closest('.alert[data-slug]');if(el)openDetail(el.dataset.slug);});
+
+/* ===== PRIVATE CREDIT VIEW ===== */
+document.getElementById('cr-sub').textContent=`${pc.length} fonds de crédit privé tokenisés · ${fmt(D.pc_total)} on-chain · ${D.generated}`;
+document.getElementById('cr-cards').innerHTML=[['Private Credit TVL',fmt(D.pc_total)],['Fonds',pc.length],['🔴 RICH',D.pc_rich.length],['⚠ Stress',D.pc_stress.length]].map(c=>`<div class="card"><div class="k">${c[0]}</div><div class="v">${c[1]}</div></div>`).join('');
+document.getElementById('crbody').innerHTML=pc.slice().sort((a,b)=>b.tvl-a.tvl).map(a=>`<tr data-slug="${a.slug}"><td class="asset">${a.name} <span class="sub">${a.symbol}</span></td><td class="sub">${a.chains.slice(0,3).join(', ')}</td><td class="num">${fmt(a.tvl)}</td><td class="num ${a.chg7d>=0?'up':'down'}">${pct(a.chg7d)}</td><td class="num">${scoreCell(a.sig)}</td><td class="num">${a.yg?gapCell(a.yg):'<span class=sub>—</span>'}</td></tr>`).join('');
+
+/* ===== NETWORKS VIEW ===== */
+const NW=D.networks||[];const nwTot=NW.reduce((s,n)=>s+n.value,0)||1;
+document.getElementById('nw-sub').textContent=`${NW.length} réseaux · ${fmt(nwTot)} de RWA on-chain répartis · ${D.generated}`;
+document.getElementById('nw-cards').innerHTML=[['Networks',NW.length],['Top network',NW[0]?NW[0].chain:'—'],['Top value',NW[0]?fmt(NW[0].value):'—'],['Total RWA',fmt(D.total_tvl)]].map(c=>`<div class="card"><div class="k">${c[0]}</div><div class="v" style="font-size:${(''+c[1]).length>9?'19px':'25px'}">${c[1]}</div></div>`).join('');
+const nwMax=NW[0]?NW[0].value:1;const NWC=['#4d94f5','#22b8a6','#d0a84a','#a855f7','#38bdf8','#ef5a56','#8b98b0','#3ec37e','#c084fc','#f59e0b'];
+document.getElementById('nwbars').innerHTML=NW.slice(0,10).map((n,i)=>`<div class="barrow"><div class="lbl">${n.chain}</div><div class="bartrack"><div class="barfill" style="width:${n.value/nwMax*100}%;background:${NWC[i%NWC.length]}"></div></div><div class="amt">${fmt(n.value)}</div></div>`).join('');
+document.getElementById('nwbody').innerHTML=NW.map((n,i)=>`<tr data-net="${n.chain}" style="cursor:pointer"><td class="num">${i+1}</td><td class="asset">${n.chain}</td><td class="num">${fmt(n.value)}</td><td class="num">${n.n}</td><td class="num">${(n.value/nwTot*100).toFixed(1)}%</td></tr>`).join('');
+(function(){const cv=document.getElementById('nwpie'), x=cv.getContext('2d');const cx=cv.width/2,cy=cv.height/2,R=110;let a0=-Math.PI/2;const top=NW.slice(0,7);const other=NW.slice(7).reduce((s,n)=>s+n.value,0);const segs=top.map((n,i)=>[n.chain,n.value,NWC[i%NWC.length]]);if(other>0)segs.push(['Other',other,'#5a6782']);const tot=segs.reduce((s,g)=>s+g[1],0)||1;segs.forEach(g=>{const a1=a0+g[1]/tot*Math.PI*2;x.beginPath();x.moveTo(cx,cy);x.arc(cx,cy,R,a0,a1);x.closePath();x.fillStyle=g[2];x.fill();a0=a1;});x.fillStyle=getComputedStyle(document.documentElement).getPropertyValue('--panel').trim();x.beginPath();x.arc(cx,cy,58,0,7);x.fill();})();
+
+/* ===== PLATFORMS VIEW ===== */
+const plats=D.assets.slice();
+document.getElementById('pf-sub').textContent=`${plats.length} protocoles / plateformes classés par valeur · ${D.generated}`;
+document.getElementById('pf-cards').innerHTML=[['Platforms',plats.length],['Top',plats[0].name],['Top value',fmt(plats[0].tvl)],['Total',fmt(D.total_tvl)]].map(c=>`<div class="card"><div class="k">${c[0]}</div><div class="v" style="font-size:${(''+c[1]).length>9?'19px':'25px'}">${c[1]}</div></div>`).join('');
+document.getElementById('pfbody').innerHTML=plats.map((a,i)=>`<tr data-slug="${a.slug}"><td class="num">${i+1}</td><td class="asset">${a.name} <span class="sub">${a.symbol}</span></td><td><span class="chip ${a.cls==='Private credit'?'credit':''}">${a.cls}</span></td><td class="num">${fmt(a.tvl)}</td><td class="num">${a.chains.length}</td><td class="num ${a.chg7d>=0?'up':'down'}">${pct(a.chg7d)}</td></tr>`).join('');
+
+/* ===== ASSET MANAGERS VIEW ===== */
+const MG=D.managers||[];const mgTot=MG.reduce((s,m)=>s+m.value,0)||1;
+document.getElementById('mg-sub').textContent=`${MG.length} gestionnaires · ${fmt(mgTot)} d'encours tokenisé · ${D.generated}`;
+document.getElementById('mg-cards').innerHTML=[['Managers',MG.length],['Top manager',MG[0]?MG[0].name:'—'],['Top encours',MG[0]?fmt(MG[0].value):'—'],['Top-5 share',(MG.slice(0,5).reduce((s,m)=>s+m.value,0)/mgTot*100).toFixed(0)+'%']].map(c=>`<div class="card"><div class="k">${c[0]}</div><div class="v" style="font-size:${(''+c[1]).length>10?'18px':'25px'}">${c[1]}</div></div>`).join('');
+const mgMax=MG[0]?MG[0].value:1;
+document.getElementById('mgbars').innerHTML=MG.slice(0,10).map((m,i)=>`<div class="barrow"><div class="lbl">${m.name}</div><div class="bartrack"><div class="barfill" style="width:${m.value/mgMax*100}%;background:${NWC[i%NWC.length]}"></div></div><div class="amt">${fmt(m.value)}</div></div>`).join('');
+document.getElementById('mgbody').innerHTML=MG.map((m,i)=>`<tr data-mgr="${m.name.replace(/"/g,'&quot;')}" style="cursor:pointer"><td class="num">${i+1}</td><td class="asset">${m.name}</td><td class="num">${fmt(m.value)}</td><td class="num">${m.n}</td><td class="sub">${m.classes.join(', ')}</td><td class="num">${m.nchains}</td></tr>`).join('');
+function openManager(name){
+  const list=D.assets.filter(a=>a.manager===name).sort((a,b)=>b.tvl-a.tvl);if(!list.length)return;
+  const tot=list.reduce((s,a)=>s+a.tvl,0);const cls={};list.forEach(a=>cls[a.cls]=(cls[a.cls]||0)+1);
+  let h=`<div class="mhd"><button class="x" onclick="closeDetail()">✕</button><div><span class="nm">👥 ${name}</span></div><div class="chips"><span class="chip">Asset manager</span></div></div><div class="mbody">`;
+  h+=`<div class="mgrid"><div><div class="k">Encours tokenisé</div><div class="v">${fmt(tot)}</div></div><div><div class="k">Actifs</div><div class="v">${list.length}</div></div><div><div class="k">Classes</div><div class="v">${Object.keys(cls).length}</div></div><div><div class="k">Réseaux</div><div class="v">${new Set(list.flatMap(a=>a.chains)).size}</div></div></div>`;
+  h+=`<div class="msec">Actifs gérés</div>`+list.slice(0,15).map(a=>`<div class="mrow" style="cursor:pointer" onclick="closeDetail();openDetail('${a.slug}')"><span class="k">${a.name} <span style="color:var(--ink-faint)">${a.symbol}</span></span><span class="v">${fmt(a.tvl)}</span></div>`).join('');
+  h+=`</div>`;md.innerHTML=h;ov.classList.add('on');
+}
+(function(){const cv=document.getElementById('mgpie'),x=cv.getContext('2d');const cx=cv.width/2,cy=cv.height/2,R=110;let a0=-Math.PI/2;const top=MG.slice(0,7);const other=MG.slice(7).reduce((s,m)=>s+m.value,0);const segs=top.map((m,i)=>[m.name,m.value,NWC[i%NWC.length]]);if(other>0)segs.push(['Other',other,'#5a6782']);const tot=segs.reduce((s,g)=>s+g[1],0)||1;segs.forEach(g=>{const a1=a0+g[1]/tot*Math.PI*2;x.beginPath();x.moveTo(cx,cy);x.arc(cx,cy,R,a0,a1);x.closePath();x.fillStyle=g[2];x.fill();a0=a1;});x.fillStyle=getComputedStyle(document.documentElement).getPropertyValue('--panel').trim();x.beginPath();x.arc(cx,cy,58,0,7);x.fill();})();
+
+/* ===== NETWORK DETAIL (fiche réseau) ===== */
+function openNetwork(chain){
+  const net=NW.find(n=>n.chain===chain);if(!net)return;
+  const list=D.assets.filter(a=>a.chains.includes(chain)).sort((a,b)=>b.tvl-a.tvl);
+  const cls={};list.forEach(a=>cls[a.cls]=(cls[a.cls]||0)+1);
+  let h=`<div class="mhd"><button class="x" onclick="closeDetail()">✕</button><div><span class="nm">🌐 ${chain}</span></div><div class="chips"><span class="chip">Réseau blockchain</span></div></div><div class="mbody">`;
+  h+=`<div class="mgrid"><div><div class="k">RWA value</div><div class="v">${fmt(net.value)}</div></div><div><div class="k">Assets hébergés</div><div class="v">${list.length}</div></div><div><div class="k">Part du RWA</div><div class="v">${(net.value/nwTot*100).toFixed(1)}%</div></div><div><div class="k">Classes</div><div class="v">${Object.keys(cls).length}</div></div></div>`;
+  h+=`<div class="msec">Actifs sur ${chain} (top 15)</div>`;
+  h+=list.slice(0,15).map(a=>`<div class="mrow" style="cursor:pointer" onclick="closeDetail();openDetail('${a.slug}')"><span class="k">${a.name} <span style="color:var(--ink-faint)">${a.symbol}</span></span><span class="v">${fmt(a.tvl)}</span></div>`).join('');
+  h+=`</div>`;md.innerHTML=h;ov.classList.add('on');
+}
+
+/* ===== DATA CATALOG VIEW ===== */
+document.getElementById('dc-sub').textContent=`Couverture : ${D.n_assets} actifs RWA · ${pc.length} fonds de crédit privé curés · données rafraîchies quotidiennement.`;
+const dcGroups=[
+  ['Métriques historisées',['TVL / valeur on-chain (28 mois)','Rendement (APY, base, volatilité σ)','Variation 1j / 7d','Flux nets par classe','Détenteurs (à venir)']],
+  ['Données de référence',['Classe d\'actif (liste blanche curée)','Réseaux / chaînes','Émetteur & juridiction','Rating, séniorité, collatéral (fondamentaux)','Structure du fonds & liquidité']],
+  ['Signaux propriétaires ✦',['LS Score (qualité/risque)','NAV gap (rendement vs risque)','Valorisation fondamentale','Alertes priorisées','Rattachement APAC']],
+];
+document.getElementById('dc-groups').innerHTML=dcGroups.map(g=>`<div class="box" style="margin-bottom:14px;"><h3>${g[0]}</h3><div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px 20px;">${g[1].map(m=>`<div style="font-size:13.5px;color:var(--ink-soft);display:flex;gap:8px;"><span style="color:var(--accent)">●</span>${m}</div>`).join('')}</div></div>`).join('');
+
+/* ===== ASSET DETAIL MODAL ===== */
+const bySlug={};D.assets.forEach(a=>bySlug[a.slug]=a);
+const ov=document.getElementById('detailOverlay'),md=document.getElementById('detailModal');
+function openDetail(slug){
+  const a=bySlug[slug];if(!a)return;const s=a.sig,yg=a.yg,fv=a.fv;
+  let h=`<div class="mhd"><button class="x" onclick="closeDetail()">✕</button><div><span class="nm">${a.name}</span><span class="sym">${a.symbol}</span></div><div class="chips"><span class="chip ${a.cls==='Private credit'?'credit':''}">${a.cls}</span>${a.apac?`<span class="chip" style="color:var(--accent)">🌏 ${a.apac}</span>`:''}<button class="memobtn" onclick="creditMemo('${slug}')">📄 Credit Memo</button></div></div><div class="mbody">`;
+  h+=`<div class="mgrid"><div><div class="k">TVL on-chain</div><div class="v">${fmt(a.tvl)}</div></div><div><div class="k">LS Score</div><div class="v g-${s.band}">${s.ls}/100${s.stress?' ⚠':''}</div></div><div><div class="k">7d</div><div class="v ${a.chg7d>=0?'up':'down'}">${pct(a.chg7d)}</div></div><div><div class="k">1d</div><div class="v ${a.chg1d>=0?'up':'down'}">${pct(a.chg1d)}</div></div></div>`;
+  h+=`<div class="msec">Analytique · signal</div><div class="mrow"><span class="k">Qualité (LS)</span><span class="v g-${s.band}">${s.ls} · ${s.note}</span></div>`;
+  if(yg){h+=`<div class="mrow"><span class="k">Rendement offert</span><span class="v">${yg.apy.toFixed(2)}%</span></div><div class="mrow"><span class="k">Rendement juste (signal)</span><span class="v">${yg.fair.toFixed(2)}%</span></div><div class="mrow"><span class="k">NAV gap (signal)</span><span class="v ${yg.gap_bps<=-75?'g-red':yg.gap_bps>=150?'g-green':''}">${yg.gap_bps>=0?'+':''}${yg.gap_bps} bps · ${yg.verdict}</span></div>`;}
+  if(fv){h+=`<div class="msec">Valorisation fondamentale</div><div class="mrow"><span class="k">Rating / séniorité</span><span class="v">${fv.rating} · ${(fv.seniority||'').replace('_',' ')}</span></div><div class="mrow"><span class="k">Liquidité / gérant</span><span class="v">${fv.liquidity} · T${fv.manager_tier}</span></div><div class="mrow"><span class="k">Rendement requis (fond.)</span><span class="v">${fv.req.toFixed(2)}%</span></div>${fv.gap_bps!=null?`<div class="mrow"><span class="k">NAV gap (fond.)</span><span class="v ${fv.gap_bps<=-75?'g-red':fv.gap_bps>=150?'g-green':''}">${fv.gap_bps>=0?'+':''}${fv.gap_bps} bps</span></div>`:''}<div class="mrow"><span class="k">Confiance donnée</span><span class="v">${confDot[fv.conf]||'🔴'} ${fv.conf}</span></div><div class="mrow"><span class="k">Note</span><span class="v" style="font-weight:400">${fv.note||''}</span></div>`;}
+  if(a.gaprel){h+=`<div class="msec">Valorisation relative (pairs)</div><div class="mrow"><span class="k">Position vs ${a.gaprel.n} pairs</span><span class="v ${a.gaprel.rv==='cheap'?'g-green':a.gaprel.rv==='rich'?'g-red':''}">${a.gaprel.rv.toUpperCase()} · ${a.gaprel.pctile}ᵉ pctile · z=${a.gaprel.z}</span></div><div class="mrow"><span class="k">Médiane des pairs</span><span class="v">${a.gaprel.peer_med>=0?'+':''}${a.gaprel.peer_med} bps</span></div>`;}
+  h+=`<div class="msec">On-chain</div><div class="mrow"><span class="k">Réseaux</span><span class="v">${a.chains.join(', ')}</span></div><div class="mrow"><span class="k">Listé (DefiLlama)</span><span class="v">${a.listedAt?new Date(a.listedAt*1000).toISOString().slice(0,10):'—'}</span></div>${a.url?`<div class="mrow"><span class="k">Site</span><span class="v" style="font-weight:400">${a.url.replace(/^https?:\/\//,'').slice(0,40)}</span></div>`:''}`;
+  h+=`</div>`;md.innerHTML=h;ov.classList.add('on');
+}
+function closeDetail(){ov.classList.remove('on');}
+function creditMemo(slug){
+  const a=bySlug[slug];if(!a)return;const s=a.sig,fv=a.fv,gu=a.gapu;
+  // recommandation dérivée
+  let reco,rc;
+  if(s.stress||s.band==='red'){reco='SURVEILLER / ÉVITER';rc='g-red';}
+  else if(gu&&gu.verdict==='rich'){reco='SURVALORISÉ — sous-pondérer';rc='g-red';}
+  else if(gu&&gu.verdict==='cheap'){reco='OPPORTUNITÉ — à creuser';rc='g-green';}
+  else {reco='NEUTRE / conforme';rc='';}
+  const today=new Date().toISOString().slice(0,10);
+  const val=gu?`Le fonds offre <b>${gu.apy.toFixed(2)}%</b> face à un rendement requis de <b>${gu.fair.toFixed(2)}%</b> (${gu.src==='fond.'?'modèle fondamental':'signal on-chain'}), soit un écart de <b class="${gu.gap_bps<=-75?'g-red':gu.gap_bps>=150?'g-green':''}">${gu.gap_bps>=0?'+':''}${gu.gap_bps} bps</b>. ${gu.gap_bps<=-75?'Le token rémunère insuffisamment son risque : NAV probablement survalorisée.':gu.gap_bps>=150?'Coussin de rendement au-dessus du risque — vérifier un éventuel risque caché.':'Rémunération alignée sur le risque.'}`:'Aucun rendement on-chain observable pour ce fonds — valorisation par signal uniquement.';
+  const struct=fv?`Notation <b>${fv.rating}</b>, séniorité <b>${(fv.seniority||'').replace('_',' ')}</b>, liquidité <b>${fv.liquidity}</b>, gérant tier <b>${fv.manager_tier}</b>. ${fv.note||''} <span class="sub">(juridiction : ${fv.jurisdiction||'n.d.'} · confiance donnée : ${fv.conf})</span>`:'Fondamentaux non curés pour ce fonds — profil structurel à compléter.';
+  let h=`<div class="mhd"><button class="x" onclick="closeDetail()">✕</button><div class="memohd"><span class="memo-eyebrow">✦ LEDGERSCOPE · CREDIT MEMO</span><span class="nm">${a.name} <span class="sym">${a.symbol}</span></span></div><div class="chips"><button class="memobtn" onclick="openDetail('${slug}')">← Fiche</button><button class="memobtn" onclick="window.print()">🖨️ Imprimer / PDF</button></div></div><div class="mbody memo">`;
+  h+=`<div class="memo-reco"><div><span class="k">Recommandation</span><div class="reco ${rc}">${reco}</div></div><div style="text-align:right"><span class="k">LS Score</span><div class="reco g-${s.band}">${s.ls}/100</div></div></div>`;
+  h+=`<div class="mgrid"><div><div class="k">Classe</div><div class="v" style="font-size:14px">${a.cls}</div></div><div><div class="k">TVL on-chain</div><div class="v">${fmt(a.tvl)}</div></div><div><div class="k">NAV gap</div><div class="v ${gu&&gu.gap_bps<=-75?'g-red':gu&&gu.gap_bps>=150?'g-green':''}">${gu?(gu.gap_bps>=0?'+':'')+gu.gap_bps+' bps':'—'}</div></div><div><div class="k">Tendance 7j</div><div class="v ${a.chg7d>=0?'up':'down'}">${pct(a.chg7d)}</div></div></div>`;
+  h+=`<div class="msec">1 · Synthèse</div><p>${a.name} est un actif tokenisé de classe <b>${a.cls.toLowerCase()}</b>, déployé sur ${a.chains.join(', ')}, pesant <b>${fmt(a.tvl)}</b> on-chain. Notre notation propriétaire lui attribue un LS Score de <b class="g-${s.band}">${s.ls}/100</b> (${s.note}).</p>`;
+  h+=`<div class="msec">2 · Qualité &amp; risque (LS Score)</div><p>Le score agrège les signaux on-chain observables : taille (échelle log), stabilité de la TVL et résilience multi-chaîne. ${s.stress?'<b class="g-red">⚠ Un stress de rachat est détecté (sortie nette ≥8% sur 7 jours) — signal de vigilance immédiat.</b>':'Aucun stress de rachat détecté sur les 7 derniers jours.'}</p>`;
+  h+=`<div class="msec">3 · Valorisation</div><p>${val}</p>`;
+  h+=`<div class="msec">4 · Structure &amp; fondamentaux</div><p>${struct}</p>`;
+  const flags=[];if(s.stress)flags.push('Pression de rachat active (sorties nettes 7j)');if(gu&&gu.gap_bps<=-75)flags.push('Rémunération inférieure au risque (survalorisation NAV)');if(s.band==='red')flags.push('Score de qualité faible');if(fv&&fv.conf==='low')flags.push('Confiance faible sur les fondamentaux — due diligence complémentaire requise');
+  h+=`<div class="msec">5 · Points d'attention</div>${flags.length?'<ul class="memo-flags">'+flags.map(f=>`<li>${f}</li>`).join('')+'</ul>':'<p>Aucun signal d\'alerte majeur à la date de cette note.</p>'}`;
+  h+=`<div class="msec">6 · Conclusion</div><p>Sur la base des données on-chain et du modèle de valorisation Ledgerscope, la position se qualifie <b class="${rc}">${reco}</b>. ${gu&&gu.gap_bps<=-75?'Nous recommandons la prudence tant que l\'écart de valorisation ne se resserre pas.':gu&&gu.gap_bps>=150?'L\'écart positif mérite une analyse du sous-jacent avant toute allocation.':'Profil conforme, à réévaluer au prochain rafraîchissement.'}</p>`;
+  h+=`<div class="memo-foot">Ledgerscope Research · Credit Memo généré le ${today} · Données on-chain DefiLlama (${D.generated}). Avis indépendant à visée informative, fondé sur des données publiques et des modèles propriétaires — ne constitue ni un conseil en investissement, ni une valorisation officielle, ni une sollicitation.</div>`;
+  h+=`</div>`;md.innerHTML=h;ov.classList.add('on');md.scrollTop=0;
+}
+ov.addEventListener('click',e=>{if(e.target===ov)closeDetail();});
+document.querySelector('.content').addEventListener('click',e=>{const trs=e.target.closest('tr[data-slug]');if(trs){openDetail(trs.dataset.slug);return;}const trn=e.target.closest('tr[data-net]');if(trn){openNetwork(trn.dataset.net);return;}const trm=e.target.closest('tr[data-mgr]');if(trm)openManager(trm.dataset.mgr);});
+
+/* ===== GLOBAL SEARCH (Cmd+K) ===== */
+const sov=document.getElementById('searchOverlay'),gS=document.getElementById('gSearch'),sR=document.getElementById('sResults');
+let selIdx=0,sHits=[];
+function openSearch(){sov.classList.add('on');gS.value='';renderSearch();gS.focus();}
+function closeSearch(){sov.classList.remove('on');}
+function renderSearch(){
+  const q=gS.value.toLowerCase();
+  sHits=D.assets.filter(a=>!q||(a.name+a.symbol+a.cls).toLowerCase().includes(q)).slice(0,12);
+  selIdx=0;
+  sR.innerHTML=sHits.map((a,i)=>`<div class="sr ${i===0?'sel':''}" data-slug="${a.slug}"><span class="nm">${a.name}</span> <span class="chip ${a.cls==='Private credit'?'credit':''}" style="font-size:10px">${a.cls}</span><span class="sub">${fmt(a.tvl)}</span></div>`).join('')||'<div class="shint" style="padding:20px">Aucun résultat</div>';
+}
+gS.addEventListener('input',renderSearch);
+gS.addEventListener('keydown',e=>{
+  if(e.key==='ArrowDown'){e.preventDefault();selIdx=Math.min(sHits.length-1,selIdx+1);}
+  else if(e.key==='ArrowUp'){e.preventDefault();selIdx=Math.max(0,selIdx-1);}
+  else if(e.key==='Enter'){if(sHits[selIdx]){closeSearch();openDetail(sHits[selIdx].slug);}return;}
+  else if(e.key==='Escape'){closeSearch();return;}
+  else return;
+  [...sR.children].forEach((c,i)=>c.classList.toggle('sel',i===selIdx));
+});
+sR.addEventListener('click',e=>{const sr=e.target.closest('.sr[data-slug]');if(sr){closeSearch();openDetail(sr.dataset.slug);}});
+sov.addEventListener('click',e=>{if(e.target===sov)closeSearch();});
+document.getElementById('sideSearch').addEventListener('click',openSearch);
+document.addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();openSearch();}});
+
+/* ===== COLLAPSE SIDEBAR + CSV ===== */
+document.getElementById('collapseBtn').addEventListener('click',()=>document.querySelector('.app').classList.toggle('mini'));
+function toCSV(rows){return rows.map(r=>r.map(c=>`"${(''+c).replace(/"/g,'""')}"`).join(',')).join('\n');}
+function dl(name,csv){const b=new Blob([csv],{type:'text/csv'});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download=name;a.click();URL.revokeObjectURL(u);}
+document.querySelectorAll('.csv').forEach(btn=>btn.addEventListener('click',()=>{
+  const t=btn.dataset.csv;let rows=[];
+  if(t==='nw'){rows=[['rank','network','value_usd','assets','share_pct']];NW.forEach((n,i)=>rows.push([i+1,n.chain,Math.round(n.value),n.n,(n.value/nwTot*100).toFixed(1)]));}
+  else if(t==='pf'){rows=[['rank','platform','class','value_usd','networks','chg7d']];plats.forEach((a,i)=>rows.push([i+1,a.name,a.cls,Math.round(a.tvl),a.chains.length,a.chg7d]));}
+  else if(t==='cr'){rows=[['fund','symbol','tvl_usd','chg7d','ls_score','nav_gap_bps']];pc.forEach(a=>rows.push([a.name,a.symbol,Math.round(a.tvl),a.chg7d,a.sig.ls,a.yg?a.yg.gap_bps:'']));}
+  else if(t==='mg'){rows=[['rank','manager','value_usd','assets','classes','networks']];MG.forEach((m,i)=>rows.push([i+1,m.name,Math.round(m.value),m.n,m.classes.join('|'),m.nchains]));}
+  else if(t==='cl'){rows=[['asset','symbol','class','tvl_usd','chg7d']];D.assets.filter(a=>a.cls===CUR_CLASS).forEach(a=>rows.push([a.name,a.symbol,a.cls,Math.round(a.tvl),a.chg7d]));}
+  else if(t==='perf'){rows=[['class','tvl_usd','1m_pct','3m_pct','ytd_pct','1y_pct']];perf.forEach(p=>rows.push([p.cls,Math.round(p.tvl),p.m1?.toFixed(1)??'',p.m3?.toFixed(1)??'',p.ytd?.toFixed(1)??'',p.y1?.toFixed(1)??'']));}
+  dl('ledgerscope_'+t+'.csv',toCSV(rows));
+}));
+
+/* ===== LOGIN / FREEMIUM ===== */
+let LOGGED=false,CUR_CLASS=null;
+const loginOv=document.getElementById('loginOverlay');
+function openLogin(mode){document.getElementById('lg-title').textContent=mode==='signup'?'Créer un compte':'Se connecter';loginOv.classList.add('on');setTimeout(()=>document.getElementById('lgEmail').focus(),50);}
+window.openLoginGlobal=()=>openLogin('login');
+function closeLogin(){loginOv.classList.remove('on');}
+document.getElementById('loginBtn').addEventListener('click',()=>openLogin('login'));
+document.getElementById('signupBtn').addEventListener('click',()=>openLogin('signup'));
+document.getElementById('loginX').addEventListener('click',closeLogin);
+loginOv.addEventListener('click',e=>{if(e.target===loginOv)closeLogin();});
+document.getElementById('lgGo').addEventListener('click',()=>{
+  LOGGED=true;closeLogin();
+  document.getElementById('authRow').innerHTML='<button class="auth ghost" style="flex:1" id="logoutBtn"><span class="lbl">✓ Premium débloqué</span></button>';
+  document.getElementById('logoutBtn').addEventListener('click',()=>location.reload());
+  if(CUR_CLASS){openClass(CUR_CLASS);renderLeague(document.querySelector('#cl-tabs button.on').dataset.lg);}
+});
+function lockCell(real){return LOGGED?real:'<span class="lock" onclick="openLoginGlobal()">🔒 Unlock</span>';}
+
+/* ===== ASSET CLASS DETAIL + LEAGUE TABLES ===== */
+function addAgg(agg,k,val){const g=agg[k]||[0,0];g[0]+=val;g[1]+=1;agg[k]=g;}
+function openClass(cls){
+  CUR_CLASS=cls;
+  const list=D.assets.filter(a=>a.cls===cls).sort((a,b)=>b.tvl-a.tvl);
+  const tot=list.reduce((s,a)=>s+a.tvl,0);
+  const chgs=list.filter(a=>a.chg7d!=null);const avg=chgs.length?chgs.reduce((s,a)=>s+a.chg7d,0)/chgs.length:0;
+  document.getElementById('cl-title').textContent=cls;
+  document.getElementById('cl-crumb').textContent='Asset Classes › '+cls;
+  document.getElementById('cl-sub').textContent=`${list.length} actifs · ${fmt(tot)} on-chain · ${(tot/D.total_tvl*100).toFixed(1)}% du RWA total · ${D.generated}`;
+  document.getElementById('cl-cards').innerHTML=[['Class TVL',fmt(tot)],['Assets',list.length],['Top asset',list[0]?list[0].name:'—'],['Avg 7d',pct(avg)]].map(c=>`<div class="card"><div class="k">${c[0]}</div><div class="v" style="font-size:${(''+c[1]).length>11?'18px':'25px'}">${c[1]}</div></div>`).join('');
+  // network breakdown
+  const nb={};list.forEach(a=>a.chains.forEach(ch=>nb[ch]=(nb[ch]||0)+a.tvl/a.chains.length));
+  const nbA=Object.entries(nb).sort((a,b)=>b[1]-a[1]).slice(0,8);const nbMax=nbA[0]?nbA[0][1]:1;
+  document.getElementById('clnw').innerHTML=nbA.map((n,i)=>`<div class="barrow"><div class="lbl">${n[0]}</div><div class="bartrack"><div class="barfill" style="width:${n[1]/nbMax*100}%;background:${NWC[i%NWC.length]}"></div></div><div class="amt">${fmt(n[1])}</div></div>`).join('');
+  // assets table (colonnes premium verrouillées)
+  document.getElementById('clbody').innerHTML=list.map(a=>`<tr data-slug="${a.slug}"><td class="asset">${a.name} <span class="sub">${a.symbol}</span></td><td class="sub">${a.chains.slice(0,3).join(', ')}</td><td class="num">${fmt(a.tvl)}</td><td class="num ${a.chg7d>=0?'up':'down'}">${pct(a.chg7d)}</td><td class="num">${lockCell(a.fv?a.fv.rating:'NR')}</td><td class="num">${lockCell(a.apac?'MAS':(a.fv&&a.fv.jurisdiction?a.fv.jurisdiction.split(' ')[0]:'—'))}</td></tr>`).join('');
+  renderLeague('platform');
+  document.querySelectorAll('#cl-tabs button').forEach(x=>x.classList.toggle('on',x.dataset.lg==='platform'));
+}
+function renderLeague(kind){
+  if(!CUR_CLASS)return;
+  const list=D.assets.filter(a=>a.cls===CUR_CLASS);
+  const locked=(kind==='jurisdiction'&&!LOGGED);
+  document.getElementById('lg-h').textContent={platform:'Platform',manager:'Manager',network:'Network',jurisdiction:'Jurisdiction'}[kind];
+  if(locked){document.getElementById('lgbody').innerHTML=`<tr><td colspan="4" style="padding:0"><div class="lockbanner"><b>🔒 League table par juridiction réservée aux comptes.</b><button onclick="openLoginGlobal()">Se connecter</button></div></td></tr>`;return;}
+  let agg={};
+  if(kind==='platform')list.forEach(a=>addAgg(agg,a.name,a.tvl));
+  else if(kind==='manager')list.forEach(a=>addAgg(agg,a.manager,a.tvl));
+  else if(kind==='network')list.forEach(a=>a.chains.forEach(ch=>addAgg(agg,ch,a.tvl/a.chains.length)));
+  else list.forEach(a=>addAgg(agg,a.fv&&a.fv.jurisdiction?a.fv.jurisdiction:'Unknown',a.tvl));
+  const arr=Object.entries(agg).sort((a,b)=>b[1][0]-a[1][0]);
+  document.getElementById('lgbody').innerHTML=arr.map(([k,v],i)=>`<tr><td class="num">${i+1}</td><td class="asset">${k}</td><td class="num">${fmt(v[0])}</td><td class="num">${v[1]}</td></tr>`).join('');
+}
+document.querySelectorAll('#cl-tabs button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('#cl-tabs button').forEach(x=>x.classList.remove('on'));b.classList.add('on');renderLeague(b.dataset.lg);}));
+
+/* asset classes dans la sidebar (cliquables → ouvrent la page de classe) */
+document.getElementById('clsnav').innerHTML=D.byclass.map(c=>`<button class="clsbtn" data-cls="${c[0]}"><span class="csw" style="background:${clr(c[0])}"></span>${c[0]}</button>`).join('');
+function showView(v){document.querySelectorAll('.view').forEach(x=>x.classList.remove('on'));document.getElementById('v-'+v).classList.add('on');window.scrollTo(0,0);}
+function setNavActive(btn){document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('on'));if(btn)btn.classList.add('on');}
+
+/* nav principal (data-v) */
+document.querySelectorAll('.nav button[data-v]').forEach(b=>b.addEventListener('click',()=>{
+  setNavActive(b);showView(b.dataset.v);
+}));
+/* classes → screener filtré */
+document.querySelectorAll('.clsbtn').forEach(b=>b.addEventListener('click',()=>{
+  setNavActive(b);openClass(b.dataset.cls);showView('class');
+}));
+/* Enterprise API (démo) */
+document.querySelector('.apibtn').addEventListener('click',()=>{setNavActive(null);showView('screener');});
+</script>

@@ -1,0 +1,9 @@
+# caches API bruts (régénérés par build.py)
+protocols.json
+pools.json
+_site/
+__pycache__/
+*.pyc
+.DS_Store
+.tools/
+gh.zip

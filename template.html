@@ -1,0 +1,967 @@
+<title>Ledgerscope Terminal</title>
+<style>
+  /* Identité institutionnelle « agence de notation » : papier chaud, encre marine, accent oxblood, sidebar marine. */
+  :root{--ground:#f3f1ec;--panel:#ffffff;--panel-2:#faf8f3;--side:#0e2135;--ink:#182b40;--ink-soft:#4a5b6e;--ink-faint:#8a95a2;--line:#e3ded4;--line-soft:#eeeae1;--accent:#8a1c2b;--accent-soft:#f2e4e2;--up:#1a7a4c;--down:#b3231f;--gold:#9c7a1a;--chip:#efece4;--mono-bg:#f4f1ea;}
+  @media(prefers-color-scheme:dark){:root:not([data-theme=light]){--ground:#0b131d;--panel:#111d2b;--panel-2:#0e1826;--side:#081019;--ink:#e8ecf1;--ink-soft:#9aa7b6;--ink-faint:#657283;--line:#1f2c3b;--line-soft:#16202c;--accent:#cf6f77;--accent-soft:#2a1518;--up:#3ec37e;--down:#e5675a;--gold:#cba94a;--chip:#16202c;--mono-bg:#0f1926;}}
+  :root[data-theme=dark]{--ground:#0b131d;--panel:#111d2b;--panel-2:#0e1826;--side:#081019;--ink:#e8ecf1;--ink-soft:#9aa7b6;--ink-faint:#657283;--line:#1f2c3b;--line-soft:#16202c;--accent:#cf6f77;--accent-soft:#2a1518;--up:#3ec37e;--down:#e5675a;--gold:#cba94a;--chip:#16202c;--mono-bg:#0f1926;}
+  *{box-sizing:border-box;}
+  body{background:var(--ground);color:var(--ink);margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:14px;-webkit-font-smoothing:antialiased;}
+  .mono{font-family:"SF Mono","Menlo","Consolas",monospace;}
+  h1,h2,h3{margin:0;}
+
+  .app{display:grid;grid-template-columns:220px 1fr;min-height:100vh;}
+  /* sidebar */
+  .sidebar{background:var(--side);border-right:1px solid var(--line);padding:16px 12px;position:sticky;top:0;height:100vh;overflow-y:auto;}
+  .brand{display:flex;align-items:center;gap:9px;font-weight:700;font-size:17px;letter-spacing:-.02em;padding:6px 8px 18px;}
+  .brand .mk{width:24px;height:24px;border-radius:6px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:800;font-size:14px;}
+  :root:not([data-theme=light]) .brand .mk,:root[data-theme=dark] .brand .mk{color:#0a0d10;}
+  .brand em{font-style:normal;color:var(--accent);}
+  .navsec{font-family:"SF Mono",monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);padding:14px 8px 6px;}
+  .navsec.hl{color:var(--accent);}
+  .nav button{display:flex;align-items:center;gap:9px;width:100%;background:none;border:none;color:var(--ink-soft);font-size:13.5px;font-weight:500;padding:8px 8px;border-radius:7px;cursor:pointer;font-family:inherit;text-align:left;}
+  .nav button:hover{background:var(--chip);color:var(--ink);}
+  .nav button.on{background:var(--accent-soft);color:var(--accent);font-weight:600;}
+  .nav button .ic{width:15px;text-align:center;opacity:.8;}
+  .nav button .star{margin-left:auto;color:var(--accent);font-size:11px;}
+  .nav button .badge{margin-left:auto;background:var(--down);color:#fff;font-size:10px;font-weight:700;border-radius:9px;min-width:16px;height:16px;line-height:16px;text-align:center;padding:0 4px;}
+  :root:not([data-theme=light]) .nav button .badge,:root[data-theme=dark] .nav button .badge{color:#0a0d10;}
+  .sidefoot{margin-top:18px;border-top:1px solid var(--line);padding:14px 8px 0;font-size:11px;color:var(--ink-faint);line-height:1.5;}
+  .tag-new{margin-left:auto;font-family:"SF Mono",monospace;font-size:9px;font-weight:700;color:var(--accent);border:1px solid var(--accent);border-radius:4px;padding:1px 4px;letter-spacing:.05em;}
+  .nav button .csw{width:9px;height:9px;border-radius:2px;flex-shrink:0;}
+  .cards.five{grid-template-columns:repeat(5,1fr);}
+  @media(max-width:860px){.cards.five{grid-template-columns:1fr 1fr;}}
+
+  /* main */
+  .main{min-width:0;}
+  .ticker{display:flex;gap:0;overflow-x:auto;border-bottom:1px solid var(--line);background:var(--panel);scrollbar-width:none;}
+  .ticker::-webkit-scrollbar{display:none;}
+  .tk{display:flex;align-items:baseline;gap:8px;padding:11px 16px;border-right:1px solid var(--line-soft);white-space:nowrap;font-size:13px;}
+  .tk .s{font-weight:700;}
+  .tk .v{font-family:"SF Mono",monospace;color:var(--ink-soft);}
+  .tk .c{font-family:"SF Mono",monospace;font-size:12px;font-weight:600;}
+
+  .content{padding:24px 28px 80px;max-width:1200px;}
+  .view{display:none;}.view.on{display:block;}
+  .welcome{color:var(--ink-soft);font-size:13.5px;line-height:1.5;margin-bottom:22px;max-width:80ch;}
+  .welcome b{color:var(--ink);}
+  .crumb{font-size:12px;color:var(--ink-faint);margin-bottom:4px;letter-spacing:.02em;text-transform:uppercase;font-family:"SF Mono",monospace;}
+  .h-title{font-size:23px;font-weight:700;letter-spacing:-.02em;margin-bottom:2px;}
+  .h-sub{color:var(--ink-soft);margin-bottom:22px;font-size:13.5px;}
+
+  .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--line);margin-bottom:20px;}
+  .cards>div{background:var(--panel);padding:16px 18px;}
+  .card .k{font-size:12px;color:var(--ink-soft);margin-bottom:8px;}
+  .card .v{font-size:25px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums;}
+  .card .d{font-size:12px;margin-top:5px;font-weight:600;font-variant-numeric:tabular-nums;}
+  .up{color:var(--up);}.down{color:var(--down);}
+
+  .chartbox{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:20px 22px;margin-bottom:16px;position:relative;}
+  #chart{cursor:crosshair;}
+  .charttip{position:absolute;pointer-events:none;display:none;z-index:10;background:var(--ground);border:1px solid var(--line);border-radius:8px;padding:12px 14px;min-width:250px;box-shadow:0 8px 28px rgba(0,0,0,.35);font-size:12.5px;}
+  .charttip .th{display:flex;justify-content:space-between;align-items:baseline;gap:16px;margin-bottom:9px;padding-bottom:8px;border-bottom:1px solid var(--line-soft);}
+  .charttip .th .d{font-weight:700;font-size:14px;}
+  .charttip .th .t{font-family:"SF Mono",monospace;font-weight:700;color:var(--ink);}
+  .charttip .r{display:flex;align-items:center;gap:8px;justify-content:space-between;padding:2px 0;}
+  .charttip .r .lft{display:flex;align-items:center;gap:7px;color:var(--ink-soft);}
+  .charttip .r .cd{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+  .charttip .r .val{font-family:"SF Mono",monospace;color:var(--ink);}
+  .chartbox .bar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:16px;}
+  .chartbox h3{font-size:16px;font-weight:700;}
+  .seg{display:inline-flex;background:var(--chip);border-radius:7px;padding:2px;gap:2px;margin-left:auto;}
+  .seg button{background:none;border:none;color:var(--ink-soft);font-size:12px;font-weight:600;padding:5px 12px;border-radius:5px;cursor:pointer;font-family:inherit;}
+  .seg button.on{background:var(--panel);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08);}
+  canvas{width:100%;height:auto;display:block;}
+  .legend{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:16px;}
+  .legend .li{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--ink-soft);}
+  .legend .dot{width:9px;height:9px;border-radius:2px;}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .box{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px;}
+  .box h3{font-size:14px;font-weight:600;margin-bottom:2px;}
+  .box .hint{font-size:12px;color:var(--ink-faint);margin-bottom:14px;}
+  .barrow{display:grid;grid-template-columns:150px 1fr 84px;align-items:center;gap:12px;padding:7px 0;font-size:13px;}
+  .barrow .lbl{color:var(--ink-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .bartrack{height:8px;background:var(--line-soft);border-radius:6px;overflow:hidden;}
+  .barfill{height:100%;border-radius:6px;background:var(--accent);}
+  .barrow .amt{text-align:right;font-weight:600;font-variant-numeric:tabular-nums;}
+
+  .toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:14px;}
+  .search{flex:1;min-width:200px;display:flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px 12px;}
+  .search input{border:none;background:none;outline:none;color:var(--ink);font-size:14px;width:100%;font-family:inherit;}
+  select.filter{background:var(--panel);border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:8px 12px;font-size:13px;font-family:inherit;cursor:pointer;}
+  .count{font-size:12px;color:var(--ink-faint);margin-left:auto;}
+  .tablewrap{background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden;}
+  .scroll{overflow-x:auto;}
+  table{border-collapse:collapse;width:100%;min-width:720px;font-size:13px;}
+  th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--line-soft);white-space:nowrap;}
+  th{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-faint);font-weight:600;background:var(--panel-2);cursor:pointer;user-select:none;}
+  th.num,td.num{text-align:right;font-variant-numeric:tabular-nums;font-family:"SF Mono",monospace;}
+  tbody tr:hover{background:var(--panel-2);}
+  tr:last-child td{border-bottom:none;}
+  td.asset{font-weight:600;}
+  td .sub{color:var(--ink-faint);font-weight:400;font-size:12px;}
+  .chip{display:inline-block;font-size:11px;padding:2px 8px;border-radius:20px;background:var(--chip);color:var(--ink-soft);font-weight:600;}
+  .chip.credit{background:var(--accent-soft);color:var(--accent);}
+  .net{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:middle;}
+  .g-green{color:var(--up);}.g-amber{color:var(--gold);}.g-red{color:var(--down);}
+  .bg-green{background:var(--up);}.bg-amber{background:var(--gold);}.bg-red{background:var(--down);}
+  .score{display:inline-flex;align-items:center;gap:7px;font-weight:700;font-variant-numeric:tabular-nums;}
+  .score .lsdot{width:9px;height:9px;border-radius:50%;}
+  .stressflag{font-size:10px;font-weight:700;color:var(--down);border:1px solid var(--down);border-radius:4px;padding:1px 6px;margin-left:6px;}
+  .meter{display:inline-block;width:64px;height:6px;background:var(--line-soft);border-radius:4px;overflow:hidden;vertical-align:middle;}
+  .meter>i{display:block;height:100%;border-radius:4px;}
+  .methodbox{background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:16px;font-size:13px;color:var(--ink-soft);line-height:1.6;}
+  .methodbox b{color:var(--ink);}
+  .alert{background:var(--panel);border:1px solid var(--line);border-left-width:4px;border-radius:10px;padding:15px 18px;margin-bottom:10px;}
+  .alert.high{border-left-color:var(--down);}.alert.med{border-left-color:var(--gold);}.alert.low{border-left-color:var(--ink-faint);}
+  .alert .top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px;}
+  .alert .nm{font-weight:700;font-size:15px;}.alert .sym{color:var(--ink-faint);font-size:12px;font-weight:400;}
+  .alert .lvl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:2px 8px;border-radius:20px;}
+  .alert.high .lvl{background:color-mix(in srgb,var(--down) 15%,transparent);color:var(--down);}
+  .alert.med .lvl{background:color-mix(in srgb,var(--gold) 18%,transparent);color:var(--gold);}
+  .alert.low .lvl{background:var(--chip);color:var(--ink-soft);}
+  .alert .meta{margin-left:auto;font-size:12px;color:var(--ink-faint);font-family:"SF Mono",monospace;}
+  .alert ul{margin:0;padding-left:18px;}.alert li{font-size:13.5px;color:var(--ink-soft);margin-bottom:3px;}
+  .disc{margin-top:22px;font-size:11.5px;color:var(--ink-faint);line-height:1.5;font-style:italic;}
+  /* collapse */
+  .brand{justify-content:space-between;}
+  .collapse{background:none;border:none;color:var(--ink-faint);cursor:pointer;font-size:16px;padding:2px 6px;border-radius:5px;}
+  .collapse:hover{background:var(--chip);color:var(--ink);}
+  .app.mini{grid-template-columns:60px 1fr;}
+  .app.mini .bname,.app.mini .lbl,.app.mini .navsec,.app.mini .ss-t,.app.mini .kbd,.app.mini .sidefoot,.app.mini .tag-new,.app.mini .badge{display:none;}
+  .app.mini .nav button{justify-content:center;}
+  .app.mini .sidesearch{justify-content:center;}
+  /* side search */
+  .sidesearch{display:flex;align-items:center;gap:8px;width:100%;background:var(--panel-2);border:1px solid var(--line);border-radius:8px;padding:8px 10px;color:var(--ink-faint);font-size:13px;cursor:pointer;font-family:inherit;margin-bottom:8px;}
+  .sidesearch:hover{border-color:var(--accent);}
+  .sidesearch .kbd{margin-left:auto;font-family:"SF Mono",monospace;font-size:10px;border:1px solid var(--line);border-radius:4px;padding:1px 5px;}
+  /* panel header + csv */
+  .panelhd{display:flex;align-items:center;justify-content:space-between;margin:22px 0 10px;}
+  .panelhd h3{font-size:15px;font-weight:700;}
+  .csv,.btn-reg{background:var(--accent-soft);color:var(--accent);border:1px solid var(--accent);border-radius:7px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;}
+  .csv:hover,.btn-reg:hover{background:var(--accent);color:#fff;}
+  :root:not([data-theme=light]) .csv:hover,:root[data-theme=dark] .csv:hover,:root:not([data-theme=light]) .btn-reg:hover,:root[data-theme=dark] .btn-reg:hover{color:#070b14;}
+  /* overlay / modal */
+  .overlay{position:fixed;inset:0;background:rgba(4,8,16,.6);backdrop-filter:blur(3px);z-index:100;display:none;align-items:flex-start;justify-content:center;padding:60px 20px;}
+  .overlay.on{display:flex;}
+  .modal{background:var(--panel);border:1px solid var(--line);border-radius:14px;max-width:640px;width:100%;max-height:82vh;overflow-y:auto;box-shadow:0 24px 70px rgba(0,0,0,.5);}
+  .mhd{padding:22px 24px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--panel);}
+  .mhd .x{position:absolute;top:18px;right:20px;background:none;border:none;color:var(--ink-faint);font-size:20px;cursor:pointer;}
+  .mhd .nm{font-size:22px;font-weight:700;letter-spacing:-.02em;}
+  .mhd .sym{color:var(--ink-faint);font-size:14px;font-weight:400;margin-left:6px;}
+  .mhd .chips{margin-top:10px;display:flex;gap:6px;flex-wrap:wrap;}
+  .mbody{padding:18px 24px 24px;}
+  .mgrid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:9px;overflow:hidden;margin-bottom:16px;}
+  .mgrid>div{background:var(--panel);padding:13px 15px;}
+  .mgrid .k{font-size:11px;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px;}
+  .mgrid .v{font-size:17px;font-weight:700;font-variant-numeric:tabular-nums;}
+  .msec{font-family:"SF Mono",monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);font-weight:600;margin:16px 0 8px;}
+  .mrow{display:flex;justify-content:space-between;gap:16px;padding:6px 0;border-bottom:1px solid var(--line-soft);font-size:13.5px;}
+  .mrow .k{color:var(--ink-soft);}.mrow .v{font-weight:600;text-align:right;}
+  /* global search */
+  .searchbox{background:var(--panel);border:1px solid var(--line);border-radius:14px;max-width:560px;width:100%;box-shadow:0 24px 70px rgba(0,0,0,.5);overflow:hidden;}
+  .searchbox input{width:100%;border:none;background:none;outline:none;color:var(--ink);font-size:17px;padding:18px 20px;font-family:inherit;border-bottom:1px solid var(--line);}
+  .sresults{max-height:50vh;overflow-y:auto;}
+  .sresults .sr{display:flex;align-items:center;gap:10px;padding:11px 20px;cursor:pointer;border-bottom:1px solid var(--line-soft);}
+  .sresults .sr.sel,.sresults .sr:hover{background:var(--accent-soft);}
+  .sresults .sr .nm{font-weight:600;}.sresults .sr .sub{color:var(--ink-faint);font-size:12px;margin-left:auto;font-family:"SF Mono",monospace;}
+  .shint{padding:10px 20px;font-size:11px;color:var(--ink-faint);font-family:"SF Mono",monospace;}
+  /* pie */
+  #nwpie{max-width:300px;margin:0 auto;}
+  /* footer */
+  .sitefoot{margin-top:40px;border-top:1px solid var(--line);padding-top:22px;}
+  .regblock{display:flex;align-items:center;justify-content:space-between;gap:16px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 22px;margin-bottom:18px;flex-wrap:wrap;}
+  .regblock .sub{color:var(--ink-soft);font-size:13px;margin-top:3px;}
+  .footlinks{display:flex;flex-wrap:wrap;gap:8px 20px;font-size:12px;color:var(--ink-faint);}
+  .footlinks span{cursor:default;}.footlinks span:first-child{color:var(--ink-soft);font-weight:600;}
+  .chatw{position:fixed;bottom:22px;right:22px;width:48px;height:48px;border-radius:50%;background:var(--accent);border:none;font-size:22px;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.35);z-index:50;}
+  tbody tr[data-slug]{cursor:pointer;}
+  /* ===== Identité institutionnelle : sidebar marine + typographie research ===== */
+  .sidebar{background:var(--side);border-right:1px solid #05101c;}
+  .sidebar .brand{color:#fff;font-family:"Georgia","Times New Roman",serif;letter-spacing:0;}
+  .sidebar .brand em{color:#d99aa0;font-style:italic;}
+  .sidebar .brand .mk{background:var(--accent);color:#fff;border-radius:3px;font-family:-apple-system,sans-serif;}
+  .sidebar .tagline{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:#6f8194;font-family:"SF Mono",monospace;padding:0 8px 14px;margin-top:-12px;}
+  .sidebar .navsec{color:#67788c;}
+  .sidebar .navsec.hl{color:#d99aa0;}
+  .sidebar .nav button{color:#b9c5d3;}
+  .sidebar .nav button:hover{background:rgba(255,255,255,.07);color:#fff;}
+  .sidebar .nav button.on{background:var(--accent);color:#fff;}
+  .sidebar .sidesearch{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.13);color:#8b9bad;}
+  .sidebar .sidesearch:hover{border-color:#d99aa0;}
+  .sidebar .sidesearch .kbd{border-color:rgba(255,255,255,.2);}
+  .sidebar .sidefoot{color:#67788c;border-color:rgba(255,255,255,.1);}
+  .sidebar .tag-new{color:#d99aa0;border-color:#d99aa0;}
+  .sidebar .auth.ghost{color:#b9c5d3;border-color:rgba(255,255,255,.18);}
+  .sidebar .authrow .auth{background:var(--accent);border-color:var(--accent);color:#fff;}
+  /* titres serif (gravitas research) */
+  .h-title,.brand{font-family:"Georgia","Times New Roman",serif;letter-spacing:-.01em;}
+  .modal .nm,.memohd .nm,.h-title{font-family:"Georgia","Times New Roman",serif;}
+  .chartbox h3,.box h3,.panelhd h3{font-family:"Georgia","Times New Roman",serif;font-weight:700;letter-spacing:0;}
+  .welcome b{font-family:"Georgia",serif;}
+  /* rating badge formel */
+  .chip.g-green,.chip.g-amber{border:1px solid currentColor;background:transparent;font-family:"SF Mono",monospace;letter-spacing:.02em;}
+  /* stat values : chiffres élégants */
+  .card .v,.mgrid .v{font-family:"Georgia","Times New Roman",serif;letter-spacing:0;}
+  /* ticker plus sobre */
+  .ticker{background:var(--panel);}
+  .tk .s{font-weight:700;letter-spacing:.01em;}
+  /* rules research-grade */
+  .cards{border-radius:4px;}.card,.box,.chartbox,.tablewrap,.panel{border-radius:4px;}
+  th{background:var(--mono-bg);}
+  /* credit memo */
+  .memobtn{background:var(--accent-soft);color:var(--accent);border:1px solid var(--accent);border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;}
+  .memobtn:hover{background:var(--accent);color:#fff;}
+  :root:not([data-theme=light]) .memobtn:hover,:root[data-theme=dark] .memobtn:hover{color:#070b14;}
+  .memohd{display:flex;flex-direction:column;gap:4px;}
+  .memo-eyebrow{font-family:"SF Mono",monospace;font-size:10px;letter-spacing:.14em;color:var(--accent);font-weight:600;}
+  .memo p{font-size:14px;line-height:1.6;color:var(--ink-soft);margin:0 0 6px;}
+  .memo p b{color:var(--ink);}
+  .memo-reco{display:flex;justify-content:space-between;gap:16px;background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin-bottom:14px;}
+  .memo-reco .k{font-size:11px;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.05em;}
+  .memo-reco .reco{font-size:18px;font-weight:800;letter-spacing:-.01em;margin-top:3px;}
+  .memo-flags{margin:0;padding-left:18px;}
+  .memo-flags li{font-size:14px;color:var(--ink-soft);margin-bottom:5px;}
+  .memo-foot{margin-top:20px;padding-top:14px;border-top:1px solid var(--line);font-size:11px;color:var(--ink-faint);font-style:italic;line-height:1.5;}
+  @media print{.sidebar,.ticker,.chatw,.memobtn,.mhd .x{display:none!important;}.overlay{position:static;background:none;padding:0;}.modal{max-width:100%;box-shadow:none;border:none;}body{background:#fff;color:#000;}}
+  /* auth */
+  .authrow{display:flex;gap:6px;margin-bottom:12px;}
+  .auth{flex:1;background:var(--accent);color:#fff;border:1px solid var(--accent);border-radius:8px;padding:7px 10px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit;}
+  :root:not([data-theme=light]) .auth,:root[data-theme=dark] .auth{color:#070b14;}
+  .auth.ghost{background:none;color:var(--ink-soft);border-color:var(--line);}
+  .app.mini .authrow{flex-direction:column;}
+  /* league tabs */
+  .lgtabs{display:flex;gap:4px;flex-wrap:wrap;}
+  .lgtabs button{background:var(--chip);border:1px solid var(--line);color:var(--ink-soft);font-size:11.5px;font-weight:600;padding:5px 10px;border-radius:6px;cursor:pointer;font-family:inherit;}
+  .lgtabs button.on{background:var(--accent);color:#fff;border-color:var(--accent);}
+  :root:not([data-theme=light]) .lgtabs button.on,:root[data-theme=dark] .lgtabs button.on{color:#070b14;}
+  /* locked cell */
+  .lock{display:inline-flex;align-items:center;gap:5px;color:var(--ink-faint);font-size:12px;cursor:pointer;filter:blur(.2px);}
+  .lock:hover{color:var(--accent);}
+  th.prem{color:var(--gold);}
+  .lockbanner{display:flex;align-items:center;gap:10px;background:color-mix(in srgb,var(--gold) 10%,var(--panel));border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:13px;color:var(--ink-soft);}
+  .lockbanner b{color:var(--ink);}.lockbanner button{margin-left:auto;background:var(--gold);color:#111;border:none;border-radius:6px;padding:5px 12px;font-size:12px;font-weight:700;cursor:pointer;}
+  /* login box */
+  .loginbox{background:var(--panel);border:1px solid var(--line);border-radius:14px;max-width:400px;width:100%;padding:28px 26px;position:relative;box-shadow:0 24px 70px rgba(0,0,0,.5);}
+  .loginbox .x{position:absolute;top:16px;right:18px;background:none;border:none;color:var(--ink-faint);font-size:18px;cursor:pointer;}
+  .lg-brand{display:flex;align-items:center;gap:8px;font-weight:700;font-size:18px;margin-bottom:18px;}
+  .lg-brand .mk{width:24px;height:24px;border-radius:6px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:800;font-size:14px;}
+  :root:not([data-theme=light]) .lg-brand .mk,:root[data-theme=dark] .lg-brand .mk{color:#070b14;}
+  .lg-brand em{font-style:normal;color:var(--accent);}
+  .lg-t{font-size:19px;font-weight:700;margin-bottom:4px;}
+  .lg-sub{color:var(--ink-soft);font-size:13px;margin-bottom:16px;}
+  .lg-in{width:100%;background:var(--panel-2);border:1px solid var(--line);border-radius:8px;padding:11px 13px;color:var(--ink);font-size:14px;margin-bottom:10px;font-family:inherit;outline:none;}
+  .lg-in:focus{border-color:var(--accent);}
+  .lg-go{width:100%;padding:11px;font-size:14px;margin-top:4px;}
+  .lg-note{font-size:11px;color:var(--ink-faint);margin-top:12px;text-align:center;}
+  @media(max-width:860px){.app{grid-template-columns:1fr;}.sidebar{position:static;height:auto;display:none;}.cards{grid-template-columns:1fr 1fr;}.grid2{grid-template-columns:1fr;}.mgrid{grid-template-columns:1fr;}}
+</style>
+
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand"><span class="mk">L</span><span class="bname">Ledger<em>scope</em></span>
+      <button class="collapse" id="collapseBtn" title="Réduire">«</button></div>
+    <div class="tagline bname">Independent Credit Research</div>
+    <button class="sidesearch" id="sideSearch"><span>🔍</span><span class="ss-t">Rechercher…</span><span class="kbd">⌘K</span></button>
+    <div class="authrow" id="authRow">
+      <button class="auth ghost" id="loginBtn"><span class="lbl">Connexion</span></button>
+      <button class="auth" id="signupBtn"><span class="lbl">Inscription</span></button>
+    </div>
+    <div class="navsec">Latest</div>
+    <div class="nav">
+      <button data-v="credit" class="on"><span class="ic">▦</span><span class="lbl">Private Debt Desk</span></button>
+      <button data-v="home"><span class="ic">◧</span><span class="lbl">Market Overview</span></button>
+      <button data-v="screener"><span class="ic">▤</span><span class="lbl">Asset Screener</span></button>
+      <button data-v="monitor"><span class="ic">✦</span><span class="lbl">New Asset Monitor</span></button>
+    </div>
+    <div class="navsec hl">✦ Ledgerscope Signals</div>
+    <div class="nav">
+      <button data-v="alerts"><span class="ic">▲</span><span class="lbl">Alerts</span> <span class="badge" id="navalertn"></span></button>
+      <button data-v="analytics"><span class="ic">◈</span><span class="lbl">Credit Signals</span></button>
+      <button data-v="valuation"><span class="ic">⊟</span><span class="lbl">Valuation</span></button>
+    </div>
+    <div class="navsec">Market Intelligence</div>
+    <div class="nav">
+      <button data-v="networks"><span class="ic">🌐</span><span class="lbl">Networks</span></button>
+      <button data-v="platforms"><span class="ic">🏢</span><span class="lbl">Platforms</span></button>
+      <button data-v="managers"><span class="ic">👥</span><span class="lbl">Asset Managers</span></button>
+      <button data-v="apac"><span class="ic">🌏</span><span class="lbl">APAC</span></button>
+    </div>
+    <div class="navsec">Data &amp; API</div>
+    <div class="nav">
+      <button data-v="datacatalog"><span class="ic">🗂️</span><span class="lbl">Data Catalog</span></button>
+      <button class="apibtn"><span class="ic">⚡</span><span class="lbl">Enterprise API</span> <span class="tag-new">NEW</span></button>
+    </div>
+    <div class="navsec">Asset Classes</div>
+    <div class="nav" id="clsnav"></div>
+    <div class="sidefoot" id="sidefoot"></div>
+  </aside>
+
+  <div class="main">
+    <div class="ticker" id="ticker"></div>
+    <div class="content">
+
+      <!-- HOME -->
+      <div class="view" id="v-home">
+        <div class="welcome" id="welcome"></div>
+        <div class="cards five" id="ov-cards"></div>
+        <div class="chartbox">
+          <div class="bar">
+            <h3>Total RWA Value</h3>
+            <div class="seg" id="clsSeg">
+              <button data-k="all" class="on">All</button>
+              <button data-k="credit">Private Credit</button>
+            </div>
+          </div>
+          <canvas id="chart" width="1080" height="380"></canvas>
+          <div class="charttip" id="chartTip"></div>
+          <div class="legend" id="legend"></div>
+        </div>
+        <div class="grid2">
+          <div class="box"><h3>Value by asset class</h3><div class="hint">TVL on-chain live</div><div id="classbars"></div></div>
+          <div class="box"><h3>Net flows (7j)</h3><div class="hint">Variation nette de TVL par classe</div><div id="flowbars"></div></div>
+        </div>
+        <div class="chartbox">
+          <div class="bar"><h3>Performance par classe (croissance TVL indexée)</h3></div>
+          <canvas id="perfChart" width="1080" height="280"></canvas>
+          <div class="legend" id="perfLegend"></div>
+        </div>
+        <div class="panelhd"><h3>Croissance par classe d'actif</h3><button class="csv" data-csv="perf">⬇ CSV</button></div>
+        <div class="tablewrap"><div class="scroll"><table id="perftable">
+          <thead><tr><th data-s="cls">Classe</th><th class="num" data-s="tvl">TVL</th><th class="num" data-s="m1">1M</th><th class="num" data-s="m3">3M</th><th class="num" data-s="ytd">YTD</th><th class="num" data-s="y1">1A</th></tr></thead>
+          <tbody id="perfbody"></tbody></table></div></div>
+      </div>
+
+      <!-- SCREENER -->
+      <div class="view" id="v-screener">
+        <div class="crumb">Data</div><div class="h-title">Asset Screener</div>
+        <div class="h-sub">Base filtrable des actifs réels tokenisés — donnée on-chain live.</div>
+        <div class="toolbar">
+          <div class="search">🔍 <input id="q" placeholder="Rechercher protocole, ticker…"></div>
+          <select class="filter" id="fClass"><option value="">Toutes classes</option></select>
+          <select class="filter" id="fNet"><option value="">Tous réseaux</option></select>
+          <span class="count" id="scount"></span>
+        </div>
+        <div class="tablewrap"><div class="scroll"><table id="stable">
+          <thead><tr><th data-s="name">Protocol</th><th data-s="cls">Class</th><th data-s="net">Networks</th>
+          <th class="num" data-s="tvl">TVL (US$)</th><th class="num" data-s="chg7d">7d %</th><th class="num" data-s="chg1d">1d %</th></tr></thead>
+          <tbody id="sbody"></tbody></table></div></div>
+      </div>
+
+      <!-- MONITOR -->
+      <div class="view" id="v-monitor">
+        <div class="crumb">Latest</div><div class="h-title">New Asset Monitor</div>
+        <div class="h-sub">Protocoles RWA les plus récemment listés.</div>
+        <div class="tablewrap"><div class="scroll"><table>
+          <thead><tr><th>Protocol</th><th>Class</th><th>Networks</th><th class="num">TVL</th><th>Listed</th></tr></thead>
+          <tbody id="mbody"></tbody></table></div></div>
+      </div>
+
+      <!-- ALERTS -->
+      <div class="view" id="v-alerts">
+        <div class="crumb">✦ Ledgerscope Signals</div><div class="h-title">Alerts</div>
+        <div class="h-sub" id="al-sub"></div>
+        <div class="cards" id="al-cards"></div>
+        <div id="al-list" style="margin-top:16px;"></div>
+      </div>
+
+      <!-- CREDIT SIGNALS -->
+      <div class="view" id="v-analytics">
+        <div class="crumb">✦ Ledgerscope Signals</div><div class="h-title">Risk &amp; Value Signals</div>
+        <div class="h-sub" id="an-sub"></div>
+        <div class="cards" id="an-cards"></div>
+        <div class="methodbox" style="margin-top:16px;">
+          <b>Notation propriétaire, toutes classes d'actifs.</b> <b>① LS Score</b> (0–100) : taille 42% + stabilité TVL 40% + résilience multi-chaîne 18%. <span class="g-green">🟢≥68</span>/<span class="g-amber">🟡48–67</span>/<span class="g-red">🔴&lt;48</span>. <b>② NAV gap</b> : rendement juste = taux sans risque (<span id="rfval"></span>) + prime[2% + (1−LS/100)×10% + volatilité σ]. <span class="g-red">RICH</span>=survalorisé / <span class="g-green">CHEAP</span>=sous-valorisé. Clique une ligne pour la fiche détaillée.
+        </div>
+        <div class="toolbar">
+          <div class="search">🔍 <input id="anq" placeholder="Filtrer…"></div>
+          <select class="filter" id="anClass"><option value="">Toutes classes</option></select>
+          <select class="filter" id="anBand"><option value="">Toutes bandes</option><option value="green">🟢 Green</option><option value="amber">🟡 Amber</option><option value="red">🔴 Red</option></select>
+          <select class="filter" id="anVerd"><option value="">Tous verdicts</option><option value="rich">RICH</option><option value="fair">Fair</option><option value="cheap">CHEAP</option><option value="_y">Rendement matché</option></select>
+          <span class="count" id="ancount"></span>
+        </div>
+        <div class="tablewrap"><div class="scroll"><table id="antable">
+          <thead><tr><th data-s="name">Protocol</th><th data-s="cls">Class</th><th class="num" data-s="tvl">TVL</th><th class="num" data-s="ls">LS Score</th>
+          <th class="num" data-s="apy">APY</th><th class="num" data-s="fair">Fair yield</th><th class="num" data-s="gap">NAV gap ✦</th><th>Verdict</th></tr></thead>
+          <tbody id="anbody"></tbody></table></div></div>
+      </div>
+
+      <!-- VALUATION -->
+      <div class="view" id="v-valuation">
+        <div class="crumb">✦ Ledgerscope Valuation</div><div class="h-title">Fundamental Valuation</div>
+        <div class="h-sub" id="fv-sub"></div>
+        <div class="methodbox">
+          <b>Modèle fondamental, indépendant du signal on-chain.</b> Depuis une base de fondamentaux curés (rating, séniorité, collatéral, lockup, gérant) : <span class="mono">requis = sans risque + 2% + spread(rating) + ajust(séniorité/lockup/gérant)</span>. <b>NAV gap = offert − requis.</b> <b>Conf.</b> 🟢/🟡/🔴 = qualité de la donnée. La base curée (<span id="fv-count"></span> fonds) est l'actif de l'agence.
+        </div>
+        <div class="tablewrap"><div class="scroll"><table id="fvtable">
+          <thead><tr><th>Fund</th><th>Profil fondamental</th><th class="num">Offered</th><th class="num">Fair (fond.)</th><th class="num">NAV gap ✦</th><th>Verdict</th><th>Conf</th></tr></thead>
+          <tbody id="fvbody"></tbody></table></div></div>
+      </div>
+
+      <!-- APAC -->
+      <div class="view" id="v-apac">
+        <div class="crumb">🌏 Relocalisation</div><div class="h-title">APAC lens — Singapore-first</div>
+        <div class="h-sub" id="ap-sub"></div>
+        <div class="cards" id="ap-cards"></div>
+        <div class="methodbox" style="margin-top:16px;">
+          <b>La thèse.</b> L'exposition on-chain rattachée à l'APAC est encore mince — <span id="ap-inline"></span> — mais c'est l'opportunité : bâtir la couche data locale <b>maintenant</b>, alignée <b>MAS / Project Guardian</b>, avant que les fonds VCC tokenisés singapouriens passent à l'échelle.
+        </div>
+        <div class="tablewrap"><div class="scroll"><table>
+          <thead><tr><th>Protocol</th><th>Class</th><th>Rattachement APAC</th><th class="num">TVL</th><th class="num">LS</th><th>Networks</th></tr></thead>
+          <tbody id="apbody"></tbody></table></div></div>
+      </div>
+
+      <!-- ASSET CLASS DETAIL -->
+      <div class="view" id="v-class">
+        <div class="crumb" id="cl-crumb">Asset Classes</div><div class="h-title" id="cl-title"></div>
+        <div class="h-sub" id="cl-sub"></div>
+        <div class="cards" id="cl-cards"></div>
+        <div class="grid2">
+          <div class="box">
+            <div class="lgtabs" id="cl-tabs">
+              <button data-lg="platform" class="on">By platform</button>
+              <button data-lg="manager">By manager</button>
+              <button data-lg="network">By network</button>
+              <button data-lg="jurisdiction">By jurisdiction 🔒</button>
+            </div>
+            <div class="tablewrap" style="margin-top:12px"><div class="scroll"><table id="lgtable">
+              <thead><tr><th>#</th><th id="lg-h">League</th><th class="num">Value</th><th class="num">Assets</th></tr></thead>
+              <tbody id="lgbody"></tbody></table></div></div>
+          </div>
+          <div class="box"><h3>Network breakdown</h3><div class="hint">Répartition de la classe par chaîne</div><div id="clnw"></div></div>
+        </div>
+        <div class="panelhd"><h3>Assets in class</h3><button class="csv" data-csv="cl">⬇ CSV</button></div>
+        <div class="tablewrap"><div class="scroll"><table id="cltable">
+          <thead><tr><th>Asset</th><th>Networks</th><th class="num">TVL</th><th class="num">7d %</th><th class="num prem">Rating 🔒</th><th class="num prem">Regulator 🔒</th></tr></thead>
+          <tbody id="clbody"></tbody></table></div></div>
+      </div>
+
+      <!-- PRIVATE CREDIT -->
+      <div class="view on" id="v-credit">
+        <div class="crumb">Ledgerscope · Private Debt Desk</div><div class="h-title">Tokenized Private Debt</div>
+        <div class="h-sub" id="cr-sub"></div>
+        <div class="cards" id="cr-cards"></div>
+        <div class="panelhd"><h3>Private credit funds</h3><button class="csv" data-csv="cr">⬇ CSV</button></div>
+        <div class="tablewrap"><div class="scroll"><table>
+          <thead><tr><th>Fund</th><th>Networks</th><th class="num">TVL</th><th class="num">7d %</th><th class="num">LS Score</th><th class="num">NAV gap</th></tr></thead>
+          <tbody id="crbody"></tbody></table></div></div>
+      </div>
+
+      <!-- NETWORKS -->
+      <div class="view" id="v-networks">
+        <div class="crumb">Market Intelligence</div><div class="h-title">Networks</div>
+        <div class="h-sub" id="nw-sub"></div>
+        <div class="cards" id="nw-cards"></div>
+        <div class="grid2">
+          <div class="box"><h3>Value by network</h3><div class="hint">TVL RWA agrégée par chaîne</div><div id="nwbars"></div></div>
+          <div class="box"><h3>Network share</h3><div class="hint">Répartition</div><canvas id="nwpie" width="360" height="300"></canvas></div>
+        </div>
+        <div class="panelhd"><h3>Network ranking</h3><button class="csv" data-csv="nw">⬇ CSV</button></div>
+        <div class="tablewrap"><div class="scroll"><table id="nwtable">
+          <thead><tr><th>#</th><th>Network</th><th class="num">RWA value</th><th class="num">Assets</th><th class="num">Share</th></tr></thead>
+          <tbody id="nwbody"></tbody></table></div></div>
+      </div>
+
+      <!-- PLATFORMS -->
+      <div class="view" id="v-platforms">
+        <div class="crumb">Market Intelligence</div><div class="h-title">Platforms</div>
+        <div class="h-sub" id="pf-sub"></div>
+        <div class="cards" id="pf-cards"></div>
+        <div class="panelhd"><h3>Platform ranking (distribution)</h3><button class="csv" data-csv="pf">⬇ CSV</button></div>
+        <div class="tablewrap"><div class="scroll"><table id="pftable">
+          <thead><tr><th>#</th><th>Platform / protocol</th><th>Primary class</th><th class="num">Value</th><th class="num">Networks</th><th class="num">7d %</th></tr></thead>
+          <tbody id="pfbody"></tbody></table></div></div>
+      </div>
+
+      <!-- ASSET MANAGERS -->
+      <div class="view" id="v-managers">
+        <div class="crumb">Market Intelligence</div><div class="h-title">Asset Managers</div>
+        <div class="h-sub" id="mg-sub"></div>
+        <div class="cards" id="mg-cards"></div>
+        <div class="grid2">
+          <div class="box"><h3>Top managers by value</h3><div class="hint">Encours tokenisé agrégé</div><div id="mgbars"></div></div>
+          <div class="box"><h3>Manager concentration</h3><div class="hint">Part des 5 plus gros</div><canvas id="mgpie" width="360" height="300"></canvas></div>
+        </div>
+        <div class="panelhd"><h3>Manager ranking</h3><button class="csv" data-csv="mg">⬇ CSV</button></div>
+        <div class="tablewrap"><div class="scroll"><table id="mgtable">
+          <thead><tr><th>#</th><th>Asset manager</th><th class="num">Value</th><th class="num">Assets</th><th>Classes</th><th class="num">Networks</th></tr></thead>
+          <tbody id="mgbody"></tbody></table></div></div>
+      </div>
+
+      <!-- DATA CATALOG -->
+      <div class="view" id="v-datacatalog">
+        <div class="crumb">Data &amp; API</div><div class="h-title">Data Catalog</div>
+        <div class="h-sub" id="dc-sub"></div>
+        <div id="dc-groups"></div>
+        <div class="methodbox" style="margin-top:16px;">Contact données &amp; API : <b>data@ledgerscope.io</b> · Accès Enterprise API sur demande. Couverture rafraîchie quotidiennement via pipeline on-chain.</div>
+      </div>
+
+      <div class="disc" id="footdisc"></div>
+
+      <!-- footer -->
+      <div class="sitefoot">
+        <div class="regblock">
+          <div><b>Pour les émetteurs &amp; plateformes</b><div class="sub">Faites indexer et analyser vos fonds tokenisés par Ledgerscope.</div></div>
+          <button class="btn-reg">Enregistrer vos actifs →</button>
+        </div>
+        <div class="footlinks">
+          <span>Ledgerscope · Singapore</span><span>Documentation</span><span>Research</span><span>API</span><span>Press &amp; Citations</span><span>Confidentialité</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ASSET DETAIL MODAL -->
+  <div class="overlay" id="detailOverlay"><div class="modal" id="detailModal"></div></div>
+  <!-- GLOBAL SEARCH -->
+  <div class="overlay" id="searchOverlay"><div class="searchbox">
+    <input id="gSearch" placeholder="Rechercher un actif, protocole, ticker…" autocomplete="off">
+    <div class="sresults" id="sResults"></div>
+    <div class="shint">↑↓ naviguer · ↵ ouvrir · Esc fermer</div>
+  </div></div>
+  <!-- LOGIN MODAL -->
+  <div class="overlay" id="loginOverlay"><div class="loginbox">
+    <button class="x" id="loginX">✕</button>
+    <div class="lg-brand"><span class="mk">L</span>Ledger<em>scope</em></div>
+    <div class="lg-t" id="lg-title">Se connecter</div>
+    <div class="lg-sub">Débloquez les colonnes premium : notation, régulateur, juridiction, league tables complètes.</div>
+    <input class="lg-in" id="lgEmail" placeholder="email@institution.com" autocomplete="off">
+    <input class="lg-in" id="lgPwd" type="password" placeholder="Mot de passe">
+    <button class="auth lg-go" id="lgGo">Continuer</button>
+    <div class="lg-note">Démo — aucune donnée n'est envoyée. « Continuer » débloque le contenu premium localement.</div>
+  </div></div>
+  <!-- chat widget -->
+  <button class="chatw" title="Support">💬</button>
+</div>
+
+<script>
+/*__DATA__*/
+const D=window.DATA;
+const fmt=n=>{n=n||0;const a=Math.abs(n);return a>=1e9?'$'+(n/1e9).toFixed(2)+'B':a>=1e6?'$'+(n/1e6).toFixed(1)+'M':a>=1e3?'$'+(n/1e3).toFixed(0)+'K':'$'+n.toFixed(0);};
+const pct=v=>v==null?'—':(v>=0?'+':'')+v.toFixed(1)+'%';
+const CLR={'U.S. Treasuries':'#3b82f6','Private credit':'#22b8a6','Commodities':'#d0a84a','Tokenized stocks / equity':'#a855f7','Cash / yield stablecoin':'#38bdf8','Real estate':'#ef5a56','Other (carbon/insurance/art)':'#64748b','Other RWA':'#94a3b8'};
+const clr=c=>CLR[c]||'#8b929b';
+
+/* welcome + footer */
+document.getElementById('welcome').innerHTML=`<b>Bienvenue sur Ledgerscope.</b> La couche de données et d'analytique indépendante sur le crédit privé tokenisé — indexation on-chain, notation du risque et écart de valorisation que les agrégateurs n'offrent pas. Source : ${D.source}. Snapshot ${D.generated}.`;
+document.getElementById('sidefoot').innerHTML=`✦ = analytique propriétaire<br>Données ${D.generated}<br>APAC · Singapore-first`;
+document.getElementById('footdisc').innerHTML=`Ledgerscope Terminal · données réelles via DefiLlama public API (${D.generated}). TVL on-chain vérifiable ; classification &amp; modèles propriétaires. <b>Limites méthodologiques :</b> le graphique historique ne couvre que les protocoles vivants aujourd'hui (biais de survivance) ; le NAV gap absolu est calibré prudemment — la <i>valorisation relative aux pairs</i> (fiche détail) le neutralise. Ni conseil d'investissement, ni notation officielle. Méthodo complète : <span class="mono">METHODOLOGY.md</span>. Rafraîchir : <span class="mono">python3 build.py</span>.`;
+
+/* ticker : top actifs */
+document.getElementById('ticker').innerHTML=D.assets.slice(0,10).map(a=>`<div class="tk"><span class="s">${a.symbol!=='-'?a.symbol:a.name.split(' ')[0]}</span><span class="v">${fmt(a.tvl)}</span><span class="c ${(a.chg7d||0)>=0?'up':'down'}">${pct(a.chg7d)}</span></div>`).join('');
+
+/* overview cards (5, façon rwa.xyz) */
+document.getElementById('ov-cards').innerHTML=[
+  ['Total RWA Value',fmt(D.total_tvl)],
+  ['Total Tokenized Value',fmt(D.total_tvl+(D.stbl_tvl||0))],
+  ['Total Stablecoin Value',fmt(D.stbl_tvl||0)],
+  ['Tracked RWA Assets',D.n_assets.toLocaleString()],
+  ['Private Credit TVL',fmt(D.pc_total)],
+].map(c=>`<div class="card"><div class="k">${c[0]}</div><div class="v">${c[1]}</div></div>`).join('');
+
+/* class bars */
+const maxC=Math.max(...D.byclass.map(c=>c[1]));
+document.getElementById('classbars').innerHTML=D.byclass.map(c=>`<div class="barrow"><div class="lbl">${c[0]}</div><div class="bartrack"><div class="barfill" style="width:${Math.max(2,c[1]/maxC*100)}%;background:${clr(c[0])}"></div></div><div class="amt">${fmt(c[1])}</div></div>`).join('');
+/* flow bars */
+const maxF=Math.max(...D.flows.map(f=>Math.abs(f[1])))||1;
+document.getElementById('flowbars').innerHTML=D.flows.map(f=>`<div class="barrow"><div class="lbl">${f[0]}</div><div class="bartrack"><div class="barfill" style="width:${Math.abs(f[1])/maxF*100}%;background:${f[1]>=0?'var(--up)':'var(--down)'}"></div></div><div class="amt ${f[1]>=0?'up':'down'}">${f[1]>=0?'+':''}${fmt(f[1])}</div></div>`).join('');
+
+/* ===== STACKED AREA CHART (vrai historique + survol interactif) ===== */
+const HIST=D.history||{labels:[],series:[]};
+const cv=document.getElementById('chart'),ctx=cv.getContext('2d'),tip=document.getElementById('chartTip');
+let GEO=null,MODE='all';const HIDDEN=new Set();
+function drawChart(mode,hoverIdx){
+  MODE=mode;
+  const W=cv.width,H=cv.height,padL=54,padR=14,padT=14,padB=28;
+  const css=getComputedStyle(document.documentElement);
+  const line=css.getPropertyValue('--line').trim(),faint=css.getPropertyValue('--ink-faint').trim(),accent=css.getPropertyValue('--accent').trim();
+  const labels=HIST.labels,N=labels.length||1;
+  const fullSeries=mode==='credit'?HIST.series.filter(s=>s.cls==='Private credit'):HIST.series;
+  let series=fullSeries.filter(s=>!HIDDEN.has(s.cls));
+  let maxY=0;
+  for(let i=0;i<N;i++){let s=0;series.forEach(sr=>s+=sr.values[i]||0);if(s>maxY)maxY=s;}
+  maxY=maxY*1.08||1;
+  const X=i=>padL+i*(W-padL-padR)/(N-1);
+  const Y=v=>padT+(1-v/maxY)*(H-padT-padB);
+  ctx.clearRect(0,0,W,H);
+  ctx.strokeStyle=line;ctx.fillStyle=faint;ctx.font='11px -apple-system,sans-serif';ctx.lineWidth=1;
+  for(let g=0;g<=5;g++){const y=padT+g*(H-padT-padB)/5;ctx.beginPath();ctx.moveTo(padL,y);ctx.lineTo(W-padR,y);ctx.stroke();
+    ctx.fillText('$'+(maxY*(1-g/5)/1e9).toFixed(0)+'B',8,y+4);}
+  const ord=series.slice().reverse();
+  let baseArr=new Array(N).fill(0);
+  const tops={}; // cls -> topArr (pour points au survol)
+  ord.forEach(sr=>{
+    const col=clr(sr.cls);
+    const topArr=baseArr.map((b,i)=>b+(sr.values[i]||0));
+    tops[sr.cls]=topArr;
+    ctx.beginPath();ctx.moveTo(X(0),Y(baseArr[0]));
+    for(let i=0;i<N;i++)ctx.lineTo(X(i),Y(topArr[i]));
+    for(let i=N-1;i>=0;i--)ctx.lineTo(X(i),Y(baseArr[i]));
+    ctx.closePath();ctx.fillStyle=col+'d9';ctx.fill();
+    ctx.beginPath();for(let i=0;i<N;i++){const p=Y(topArr[i]);i?ctx.lineTo(X(i),p):ctx.moveTo(X(i),p);}
+    ctx.strokeStyle=col;ctx.lineWidth=1.2;ctx.stroke();
+    baseArr=topArr;
+  });
+  ctx.fillStyle=faint;const step=Math.max(1,Math.floor(N/8));
+  for(let i=0;i<N;i+=step){ctx.fillText(labels[i],X(i)-12,H-8);}
+  // crosshair + points au survol
+  if(hoverIdx!=null&&hoverIdx>=0&&hoverIdx<N){
+    const hx=X(hoverIdx);
+    ctx.strokeStyle=accent;ctx.lineWidth=1;ctx.setLineDash([4,4]);
+    ctx.beginPath();ctx.moveTo(hx,padT);ctx.lineTo(hx,H-padB);ctx.stroke();ctx.setLineDash([]);
+    series.forEach(sr=>{const yv=Y(tops[sr.cls][hoverIdx]);
+      ctx.beginPath();ctx.arc(hx,yv,3.5,0,7);ctx.fillStyle=clr(sr.cls);ctx.fill();
+      ctx.lineWidth=1.5;ctx.strokeStyle=css.getPropertyValue('--panel').trim();ctx.stroke();});
+  }
+  GEO={W,H,padL,padR,padT,padB,N,series,labels};
+  document.getElementById('legend').innerHTML=fullSeries.map(sr=>`<div class="li" data-cls="${sr.cls}" title="Masquer/afficher" style="cursor:pointer;opacity:${HIDDEN.has(sr.cls)?.35:1}"><span class="dot" style="background:${clr(sr.cls)}"></span>${sr.cls} · ${fmt(sr.values[N-1]||0)}</div>`).join('');
+}
+document.getElementById('legend').addEventListener('click',e=>{const li=e.target.closest('.li[data-cls]');if(!li)return;const c=li.dataset.cls;HIDDEN.has(c)?HIDDEN.delete(c):HIDDEN.add(c);drawChart(MODE,null);});
+function showTip(idx,clientX){
+  const {series,labels,N}=GEO;
+  const rows=series.map(sr=>[sr.cls,sr.values[idx]||0]).sort((a,b)=>b[1]-a[1]);
+  const total=rows.reduce((s,r)=>s+r[1],0);
+  tip.innerHTML=`<div class="th"><span class="d">${labels[idx]}</span><span class="t">${fmt(total)}</span></div>`+
+    rows.map(r=>`<div class="r"><span class="lft"><span class="cd" style="background:${clr(r[0])}"></span>${r[0]}</span><span class="val">${fmt(r[1])}</span></div>`).join('');
+  tip.style.display='block';
+  const box=cv.parentElement.getBoundingClientRect();
+  const rel=clientX-box.left;
+  const tw=tip.offsetWidth;
+  let left=rel+18; if(left+tw>box.width-8)left=rel-tw-18; if(left<8)left=8;
+  tip.style.left=left+'px'; tip.style.top='58px';
+}
+function hoverAt(e){
+  if(!GEO)return;
+  const rect=cv.getBoundingClientRect();
+  const x=(e.clientX-rect.left)*(cv.width/rect.width);
+  const {padL,padR,W,N}=GEO;
+  let i=Math.round((x-padL)/((W-padL-padR)/(N-1)));
+  i=Math.max(0,Math.min(N-1,i));
+  drawChart(MODE,i);showTip(i,e.clientX);
+}
+cv.addEventListener('mousemove',hoverAt);
+cv.addEventListener('mouseleave',()=>{tip.style.display='none';drawChart(MODE,null);});
+drawChart('all');
+
+/* ===== PERFORMANCE PAR CLASSE (croissance TVL, vrai historique) ===== */
+const PL=HIST.labels,PN=PL.length;
+const yr=PL.length?PL[PN-1].split('/')[1]:'';
+let ytdIdx=PL.findIndex(l=>l.split('/')[1]===yr); if(ytdIdx<0)ytdIdx=0;
+const gr=(v,base)=>base>0?(v/base-1)*100:null;
+const perf=HIST.series.map(s=>{const v=s.values,last=v[PN-1];return {
+  cls:s.cls, tvl:last,
+  m1:PN>=2?gr(last,v[PN-2]):null, m3:PN>=4?gr(last,v[PN-4]):null,
+  ytd:gr(last,v[ytdIdx]), y1:PN>=13?gr(last,v[PN-13]):null };});
+const pcell=x=>x==null?'<span class="sub">—</span>':`<span class="${x>=0?'up':'down'}">${x>=0?'+':''}${x.toFixed(1)}%</span>`;
+let pk='tvl',pd=-1;
+function perfRender(){
+  const r=perf.slice().sort((a,b)=>{const A=a[pk],B=b[pk];if(typeof A==='string')return (A||'').localeCompare(B||'')*pd;return ((A??-1e9)-(B??-1e9))*pd;});
+  document.getElementById('perfbody').innerHTML=r.map(p=>`<tr><td class="asset"><span class="csw" style="display:inline-block;width:9px;height:9px;border-radius:2px;background:${clr(p.cls)};margin-right:7px"></span>${p.cls}</td><td class="num">${fmt(p.tvl)}</td><td class="num">${pcell(p.m1)}</td><td class="num">${pcell(p.m3)}</td><td class="num">${pcell(p.ytd)}</td><td class="num">${pcell(p.y1)}</td></tr>`).join('');
+}
+document.querySelectorAll('#perftable th').forEach(th=>th.addEventListener('click',()=>{const k=th.dataset.s;if(pk===k)pd*=-1;else{pk=k;pd=k==='cls'?1:-1;}perfRender();}));
+perfRender();
+/* comparison chart : indexé base-100 il y a 12 mois (classes existantes) */
+(function(){
+  const cvp=document.getElementById('perfChart'),c=cvp.getContext('2d');const W=cvp.width,H=cvp.height,pL=48,pR=14,pT=12,pB=26;
+  const base=Math.max(0,PN-13);const series=HIST.series.filter(s=>s.values[base]>0);
+  const css=getComputedStyle(document.documentElement),line=css.getPropertyValue('--line').trim(),faint=css.getPropertyValue('--ink-faint').trim();
+  const idx=s=>s.values.slice(base).map(v=>v/s.values[base]*100);
+  let maxY=100;series.forEach(s=>idx(s).forEach(v=>{if(v>maxY)maxY=v;}));maxY=Math.min(maxY*1.05,600);
+  const M=PN-base;const X=i=>pL+i*(W-pL-pR)/(M-1);const Y=v=>pT+(1-(v-80)/(maxY-80))*(H-pT-pB);
+  c.clearRect(0,0,W,H);c.strokeStyle=line;c.fillStyle=faint;c.font='11px -apple-system,sans-serif';c.lineWidth=1;
+  for(let g=0;g<=4;g++){const y=pT+g*(H-pT-pB)/4;c.beginPath();c.moveTo(pL,y);c.lineTo(W-pR,y);c.stroke();c.fillText(Math.round(maxY-(maxY-80)*g/4)+'',10,y+4);}
+  series.forEach(s=>{const d=idx(s);c.beginPath();d.forEach((v,i)=>{const p=Y(v);i?c.lineTo(X(i),p):c.moveTo(X(i),p);});c.strokeStyle=clr(s.cls);c.lineWidth=2;c.stroke();});
+  c.fillStyle=faint;const st=Math.max(1,Math.floor(M/6));for(let i=0;i<M;i+=st)c.fillText(PL[base+i],X(i)-12,H-8);
+  document.getElementById('perfLegend').innerHTML=series.map(s=>{const d=idx(s);const g=d[d.length-1]-100;return `<div class="li"><span class="dot" style="background:${clr(s.cls)}"></span>${s.cls} · ${g>=0?'+':''}${g.toFixed(0)}%</div>`;}).join('');
+})();
+document.querySelectorAll('#clsSeg button').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('#clsSeg button').forEach(x=>x.classList.remove('on'));b.classList.add('on');drawChart(b.dataset.k);}));
+
+/* screener */
+const netColors={Ethereum:'#627eea',Solana:'#14f195',Stellar:'#3b82c4',Polygon:'#8247e5',Base:'#0052ff',Avalanche:'#e84142',Aptos:'#4b9e91',Sei:'#c0362c',Arbitrum:'#28a0f0'};
+const fClass=document.getElementById('fClass'),fNet=document.getElementById('fNet');
+[...new Set(D.assets.map(a=>a.cls))].sort().forEach(c=>fClass.add(new Option(c,c)));
+[...new Set(D.assets.flatMap(a=>a.chains))].sort().forEach(n=>fNet.add(new Option(n,n)));
+let sk='tvl',sd=-1;
+function scr(){
+  const q=document.getElementById('q').value.toLowerCase(),fc=fClass.value,fn=fNet.value;
+  let r=D.assets.filter(a=>(!q||(a.name+a.symbol).toLowerCase().includes(q))&&(!fc||a.cls===fc)&&(!fn||a.chains.includes(fn)));
+  r.sort((a,b)=>{let x,y;if(sk==='net'){x=a.chains.join();y=b.chains.join();}else{x=a[sk];y=b[sk];}
+    if(typeof x==='string')return (x||'').localeCompare(y||'')*sd;return ((x??-1e18)-(y??-1e18))*sd;});
+  document.getElementById('sbody').innerHTML=r.map(a=>`<tr data-slug="${a.slug}"><td class="asset">${a.name} <span class="sub">${a.symbol}</span></td><td><span class="chip ${a.cls==='Private credit'?'credit':''}">${a.cls}</span></td><td class="sub">${a.chains.slice(0,3).join(', ')}</td><td class="num">${fmt(a.tvl)}</td><td class="num ${a.chg7d>=0?'up':'down'}">${pct(a.chg7d)}</td><td class="num ${a.chg1d>=0?'up':'down'}">${pct(a.chg1d)}</td></tr>`).join('');
+  document.getElementById('scount').textContent=r.length+' assets';
+}
+['q','fClass','fNet'].forEach(id=>document.getElementById(id).addEventListener('input',scr));
+document.querySelectorAll('#stable th').forEach(th=>th.addEventListener('click',()=>{const k=th.dataset.s;if(sk===k)sd*=-1;else{sk=k;sd=(k==='name'||k==='cls'||k==='net')?1:-1;}scr();}));
+scr();
+
+/* monitor */
+const dt=t=>t?new Date(t*1000).toISOString().slice(0,10):'—';
+document.getElementById('mbody').innerHTML=D.recent.map(a=>`<tr data-slug="${a.slug}"><td class="asset">${a.name} <span class="sub">${a.symbol}</span></td><td><span class="chip ${a.cls==='Private credit'?'credit':''}">${a.cls}</span></td><td class="sub">${a.chains.slice(0,3).join(', ')}</td><td class="num">${fmt(a.tvl)}</td><td class="sub">${dt(a.listedAt)}</td></tr>`).join('');
+
+const pc=D.assets.filter(a=>a.cls==='Private credit');
+const scoreCell=s=>`<span class="score g-${s.band}"><span class="lsdot bg-${s.band}"></span>${s.ls}</span>${s.stress?'<span class="stressflag">STRESS</span>':''}`;
+
+/* risk & value signals — TOUTES CLASSES */
+const sigAssets=D.assets.filter(a=>a.tvl>=2e6);
+document.getElementById('rfval').textContent=(D.rf!=null?D.rf.toFixed(2):'—')+'%';
+const allRich=sigAssets.filter(a=>a.gapu&&a.gapu.verdict==='rich').length;
+const allCheap=sigAssets.filter(a=>a.gapu&&a.gapu.verdict==='cheap').length;
+const allStress=sigAssets.filter(a=>a.sig.stress).length;
+document.getElementById('an-sub').textContent=`LS Score + NAV gap sur ${sigAssets.length} actifs (toutes classes) · ${sigAssets.filter(a=>a.gapu).length} avec valorisation · taux sans risque ${D.rf}% · ${D.generated}`;
+document.getElementById('an-cards').innerHTML=[['On-chain risk-free',D.rf+'%'],['🔴 RICH',allRich],['🟢 CHEAP',allCheap],['⚠ Stress',allStress]].map(c=>`<div class="card"><div class="k">${c[0]}</div><div class="v">${c[1]}</div></div>`).join('');
+const anClass=document.getElementById('anClass');
+[...new Set(sigAssets.map(a=>a.cls))].sort().forEach(c=>anClass.add(new Option(c,c)));
+const gapCell=yg=>{if(!yg)return '<span class="sub">no yield</span>';const cl=yg.gap_bps<=-75?'g-red':yg.gap_bps>=150?'g-green':'';return `<span class="${cl}" style="font-weight:700">${yg.gap_bps>=0?'+':''}${yg.gap_bps} bps</span>`;};
+const verdCell=yg=>{if(!yg)return '<span class="sub">—</span>';const m={rich:['RICH','g-red'],cheap:['CHEAP','g-green'],fair:['Fair','']};const[t,c]=m[yg.verdict];return `<span class="${c}" style="font-weight:700">${t}</span>`;};
+let ank='gap',and_=1;
+function anRender(){
+  const q=document.getElementById('anq').value.toLowerCase(),fc=anClass.value,fb=document.getElementById('anBand').value,fv=document.getElementById('anVerd').value;
+  let r=sigAssets.filter(a=>(!q||(a.name+a.symbol).toLowerCase().includes(q))&&(!fc||a.cls===fc)&&(!fb||a.sig.band===fb)&&(!fv||(fv==='_y'?a.gapu:(a.gapu&&a.gapu.verdict===fv))));
+  const gv=a=>a.gapu?a.gapu.gap_bps:9e9;
+  r.sort((x,y)=>{let A,B;if(ank==='gap'){A=gv(x);B=gv(y);}else if(ank==='apy'){A=x.gapu?x.gapu.apy:-1;B=y.gapu?y.gapu.apy:-1;}else if(ank==='fair'){A=x.gapu?x.gapu.fair:-1;B=y.gapu?y.gapu.fair:-1;}else if(ank==='ls'){A=x.sig.ls;B=y.sig.ls;}else if(ank==='name'){A=x.name;B=y.name;}else if(ank==='cls'){A=x.cls;B=y.cls;}else{A=x.tvl;B=y.tvl;}
+    if(typeof A==='string')return A.localeCompare(B)*and_;return (A-B)*and_;});
+  document.getElementById('anbody').innerHTML=r.map(a=>`<tr data-slug="${a.slug}"><td class="asset">${a.name} <span class="sub">${a.symbol}</span></td><td><span class="chip ${a.cls==='Private credit'?'credit':''}">${a.cls}</span></td><td class="num">${fmt(a.tvl)}</td><td class="num">${scoreCell(a.sig)}</td><td class="num">${a.gapu?a.gapu.apy.toFixed(2)+'%':'<span class=sub>—</span>'}</td><td class="num">${a.gapu?a.gapu.fair.toFixed(2)+'%'+(a.gapu.src==='fond.'?'':' <span class="sub" style="font-size:9px">sig</span>'):'<span class=sub>—</span>'}</td><td class="num">${gapCell(a.gapu)}</td><td>${verdCell(a.gapu)}</td></tr>`).join('');
+  document.getElementById('ancount').textContent=r.length+' actifs';
+}
+['anq','anClass','anBand','anVerd'].forEach(id=>document.getElementById(id).addEventListener('input',anRender));
+document.querySelectorAll('#antable th').forEach(th=>th.addEventListener('click',()=>{const k=th.dataset.s;if(!k)return;if(ank===k)and_*=-1;else{ank=k;and_=(k==='name'||k==='cls')?1:-1;}anRender();}));
+anRender();
+
+/* valuation */
+const fvAssets=D.assets.filter(a=>a.fv);
+document.getElementById('fv-sub').textContent=`Rendement requis fondamental sur ${fvAssets.length} actifs curés (toutes classes) · ${fvAssets.filter(a=>a.fv.gap_bps!=null).length} avec rendement · ${D.generated}`;
+document.getElementById('fv-count').textContent=fvAssets.length;
+const confDot={high:'🟢',med:'🟡',low:'🔴'};
+const ratingChip=r=>{const g=r&&['AAA','AA','A'].includes(r)?'g-green':r==='NR'?'':'g-amber';return `<span class="chip ${g}" style="font-weight:700">${r||'NR'}</span>`;};
+const fvGap=fv=>{if(fv.gap_bps==null)return '<span class="sub">no yield</span>';const cl=fv.gap_bps<=-75?'g-red':fv.gap_bps>=150?'g-green':'';return `<span class="${cl}" style="font-weight:700">${fv.gap_bps>=0?'+':''}${fv.gap_bps} bps</span>`;};
+const fvVerd=fv=>{if(!fv.verdict)return '<span class="sub">—</span>';const m={rich:['RICH','g-red'],cheap:['CHEAP','g-green'],fair:['Fair','']};const[t,c]=m[fv.verdict];return `<span class="${c}" style="font-weight:700">${t}</span>`;};
+document.getElementById('fvbody').innerHTML=fvAssets.slice().sort((a,b)=>(a.fv.gap_bps==null?9e9:a.fv.gap_bps)-(b.fv.gap_bps==null?9e9:b.fv.gap_bps)).map(a=>{const f=a.fv;return `<tr data-slug="${a.slug}"><td class="asset">${a.name} <span class="sub">${a.symbol}</span><br><span class="sub" style="font-weight:400">${f.jurisdiction||''}</span></td><td style="font-size:12px;color:var(--ink-soft);white-space:normal;max-width:250px">${ratingChip(f.rating)} ${(f.seniority||'').replace('_',' ')} · ${f.liquidity} · T${f.manager_tier}<br>${f.note||''}</td><td class="num">${f.offered!=null?f.offered.toFixed(1)+'%':'<span class=sub>—</span>'}</td><td class="num">${f.req.toFixed(1)}%</td><td class="num">${fvGap(f)}</td><td>${fvVerd(f)}</td><td>${confDot[f.conf]||'🔴'}</td></tr>`;}).join('');
+
+/* apac */
+const apac=D.assets.filter(a=>a.apac);
+const apShare=D.total_tvl?(D.apac_tvl/D.total_tvl*100):0;
+document.getElementById('ap-sub').textContent=`${D.apac_n} protocoles rattachés à l'APAC · ${fmt(D.apac_tvl)} on-chain · vue de relocalisation Singapour.`;
+document.getElementById('ap-inline').textContent=`${D.apac_n} émetteurs, ${fmt(D.apac_tvl)}, ${apShare.toFixed(1)}% du total`;
+document.getElementById('ap-cards').innerHTML=[['Émetteurs APAC',D.apac_n],['TVL APAC',fmt(D.apac_tvl)],['Part du RWA',apShare.toFixed(1)+'%'],['Cadre','MAS·Guardian']].map(c=>`<div class="card"><div class="k">${c[0]}</div><div class="v" style="font-size:${(''+c[1]).length>9?'19px':'25px'}">${c[1]}</div></div>`).join('');
+document.getElementById('apbody').innerHTML=apac.sort((a,b)=>b.tvl-a.tvl).map(a=>`<tr data-slug="${a.slug}"><td class="asset">${a.name} <span class="sub">${a.symbol}</span></td><td><span class="chip ${a.cls==='Private credit'?'credit':''}">${a.cls}</span></td><td class="sub" style="color:var(--accent)">${a.apac}</td><td class="num">${fmt(a.tvl)}</td><td class="num">${scoreCell(a.sig)}</td><td class="sub">${a.chains.slice(0,3).join(', ')}</td></tr>`).join('');
+
+/* alerts */
+const AL=D.alerts||[];
+document.getElementById('navalertn').textContent=AL.length||'';
+if(!AL.length)document.getElementById('navalertn').style.display='none';
+document.getElementById('al-sub').textContent=`${AL.length} signaux actionnables (toutes classes, TVL ≥ $20M) · triés par sévérité · clique pour la fiche · ${D.generated}`;
+document.getElementById('al-cards').innerHTML=[['Signaux',AL.length],['🔴 Haute',AL.filter(a=>a.level==='high').length],['🟡 Moyenne',AL.filter(a=>a.level==='med').length],['Classes touchées',new Set(AL.map(a=>a.cls)).size]].map(c=>`<div class="card"><div class="k">${c[0]}</div><div class="v">${c[1]}</div></div>`).join('');
+document.getElementById('al-list').innerHTML=AL.length?AL.map(a=>`<div class="alert ${a.level}" data-slug="${a.slug}" style="cursor:pointer"><div class="top"><span class="nm">${a.name} <span class="sym">${a.symbol}</span></span><span class="chip ${a.cls==='Private credit'?'credit':''}" style="font-size:10px">${a.cls}</span><span class="lvl">${a.level==='high'?'Haute':a.level==='med'?'Moyenne':'Info'}</span><span class="meta">LS ${a.ls} · ${fmt(a.tvl)} · sev ${a.sev}</span></div><ul>${a.reasons.map(r=>`<li>${r}</li>`).join('')}</ul></div>`).join(''):'<div class="disc">Aucun signal actif.</div>';
+document.getElementById('al-list').addEventListener('click',e=>{const el=e.target.closest('.alert[data-slug]');if(el)openDetail(el.dataset.slug);});
+
+/* ===== PRIVATE CREDIT VIEW ===== */
+document.getElementById('cr-sub').textContent=`${pc.length} fonds de crédit privé tokenisés · ${fmt(D.pc_total)} on-chain · ${D.generated}`;
+document.getElementById('cr-cards').innerHTML=[['Private Credit TVL',fmt(D.pc_total)],['Fonds',pc.length],['🔴 RICH',D.pc_rich.length],['⚠ Stress',D.pc_stress.length]].map(c=>`<div class="card"><div class="k">${c[0]}</div><div class="v">${c[1]}</div></div>`).join('');
+document.getElementById('crbody').innerHTML=pc.slice().sort((a,b)=>b.tvl-a.tvl).map(a=>`<tr data-slug="${a.slug}"><td class="asset">${a.name} <span class="sub">${a.symbol}</span></td><td class="sub">${a.chains.slice(0,3).join(', ')}</td><td class="num">${fmt(a.tvl)}</td><td class="num ${a.chg7d>=0?'up':'down'}">${pct(a.chg7d)}</td><td class="num">${scoreCell(a.sig)}</td><td class="num">${a.yg?gapCell(a.yg):'<span class=sub>—</span>'}</td></tr>`).join('');
+
+/* ===== NETWORKS VIEW ===== */
+const NW=D.networks||[];const nwTot=NW.reduce((s,n)=>s+n.value,0)||1;
+document.getElementById('nw-sub').textContent=`${NW.length} réseaux · ${fmt(nwTot)} de RWA on-chain répartis · ${D.generated}`;
+document.getElementById('nw-cards').innerHTML=[['Networks',NW.length],['Top network',NW[0]?NW[0].chain:'—'],['Top value',NW[0]?fmt(NW[0].value):'—'],['Total RWA',fmt(D.total_tvl)]].map(c=>`<div class="card"><div class="k">${c[0]}</div><div class="v" style="font-size:${(''+c[1]).length>9?'19px':'25px'}">${c[1]}</div></div>`).join('');
+const nwMax=NW[0]?NW[0].value:1;const NWC=['#4d94f5','#22b8a6','#d0a84a','#a855f7','#38bdf8','#ef5a56','#8b98b0','#3ec37e','#c084fc','#f59e0b'];
+document.getElementById('nwbars').innerHTML=NW.slice(0,10).map((n,i)=>`<div class="barrow"><div class="lbl">${n.chain}</div><div class="bartrack"><div class="barfill" style="width:${n.value/nwMax*100}%;background:${NWC[i%NWC.length]}"></div></div><div class="amt">${fmt(n.value)}</div></div>`).join('');
+document.getElementById('nwbody').innerHTML=NW.map((n,i)=>`<tr data-net="${n.chain}" style="cursor:pointer"><td class="num">${i+1}</td><td class="asset">${n.chain}</td><td class="num">${fmt(n.value)}</td><td class="num">${n.n}</td><td class="num">${(n.value/nwTot*100).toFixed(1)}%</td></tr>`).join('');
+(function(){const cv=document.getElementById('nwpie'), x=cv.getContext('2d');const cx=cv.width/2,cy=cv.height/2,R=110;let a0=-Math.PI/2;const top=NW.slice(0,7);const other=NW.slice(7).reduce((s,n)=>s+n.value,0);const segs=top.map((n,i)=>[n.chain,n.value,NWC[i%NWC.length]]);if(other>0)segs.push(['Other',other,'#5a6782']);const tot=segs.reduce((s,g)=>s+g[1],0)||1;segs.forEach(g=>{const a1=a0+g[1]/tot*Math.PI*2;x.beginPath();x.moveTo(cx,cy);x.arc(cx,cy,R,a0,a1);x.closePath();x.fillStyle=g[2];x.fill();a0=a1;});x.fillStyle=getComputedStyle(document.documentElement).getPropertyValue('--panel').trim();x.beginPath();x.arc(cx,cy,58,0,7);x.fill();})();
+
+/* ===== PLATFORMS VIEW ===== */
+const plats=D.assets.slice();
+document.getElementById('pf-sub').textContent=`${plats.length} protocoles / plateformes classés par valeur · ${D.generated}`;
+document.getElementById('pf-cards').innerHTML=[['Platforms',plats.length],['Top',plats[0].name],['Top value',fmt(plats[0].tvl)],['Total',fmt(D.total_tvl)]].map(c=>`<div class="card"><div class="k">${c[0]}</div><div class="v" style="font-size:${(''+c[1]).length>9?'19px':'25px'}">${c[1]}</div></div>`).join('');
+document.getElementById('pfbody').innerHTML=plats.map((a,i)=>`<tr data-slug="${a.slug}"><td class="num">${i+1}</td><td class="asset">${a.name} <span class="sub">${a.symbol}</span></td><td><span class="chip ${a.cls==='Private credit'?'credit':''}">${a.cls}</span></td><td class="num">${fmt(a.tvl)}</td><td class="num">${a.chains.length}</td><td class="num ${a.chg7d>=0?'up':'down'}">${pct(a.chg7d)}</td></tr>`).join('');
+
+/* ===== ASSET MANAGERS VIEW ===== */
+const MG=D.managers||[];const mgTot=MG.reduce((s,m)=>s+m.value,0)||1;
+document.getElementById('mg-sub').textContent=`${MG.length} gestionnaires · ${fmt(mgTot)} d'encours tokenisé · ${D.generated}`;
+document.getElementById('mg-cards').innerHTML=[['Managers',MG.length],['Top manager',MG[0]?MG[0].name:'—'],['Top encours',MG[0]?fmt(MG[0].value):'—'],['Top-5 share',(MG.slice(0,5).reduce((s,m)=>s+m.value,0)/mgTot*100).toFixed(0)+'%']].map(c=>`<div class="card"><div class="k">${c[0]}</div><div class="v" style="font-size:${(''+c[1]).length>10?'18px':'25px'}">${c[1]}</div></div>`).join('');
+const mgMax=MG[0]?MG[0].value:1;
+document.getElementById('mgbars').innerHTML=MG.slice(0,10).map((m,i)=>`<div class="barrow"><div class="lbl">${m.name}</div><div class="bartrack"><div class="barfill" style="width:${m.value/mgMax*100}%;background:${NWC[i%NWC.length]}"></div></div><div class="amt">${fmt(m.value)}</div></div>`).join('');
+document.getElementById('mgbody').innerHTML=MG.map((m,i)=>`<tr data-mgr="${m.name.replace(/"/g,'&quot;')}" style="cursor:pointer"><td class="num">${i+1}</td><td class="asset">${m.name}</td><td class="num">${fmt(m.value)}</td><td class="num">${m.n}</td><td class="sub">${m.classes.join(', ')}</td><td class="num">${m.nchains}</td></tr>`).join('');
+function openManager(name){
+  const list=D.assets.filter(a=>a.manager===name).sort((a,b)=>b.tvl-a.tvl);if(!list.length)return;
+  const tot=list.reduce((s,a)=>s+a.tvl,0);const cls={};list.forEach(a=>cls[a.cls]=(cls[a.cls]||0)+1);
+  let h=`<div class="mhd"><button class="x" onclick="closeDetail()">✕</button><div><span class="nm">👥 ${name}</span></div><div class="chips"><span class="chip">Asset manager</span></div></div><div class="mbody">`;
+  h+=`<div class="mgrid"><div><div class="k">Encours tokenisé</div><div class="v">${fmt(tot)}</div></div><div><div class="k">Actifs</div><div class="v">${list.length}</div></div><div><div class="k">Classes</div><div class="v">${Object.keys(cls).length}</div></div><div><div class="k">Réseaux</div><div class="v">${new Set(list.flatMap(a=>a.chains)).size}</div></div></div>`;
+  h+=`<div class="msec">Actifs gérés</div>`+list.slice(0,15).map(a=>`<div class="mrow" style="cursor:pointer" onclick="closeDetail();openDetail('${a.slug}')"><span class="k">${a.name} <span style="color:var(--ink-faint)">${a.symbol}</span></span><span class="v">${fmt(a.tvl)}</span></div>`).join('');
+  h+=`</div>`;md.innerHTML=h;ov.classList.add('on');
+}
+(function(){const cv=document.getElementById('mgpie'),x=cv.getContext('2d');const cx=cv.width/2,cy=cv.height/2,R=110;let a0=-Math.PI/2;const top=MG.slice(0,7);const other=MG.slice(7).reduce((s,m)=>s+m.value,0);const segs=top.map((m,i)=>[m.name,m.value,NWC[i%NWC.length]]);if(other>0)segs.push(['Other',other,'#5a6782']);const tot=segs.reduce((s,g)=>s+g[1],0)||1;segs.forEach(g=>{const a1=a0+g[1]/tot*Math.PI*2;x.beginPath();x.moveTo(cx,cy);x.arc(cx,cy,R,a0,a1);x.closePath();x.fillStyle=g[2];x.fill();a0=a1;});x.fillStyle=getComputedStyle(document.documentElement).getPropertyValue('--panel').trim();x.beginPath();x.arc(cx,cy,58,0,7);x.fill();})();
+
+/* ===== NETWORK DETAIL (fiche réseau) ===== */
+function openNetwork(chain){
+  const net=NW.find(n=>n.chain===chain);if(!net)return;
+  const list=D.assets.filter(a=>a.chains.includes(chain)).sort((a,b)=>b.tvl-a.tvl);
+  const cls={};list.forEach(a=>cls[a.cls]=(cls[a.cls]||0)+1);
+  let h=`<div class="mhd"><button class="x" onclick="closeDetail()">✕</button><div><span class="nm">🌐 ${chain}</span></div><div class="chips"><span class="chip">Réseau blockchain</span></div></div><div class="mbody">`;
+  h+=`<div class="mgrid"><div><div class="k">RWA value</div><div class="v">${fmt(net.value)}</div></div><div><div class="k">Assets hébergés</div><div class="v">${list.length}</div></div><div><div class="k">Part du RWA</div><div class="v">${(net.value/nwTot*100).toFixed(1)}%</div></div><div><div class="k">Classes</div><div class="v">${Object.keys(cls).length}</div></div></div>`;
+  h+=`<div class="msec">Actifs sur ${chain} (top 15)</div>`;
+  h+=list.slice(0,15).map(a=>`<div class="mrow" style="cursor:pointer" onclick="closeDetail();openDetail('${a.slug}')"><span class="k">${a.name} <span style="color:var(--ink-faint)">${a.symbol}</span></span><span class="v">${fmt(a.tvl)}</span></div>`).join('');
+  h+=`</div>`;md.innerHTML=h;ov.classList.add('on');
+}
+
+/* ===== DATA CATALOG VIEW ===== */
+document.getElementById('dc-sub').textContent=`Couverture : ${D.n_assets} actifs RWA · ${pc.length} fonds de crédit privé curés · données rafraîchies quotidiennement.`;
+const dcGroups=[
+  ['Métriques historisées',['TVL / valeur on-chain (28 mois)','Rendement (APY, base, volatilité σ)','Variation 1j / 7d','Flux nets par classe','Détenteurs (à venir)']],
+  ['Données de référence',['Classe d\'actif (liste blanche curée)','Réseaux / chaînes','Émetteur & juridiction','Rating, séniorité, collatéral (fondamentaux)','Structure du fonds & liquidité']],
+  ['Signaux propriétaires ✦',['LS Score (qualité/risque)','NAV gap (rendement vs risque)','Valorisation fondamentale','Alertes priorisées','Rattachement APAC']],
+];
+document.getElementById('dc-groups').innerHTML=dcGroups.map(g=>`<div class="box" style="margin-bottom:14px;"><h3>${g[0]}</h3><div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px 20px;">${g[1].map(m=>`<div style="font-size:13.5px;color:var(--ink-soft);display:flex;gap:8px;"><span style="color:var(--accent)">●</span>${m}</div>`).join('')}</div></div>`).join('');
+
+/* ===== ASSET DETAIL MODAL ===== */
+const bySlug={};D.assets.forEach(a=>bySlug[a.slug]=a);
+const ov=document.getElementById('detailOverlay'),md=document.getElementById('detailModal');
+function openDetail(slug){
+  const a=bySlug[slug];if(!a)return;const s=a.sig,yg=a.yg,fv=a.fv;
+  let h=`<div class="mhd"><button class="x" onclick="closeDetail()">✕</button><div><span class="nm">${a.name}</span><span class="sym">${a.symbol}</span></div><div class="chips"><span class="chip ${a.cls==='Private credit'?'credit':''}">${a.cls}</span>${a.apac?`<span class="chip" style="color:var(--accent)">🌏 ${a.apac}</span>`:''}<button class="memobtn" onclick="creditMemo('${slug}')">📄 Credit Memo</button></div></div><div class="mbody">`;
+  h+=`<div class="mgrid"><div><div class="k">TVL on-chain</div><div class="v">${fmt(a.tvl)}</div></div><div><div class="k">LS Score</div><div class="v g-${s.band}">${s.ls}/100${s.stress?' ⚠':''}</div></div><div><div class="k">7d</div><div class="v ${a.chg7d>=0?'up':'down'}">${pct(a.chg7d)}</div></div><div><div class="k">1d</div><div class="v ${a.chg1d>=0?'up':'down'}">${pct(a.chg1d)}</div></div></div>`;
+  h+=`<div class="msec">Analytique · signal</div><div class="mrow"><span class="k">Qualité (LS)</span><span class="v g-${s.band}">${s.ls} · ${s.note}</span></div>`;
+  if(yg){h+=`<div class="mrow"><span class="k">Rendement offert</span><span class="v">${yg.apy.toFixed(2)}%</span></div><div class="mrow"><span class="k">Rendement juste (signal)</span><span class="v">${yg.fair.toFixed(2)}%</span></div><div class="mrow"><span class="k">NAV gap (signal)</span><span class="v ${yg.gap_bps<=-75?'g-red':yg.gap_bps>=150?'g-green':''}">${yg.gap_bps>=0?'+':''}${yg.gap_bps} bps · ${yg.verdict}</span></div>`;}
+  if(fv){h+=`<div class="msec">Valorisation fondamentale</div><div class="mrow"><span class="k">Rating / séniorité</span><span class="v">${fv.rating} · ${(fv.seniority||'').replace('_',' ')}</span></div><div class="mrow"><span class="k">Liquidité / gérant</span><span class="v">${fv.liquidity} · T${fv.manager_tier}</span></div><div class="mrow"><span class="k">Rendement requis (fond.)</span><span class="v">${fv.req.toFixed(2)}%</span></div>${fv.gap_bps!=null?`<div class="mrow"><span class="k">NAV gap (fond.)</span><span class="v ${fv.gap_bps<=-75?'g-red':fv.gap_bps>=150?'g-green':''}">${fv.gap_bps>=0?'+':''}${fv.gap_bps} bps</span></div>`:''}<div class="mrow"><span class="k">Confiance donnée</span><span class="v">${confDot[fv.conf]||'🔴'} ${fv.conf}</span></div><div class="mrow"><span class="k">Note</span><span class="v" style="font-weight:400">${fv.note||''}</span></div>`;}
+  if(a.gaprel){h+=`<div class="msec">Valorisation relative (pairs)</div><div class="mrow"><span class="k">Position vs ${a.gaprel.n} pairs</span><span class="v ${a.gaprel.rv==='cheap'?'g-green':a.gaprel.rv==='rich'?'g-red':''}">${a.gaprel.rv.toUpperCase()} · ${a.gaprel.pctile}ᵉ pctile · z=${a.gaprel.z}</span></div><div class="mrow"><span class="k">Médiane des pairs</span><span class="v">${a.gaprel.peer_med>=0?'+':''}${a.gaprel.peer_med} bps</span></div>`;}
+  h+=`<div class="msec">On-chain</div><div class="mrow"><span class="k">Réseaux</span><span class="v">${a.chains.join(', ')}</span></div><div class="mrow"><span class="k">Listé (DefiLlama)</span><span class="v">${a.listedAt?new Date(a.listedAt*1000).toISOString().slice(0,10):'—'}</span></div>${a.url?`<div class="mrow"><span class="k">Site</span><span class="v" style="font-weight:400">${a.url.replace(/^https?:\/\//,'').slice(0,40)}</span></div>`:''}`;
+  h+=`</div>`;md.innerHTML=h;ov.classList.add('on');
+}
+function closeDetail(){ov.classList.remove('on');}
+function creditMemo(slug){
+  const a=bySlug[slug];if(!a)return;const s=a.sig,fv=a.fv,gu=a.gapu;
+  // recommandation dérivée
+  let reco,rc;
+  if(s.stress||s.band==='red'){reco='SURVEILLER / ÉVITER';rc='g-red';}
+  else if(gu&&gu.verdict==='rich'){reco='SURVALORISÉ — sous-pondérer';rc='g-red';}
+  else if(gu&&gu.verdict==='cheap'){reco='OPPORTUNITÉ — à creuser';rc='g-green';}
+  else {reco='NEUTRE / conforme';rc='';}
+  const today=new Date().toISOString().slice(0,10);
+  const val=gu?`Le fonds offre <b>${gu.apy.toFixed(2)}%</b> face à un rendement requis de <b>${gu.fair.toFixed(2)}%</b> (${gu.src==='fond.'?'modèle fondamental':'signal on-chain'}), soit un écart de <b class="${gu.gap_bps<=-75?'g-red':gu.gap_bps>=150?'g-green':''}">${gu.gap_bps>=0?'+':''}${gu.gap_bps} bps</b>. ${gu.gap_bps<=-75?'Le token rémunère insuffisamment son risque : NAV probablement survalorisée.':gu.gap_bps>=150?'Coussin de rendement au-dessus du risque — vérifier un éventuel risque caché.':'Rémunération alignée sur le risque.'}`:'Aucun rendement on-chain observable pour ce fonds — valorisation par signal uniquement.';
+  const struct=fv?`Notation <b>${fv.rating}</b>, séniorité <b>${(fv.seniority||'').replace('_',' ')}</b>, liquidité <b>${fv.liquidity}</b>, gérant tier <b>${fv.manager_tier}</b>. ${fv.note||''} <span class="sub">(juridiction : ${fv.jurisdiction||'n.d.'} · confiance donnée : ${fv.conf})</span>`:'Fondamentaux non curés pour ce fonds — profil structurel à compléter.';
+  let h=`<div class="mhd"><button class="x" onclick="closeDetail()">✕</button><div class="memohd"><span class="memo-eyebrow">✦ LEDGERSCOPE · CREDIT MEMO</span><span class="nm">${a.name} <span class="sym">${a.symbol}</span></span></div><div class="chips"><button class="memobtn" onclick="openDetail('${slug}')">← Fiche</button><button class="memobtn" onclick="window.print()">🖨️ Imprimer / PDF</button></div></div><div class="mbody memo">`;
+  h+=`<div class="memo-reco"><div><span class="k">Recommandation</span><div class="reco ${rc}">${reco}</div></div><div style="text-align:right"><span class="k">LS Score</span><div class="reco g-${s.band}">${s.ls}/100</div></div></div>`;
+  h+=`<div class="mgrid"><div><div class="k">Classe</div><div class="v" style="font-size:14px">${a.cls}</div></div><div><div class="k">TVL on-chain</div><div class="v">${fmt(a.tvl)}</div></div><div><div class="k">NAV gap</div><div class="v ${gu&&gu.gap_bps<=-75?'g-red':gu&&gu.gap_bps>=150?'g-green':''}">${gu?(gu.gap_bps>=0?'+':'')+gu.gap_bps+' bps':'—'}</div></div><div><div class="k">Tendance 7j</div><div class="v ${a.chg7d>=0?'up':'down'}">${pct(a.chg7d)}</div></div></div>`;
+  h+=`<div class="msec">1 · Synthèse</div><p>${a.name} est un actif tokenisé de classe <b>${a.cls.toLowerCase()}</b>, déployé sur ${a.chains.join(', ')}, pesant <b>${fmt(a.tvl)}</b> on-chain. Notre notation propriétaire lui attribue un LS Score de <b class="g-${s.band}">${s.ls}/100</b> (${s.note}).</p>`;
+  h+=`<div class="msec">2 · Qualité &amp; risque (LS Score)</div><p>Le score agrège les signaux on-chain observables : taille (échelle log), stabilité de la TVL et résilience multi-chaîne. ${s.stress?'<b class="g-red">⚠ Un stress de rachat est détecté (sortie nette ≥8% sur 7 jours) — signal de vigilance immédiat.</b>':'Aucun stress de rachat détecté sur les 7 derniers jours.'}</p>`;
+  h+=`<div class="msec">3 · Valorisation</div><p>${val}</p>`;
+  h+=`<div class="msec">4 · Structure &amp; fondamentaux</div><p>${struct}</p>`;
+  const flags=[];if(s.stress)flags.push('Pression de rachat active (sorties nettes 7j)');if(gu&&gu.gap_bps<=-75)flags.push('Rémunération inférieure au risque (survalorisation NAV)');if(s.band==='red')flags.push('Score de qualité faible');if(fv&&fv.conf==='low')flags.push('Confiance faible sur les fondamentaux — due diligence complémentaire requise');
+  h+=`<div class="msec">5 · Points d'attention</div>${flags.length?'<ul class="memo-flags">'+flags.map(f=>`<li>${f}</li>`).join('')+'</ul>':'<p>Aucun signal d\'alerte majeur à la date de cette note.</p>'}`;
+  h+=`<div class="msec">6 · Conclusion</div><p>Sur la base des données on-chain et du modèle de valorisation Ledgerscope, la position se qualifie <b class="${rc}">${reco}</b>. ${gu&&gu.gap_bps<=-75?'Nous recommandons la prudence tant que l\'écart de valorisation ne se resserre pas.':gu&&gu.gap_bps>=150?'L\'écart positif mérite une analyse du sous-jacent avant toute allocation.':'Profil conforme, à réévaluer au prochain rafraîchissement.'}</p>`;
+  h+=`<div class="memo-foot">Ledgerscope Research · Credit Memo généré le ${today} · Données on-chain DefiLlama (${D.generated}). Avis indépendant à visée informative, fondé sur des données publiques et des modèles propriétaires — ne constitue ni un conseil en investissement, ni une valorisation officielle, ni une sollicitation.</div>`;
+  h+=`</div>`;md.innerHTML=h;ov.classList.add('on');md.scrollTop=0;
+}
+ov.addEventListener('click',e=>{if(e.target===ov)closeDetail();});
+document.querySelector('.content').addEventListener('click',e=>{const trs=e.target.closest('tr[data-slug]');if(trs){openDetail(trs.dataset.slug);return;}const trn=e.target.closest('tr[data-net]');if(trn){openNetwork(trn.dataset.net);return;}const trm=e.target.closest('tr[data-mgr]');if(trm)openManager(trm.dataset.mgr);});
+
+/* ===== GLOBAL SEARCH (Cmd+K) ===== */
+const sov=document.getElementById('searchOverlay'),gS=document.getElementById('gSearch'),sR=document.getElementById('sResults');
+let selIdx=0,sHits=[];
+function openSearch(){sov.classList.add('on');gS.value='';renderSearch();gS.focus();}
+function closeSearch(){sov.classList.remove('on');}
+function renderSearch(){
+  const q=gS.value.toLowerCase();
+  sHits=D.assets.filter(a=>!q||(a.name+a.symbol+a.cls).toLowerCase().includes(q)).slice(0,12);
+  selIdx=0;
+  sR.innerHTML=sHits.map((a,i)=>`<div class="sr ${i===0?'sel':''}" data-slug="${a.slug}"><span class="nm">${a.name}</span> <span class="chip ${a.cls==='Private credit'?'credit':''}" style="font-size:10px">${a.cls}</span><span class="sub">${fmt(a.tvl)}</span></div>`).join('')||'<div class="shint" style="padding:20px">Aucun résultat</div>';
+}
+gS.addEventListener('input',renderSearch);
+gS.addEventListener('keydown',e=>{
+  if(e.key==='ArrowDown'){e.preventDefault();selIdx=Math.min(sHits.length-1,selIdx+1);}
+  else if(e.key==='ArrowUp'){e.preventDefault();selIdx=Math.max(0,selIdx-1);}
+  else if(e.key==='Enter'){if(sHits[selIdx]){closeSearch();openDetail(sHits[selIdx].slug);}return;}
+  else if(e.key==='Escape'){closeSearch();return;}
+  else return;
+  [...sR.children].forEach((c,i)=>c.classList.toggle('sel',i===selIdx));
+});
+sR.addEventListener('click',e=>{const sr=e.target.closest('.sr[data-slug]');if(sr){closeSearch();openDetail(sr.dataset.slug);}});
+sov.addEventListener('click',e=>{if(e.target===sov)closeSearch();});
+document.getElementById('sideSearch').addEventListener('click',openSearch);
+document.addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();openSearch();}});
+
+/* ===== COLLAPSE SIDEBAR + CSV ===== */
+document.getElementById('collapseBtn').addEventListener('click',()=>document.querySelector('.app').classList.toggle('mini'));
+function toCSV(rows){return rows.map(r=>r.map(c=>`"${(''+c).replace(/"/g,'""')}"`).join(',')).join('\n');}
+function dl(name,csv){const b=new Blob([csv],{type:'text/csv'});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download=name;a.click();URL.revokeObjectURL(u);}
+document.querySelectorAll('.csv').forEach(btn=>btn.addEventListener('click',()=>{
+  const t=btn.dataset.csv;let rows=[];
+  if(t==='nw'){rows=[['rank','network','value_usd','assets','share_pct']];NW.forEach((n,i)=>rows.push([i+1,n.chain,Math.round(n.value),n.n,(n.value/nwTot*100).toFixed(1)]));}
+  else if(t==='pf'){rows=[['rank','platform','class','value_usd','networks','chg7d']];plats.forEach((a,i)=>rows.push([i+1,a.name,a.cls,Math.round(a.tvl),a.chains.length,a.chg7d]));}
+  else if(t==='cr'){rows=[['fund','symbol','tvl_usd','chg7d','ls_score','nav_gap_bps']];pc.forEach(a=>rows.push([a.name,a.symbol,Math.round(a.tvl),a.chg7d,a.sig.ls,a.yg?a.yg.gap_bps:'']));}
+  else if(t==='mg'){rows=[['rank','manager','value_usd','assets','classes','networks']];MG.forEach((m,i)=>rows.push([i+1,m.name,Math.round(m.value),m.n,m.classes.join('|'),m.nchains]));}
+  else if(t==='cl'){rows=[['asset','symbol','class','tvl_usd','chg7d']];D.assets.filter(a=>a.cls===CUR_CLASS).forEach(a=>rows.push([a.name,a.symbol,a.cls,Math.round(a.tvl),a.chg7d]));}
+  else if(t==='perf'){rows=[['class','tvl_usd','1m_pct','3m_pct','ytd_pct','1y_pct']];perf.forEach(p=>rows.push([p.cls,Math.round(p.tvl),p.m1?.toFixed(1)??'',p.m3?.toFixed(1)??'',p.ytd?.toFixed(1)??'',p.y1?.toFixed(1)??'']));}
+  dl('ledgerscope_'+t+'.csv',toCSV(rows));
+}));
+
+/* ===== LOGIN / FREEMIUM ===== */
+let LOGGED=false,CUR_CLASS=null;
+const loginOv=document.getElementById('loginOverlay');
+function openLogin(mode){document.getElementById('lg-title').textContent=mode==='signup'?'Créer un compte':'Se connecter';loginOv.classList.add('on');setTimeout(()=>document.getElementById('lgEmail').focus(),50);}
+window.openLoginGlobal=()=>openLogin('login');
+function closeLogin(){loginOv.classList.remove('on');}
+document.getElementById('loginBtn').addEventListener('click',()=>openLogin('login'));
+document.getElementById('signupBtn').addEventListener('click',()=>openLogin('signup'));
+document.getElementById('loginX').addEventListener('click',closeLogin);
+loginOv.addEventListener('click',e=>{if(e.target===loginOv)closeLogin();});
+document.getElementById('lgGo').addEventListener('click',()=>{
+  LOGGED=true;closeLogin();
+  document.getElementById('authRow').innerHTML='<button class="auth ghost" style="flex:1" id="logoutBtn"><span class="lbl">✓ Premium débloqué</span></button>';
+  document.getElementById('logoutBtn').addEventListener('click',()=>location.reload());
+  if(CUR_CLASS){openClass(CUR_CLASS);renderLeague(document.querySelector('#cl-tabs button.on').dataset.lg);}
+});
+function lockCell(real){return LOGGED?real:'<span class="lock" onclick="openLoginGlobal()">🔒 Unlock</span>';}
+
+/* ===== ASSET CLASS DETAIL + LEAGUE TABLES ===== */
+function addAgg(agg,k,val){const g=agg[k]||[0,0];g[0]+=val;g[1]+=1;agg[k]=g;}
+function openClass(cls){
+  CUR_CLASS=cls;
+  const list=D.assets.filter(a=>a.cls===cls).sort((a,b)=>b.tvl-a.tvl);
+  const tot=list.reduce((s,a)=>s+a.tvl,0);
+  const chgs=list.filter(a=>a.chg7d!=null);const avg=chgs.length?chgs.reduce((s,a)=>s+a.chg7d,0)/chgs.length:0;
+  document.getElementById('cl-title').textContent=cls;
+  document.getElementById('cl-crumb').textContent='Asset Classes › '+cls;
+  document.getElementById('cl-sub').textContent=`${list.length} actifs · ${fmt(tot)} on-chain · ${(tot/D.total_tvl*100).toFixed(1)}% du RWA total · ${D.generated}`;
+  document.getElementById('cl-cards').innerHTML=[['Class TVL',fmt(tot)],['Assets',list.length],['Top asset',list[0]?list[0].name:'—'],['Avg 7d',pct(avg)]].map(c=>`<div class="card"><div class="k">${c[0]}</div><div class="v" style="font-size:${(''+c[1]).length>11?'18px':'25px'}">${c[1]}</div></div>`).join('');
+  // network breakdown
+  const nb={};list.forEach(a=>a.chains.forEach(ch=>nb[ch]=(nb[ch]||0)+a.tvl/a.chains.length));
+  const nbA=Object.entries(nb).sort((a,b)=>b[1]-a[1]).slice(0,8);const nbMax=nbA[0]?nbA[0][1]:1;
+  document.getElementById('clnw').innerHTML=nbA.map((n,i)=>`<div class="barrow"><div class="lbl">${n[0]}</div><div class="bartrack"><div class="barfill" style="width:${n[1]/nbMax*100}%;background:${NWC[i%NWC.length]}"></div></div><div class="amt">${fmt(n[1])}</div></div>`).join('');
+  // assets table (colonnes premium verrouillées)
+  document.getElementById('clbody').innerHTML=list.map(a=>`<tr data-slug="${a.slug}"><td class="asset">${a.name} <span class="sub">${a.symbol}</span></td><td class="sub">${a.chains.slice(0,3).join(', ')}</td><td class="num">${fmt(a.tvl)}</td><td class="num ${a.chg7d>=0?'up':'down'}">${pct(a.chg7d)}</td><td class="num">${lockCell(a.fv?a.fv.rating:'NR')}</td><td class="num">${lockCell(a.apac?'MAS':(a.fv&&a.fv.jurisdiction?a.fv.jurisdiction.split(' ')[0]:'—'))}</td></tr>`).join('');
+  renderLeague('platform');
+  document.querySelectorAll('#cl-tabs button').forEach(x=>x.classList.toggle('on',x.dataset.lg==='platform'));
+}
+function renderLeague(kind){
+  if(!CUR_CLASS)return;
+  const list=D.assets.filter(a=>a.cls===CUR_CLASS);
+  const locked=(kind==='jurisdiction'&&!LOGGED);
+  document.getElementById('lg-h').textContent={platform:'Platform',manager:'Manager',network:'Network',jurisdiction:'Jurisdiction'}[kind];
+  if(locked){document.getElementById('lgbody').innerHTML=`<tr><td colspan="4" style="padding:0"><div class="lockbanner"><b>🔒 League table par juridiction réservée aux comptes.</b><button onclick="openLoginGlobal()">Se connecter</button></div></td></tr>`;return;}
+  let agg={};
+  if(kind==='platform')list.forEach(a=>addAgg(agg,a.name,a.tvl));
+  else if(kind==='manager')list.forEach(a=>addAgg(agg,a.manager,a.tvl));
+  else if(kind==='network')list.forEach(a=>a.chains.forEach(ch=>addAgg(agg,ch,a.tvl/a.chains.length)));
+  else list.forEach(a=>addAgg(agg,a.fv&&a.fv.jurisdiction?a.fv.jurisdiction:'Unknown',a.tvl));
+  const arr=Object.entries(agg).sort((a,b)=>b[1][0]-a[1][0]);
+  document.getElementById('lgbody').innerHTML=arr.map(([k,v],i)=>`<tr><td class="num">${i+1}</td><td class="asset">${k}</td><td class="num">${fmt(v[0])}</td><td class="num">${v[1]}</td></tr>`).join('');
+}
+document.querySelectorAll('#cl-tabs button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('#cl-tabs button').forEach(x=>x.classList.remove('on'));b.classList.add('on');renderLeague(b.dataset.lg);}));
+
+/* asset classes dans la sidebar (cliquables → ouvrent la page de classe) */
+document.getElementById('clsnav').innerHTML=D.byclass.map(c=>`<button class="clsbtn" data-cls="${c[0]}"><span class="csw" style="background:${clr(c[0])}"></span>${c[0]}</button>`).join('');
+function showView(v){document.querySelectorAll('.view').forEach(x=>x.classList.remove('on'));document.getElementById('v-'+v).classList.add('on');window.scrollTo(0,0);}
+function setNavActive(btn){document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('on'));if(btn)btn.classList.add('on');}
+
+/* nav principal (data-v) */
+document.querySelectorAll('.nav button[data-v]').forEach(b=>b.addEventListener('click',()=>{
+  setNavActive(b);showView(b.dataset.v);
+}));
+/* classes → screener filtré */
+document.querySelectorAll('.clsbtn').forEach(b=>b.addEventListener('click',()=>{
+  setNavActive(b);openClass(b.dataset.cls);showView('class');
+}));
+/* Enterprise API (démo) */
+document.querySelector('.apibtn').addEventListener('click',()=>{setNavActive(null);showView('screener');});
+</script>
