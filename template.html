@@ -261,7 +261,7 @@
   <aside class="sidebar" id="sidebar">
     <div class="brand"><span class="mk">L</span><span class="bname">Ledger<em>scope</em></span>
       <button class="collapse" id="collapseBtn" title="Réduire">«</button></div>
-    <div class="tagline bname">Independent Credit Research</div>
+    <div class="tagline bname">RWA Credit Intelligence</div>
     <button class="sidesearch" id="sideSearch"><span>🔍</span><span class="ss-t">Rechercher…</span><span class="kbd">⌘K</span></button>
     <div class="authrow" id="authRow">
       <button class="auth ghost" id="loginBtn"><span class="lbl">Connexion</span></button>
@@ -438,7 +438,7 @@
 
       <!-- PRIVATE CREDIT -->
       <div class="view on" id="v-credit">
-        <div class="crumb">Ledgerscope · Private Debt Desk</div><div class="h-title">Tokenized Private Debt</div>
+        <div class="crumb">RWA Credit Intelligence · Ledgerscope</div><div class="h-title">Independent Ratings: Tokenized Private Credit</div>
         <div class="h-sub" id="cr-sub"></div>
         <div class="cards" id="cr-cards"></div>
         <div class="panelhd"><h3>Private credit funds</h3><button class="csv" data-csv="cr">⬇ CSV</button></div>
@@ -543,7 +543,7 @@ const CLR={'U.S. Treasuries':'#3b82f6','Private credit':'#22b8a6','Commodities':
 const clr=c=>CLR[c]||'#8b929b';
 
 /* welcome + footer */
-document.getElementById('welcome').innerHTML=`<b>Bienvenue sur Ledgerscope.</b> La couche de données et d'analytique indépendante sur le crédit privé tokenisé — indexation on-chain, notation du risque et écart de valorisation que les agrégateurs n'offrent pas. Source : ${D.source}. Snapshot ${D.generated}.`;
+document.getElementById('welcome').innerHTML=`<b>Ledgerscope, by RWA Credit Intelligence.</b> The independent rating layer for tokenized private credit. We rate the funds. Issuers, exchanges and funds buy the score. Source: ${D.source}. Snapshot ${D.generated}.`;
 document.getElementById('sidefoot').innerHTML=`✦ = analytique propriétaire<br>Données ${D.generated}<br>APAC · Singapore-first`;
 document.getElementById('footdisc').innerHTML=`Ledgerscope Terminal · données réelles via DefiLlama public API (${D.generated}). TVL on-chain vérifiable ; classification &amp; modèles propriétaires. <b>Limites méthodologiques :</b> le graphique historique ne couvre que les protocoles vivants aujourd'hui (biais de survivance) ; le NAV gap absolu est calibré prudemment — la <i>valorisation relative aux pairs</i> (fiche détail) le neutralise. Ni conseil d'investissement, ni notation officielle. Méthodo complète : <span class="mono">METHODOLOGY.md</span>. Rafraîchir : <span class="mono">python3 build.py</span>.`;
 
@@ -756,7 +756,7 @@ document.getElementById('al-list').innerHTML=AL.length?AL.map(a=>`<div class="al
 document.getElementById('al-list').addEventListener('click',e=>{const el=e.target.closest('.alert[data-slug]');if(el)openDetail(el.dataset.slug);});
 
 /* ===== PRIVATE CREDIT VIEW ===== */
-document.getElementById('cr-sub').textContent=`${pc.length} fonds de crédit privé tokenisés · ${fmt(D.pc_total)} on-chain · ${D.generated}`;
+document.getElementById('cr-sub').textContent=`Independent ratings on ${pc.length} tokenized private-credit funds · ${fmt(D.pc_total)} on-chain · we rate, issuers and exchanges buy the score · ${D.generated}`;
 document.getElementById('cr-cards').innerHTML=[['Private Credit TVL',fmt(D.pc_total)],['Fonds',pc.length],['🔴 RICH',D.pc_rich.length],['⚠ Stress',D.pc_stress.length]].map(c=>`<div class="card"><div class="k">${c[0]}</div><div class="v">${c[1]}</div></div>`).join('');
 document.getElementById('crbody').innerHTML=pc.slice().sort((a,b)=>b.tvl-a.tvl).map(a=>`<tr data-slug="${a.slug}"><td class="asset">${a.name} <span class="sub">${a.symbol}</span></td><td class="sub">${a.chains.slice(0,3).join(', ')}</td><td class="num">${fmt(a.tvl)}</td><td class="num ${a.chg7d>=0?'up':'down'}">${pct(a.chg7d)}</td><td class="num">${scoreCell(a.sig)}</td><td class="num">${a.yg?gapCell(a.yg):'<span class=sub>—</span>'}</td></tr>`).join('');
 
