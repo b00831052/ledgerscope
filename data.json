@@ -1,76 +1,76 @@
 {
- "generated": "2026-11-07 06:00 UTC",
+ "generated": "2026-11-08 06:00 UTC",
  "source": "DefiLlama public API (live)",
  "n_assets": 102,
- "total_tvl": 3708671600.471449,
- "pc_total": 175474949.19180822,
+ "total_tvl": 3649538727.695419,
+ "pc_total": 125344063.49238977,
  "n_pc": 16,
  "byclass": [
   [
    "Other RWA",
-   1245262110.346003
+   1244915107.9540389
   ],
   [
    "Other (carbon/insurance/art)",
-   795062961.2960571
+   795696607.146717
   ],
   [
    "Cash / yield stablecoin",
-   653901829.9510776
+   644652591.365569
   ],
   [
    "U.S. Treasuries",
-   470711737.27631766
+   470735864.47285676
   ],
   [
    "Real estate",
-   326608651.3845216
+   326552600.4097038
   ],
   [
    "Private credit",
-   175474949.19180822
+   125344063.49238977
   ],
   [
    "Commodities",
-   41625162.31180443
+   41617685.7371164
   ],
   [
    "Tokenized stocks / equity",
-   24198.71385986789
+   24207.117025294978
   ]
  ],
  "flows": [
   [
    "Other RWA",
-   -158282826.15038237
+   -155089022.53623825
   ],
   [
    "Cash / yield stablecoin",
-   -69551003.04127675
+   -80340752.22742108
   ],
   [
    "Private credit",
-   -10200430.574620264
+   -60382299.7500125
   ],
   [
    "Other (carbon/insurance/art)",
-   8228771.933536732
+   7099284.405020738
   ],
   [
    "U.S. Treasuries",
-   -5338295.07678827
+   -5407366.879036414
   ],
   [
    "Commodities",
-   3091377.6514404193
+   3070635.7490489907
   ],
   [
    "Real estate",
-   -204037.3923219851
+   -345722.6736540222
   ],
   [
    "Tokenized stocks / equity",
-   -85.44881851237626
+   -339.48964262672615
   ]
  ],
  "assets": [
@@ -85,9 +85,9 @@
     "Arbitrum",
     "Avalanche"
    ],
-   "tvl": 484739194.8002492,
-   "chg7d": 1.5871582892510645,
-   "chg1d": 0.060778514323445165,
+   "tvl": 485113540.4367226,
+   "chg7d": 1.3146782705529318,
+   "chg1d": 0.07157256609029616,
    "listedAt": 1766447067,
    "url": "https://app.re.xyz",
    "sig": {
@@ -95,27 +95,27 @@
     "band": "green",
     "stress": false,
     "size": 0.93,
-    "stability": 0.94,
+    "stability": 0.95,
     "resil": 1.0,
     "note": "taille solide, stable, multi-chaîne"
    },
    "yg": {
-    "apy": 7.3,
+    "apy": 7.31,
     "sigma": 0.077,
     "volpen": 1.54,
-    "rf": 3.75,
-    "fair": 7.79,
-    "spread": 3.55,
-    "gap_bps": -49,
+    "rf": 3.73,
+    "fair": 7.77,
+    "spread": 3.57,
+    "gap_bps": -46,
     "verdict": "fair"
    },
    "fv": null,
    "apac": null,
    "manager": "Re",
    "gapu": {
-    "apy": 7.3,
-    "fair": 7.79,
-    "gap_bps": -49,
+    "apy": 7.31,
+    "fair": 7.77,
+    "gap_bps": -46,
     "verdict": "fair",
     "src": "signal"
    },
@@ -129,9 +129,9 @@
    "chains": [
     "Ethereum"
    ],
-   "tvl": 416348997.89109135,
-   "chg7d": -14.043459787128924,
-   "chg1d": -0.06319307722594658,
+   "tvl": 416432988.0066538,
+   "chg7d": -14.078358541865896,
+   "chg1d": 0.02017300773817965,
    "listedAt": 1734350466,
    "url": "https://usdtb.money",
    "sig": {
@@ -152,7 +152,7 @@
     "jurisdiction": "Web3 (Ethena)",
     "note": "Digital dollar adossé RWA",
     "conf": "med",
-    "req": 5.55,
+    "req": 5.53,
     "offered": null,
     "gap_bps": null,
     "verdict": null
@@ -173,17 +173,17 @@
     "Stellar",
     "Monad"
    ],
-   "tvl": 345740732.09411705,
-   "chg7d": -6.986800608275644,
-   "chg1d": 3.9827693397821236,
+   "tvl": 345033494.73541844,
+   "chg7d": -6.76108444805287,
+   "chg1d": -0.20480114618034406,
    "listedAt": 1779853635,
    "url": "https://app.huma.finance",
    "sig": {
-    "ls": 85,
+    "ls": 86,
     "band": "green",
     "stress": false,
     "size": 0.92,
-    "stability": 0.72,
+    "stability": 0.73,
     "resil": 1.0,
     "note": "taille solide, stable, multi-chaîne"
    },
@@ -202,9 +202,9 @@
    "chains": [
     "Solana"
    ],
-   "tvl": 308603953.62367713,
-   "chg7d": 0.30585428607683696,
-   "chg1d": 0.02852852449699128,
+   "tvl": 308578382.70638347,
+   "chg7d": 0.26197897549873517,
+   "chg1d": -0.005293983492364873,
    "listedAt": 1752511417,
    "url": "https://app.onre.finance",
    "sig": {
@@ -220,10 +220,10 @@
     "apy": 11.02,
     "sigma": 0.026,
     "volpen": 0.52,
-    "rf": 3.75,
-    "fair": 7.87,
-    "spread": 7.27,
-    "gap_bps": 315,
+    "rf": 3.73,
+    "fair": 7.86,
+    "spread": 7.29,
+    "gap_bps": 316,
     "verdict": "cheap"
    },
    "fv": null,
@@ -231,8 +231,8 @@
    "manager": "OnRe",
    "gapu": {
     "apy": 11.02,
-    "fair": 7.87,
-    "gap_bps": 315,
+    "fair": 7.86,
+    "gap_bps": 316,
     "verdict": "cheap",
     "src": "signal"
    },
@@ -248,9 +248,9 @@
     "Ethereum",
     "Plume Mainnet"
    ],
-   "tvl": 245570550.07536325,
-   "chg7d": -0.4354427451701355,
-   "chg1d": 0.012337581655046392,
+   "tvl": 245592910.27270696,
+   "chg7d": -0.4538136713034362,
+   "chg1d": 0.010524576220063864,
    "listedAt": 1733496042,
    "url": "https://www.opentrade.io",
    "sig": {
@@ -281,44 +281,44 @@
     "Binance",
     "Avalanche"
    ],
-   "tvl": 218256116.12790108,
-   "chg7d": -5.551909283828309,
-   "chg1d": -0.8829448285888617,
+   "tvl": 218971288.82641834,
+   "chg7d": -4.313719977444336,
+   "chg1d": 0.30872619111225674,
    "listedAt": 1729962607,
    "url": "https://app.plume.org/vaults",
    "sig": {
-    "ls": 87,
+    "ls": 89,
     "band": "green",
     "stress": false,
     "size": 0.9,
-    "stability": 0.78,
+    "stability": 0.83,
     "resil": 1.0,
     "note": "taille solide, stable, multi-chaîne"
    },
    "yg": {
-    "apy": 10.16,
+    "apy": 10.17,
     "sigma": 0.071,
-    "volpen": 1.42,
-    "rf": 3.75,
-    "fair": 8.47,
-    "spread": 6.41,
-    "gap_bps": 169,
+    "volpen": 1.41,
+    "rf": 3.73,
+    "fair": 8.25,
+    "spread": 6.44,
+    "gap_bps": 192,
     "verdict": "cheap"
    },
    "fv": null,
    "apac": null,
    "manager": "Plume Vaults",
    "gapu": {
-    "apy": 10.16,
-    "fair": 8.47,
-    "gap_bps": 169,
+    "apy": 10.17,
+    "fair": 8.25,
+    "gap_bps": 192,
     "verdict": "cheap",
     "src": "signal"
    },
    "gaprel": {
     "pctile": 57,
     "z": 0.0,
-    "peer_med": 169,
+    "peer_med": 192,
     "rv": "in-line",
     "n": 7
    }
@@ -332,13 +332,13 @@
     "Pharos",
     "Sui"
    ],
-   "tvl": 197599350.11109522,
-   "chg7d": 0.527659143857548,
-   "chg1d": 0.0768494051856834,
+   "tvl": 197648147.6019225,
+   "chg7d": 0.6125944109256523,
+   "chg1d": 0.017030692793795765,
    "listedAt": 1777489095,
    "url": "https://www.r25.xyz/",
    "sig": {
-    "ls": 89,
+    "ls": 88,
     "band": "green",
     "stress": false,
     "size": 0.89,
@@ -361,9 +361,9 @@
    "chains": [
     "Arbitrum"
    ],
-   "tvl": 158160608.98844865,
-   "chg7d": -42.33463828250142,
-   "chg1d": -0.08184045175416088,
+   "tvl": 157837905.80111417,
+   "chg7d": -42.449838973867415,
+   "chg1d": -0.21345296284505366,
    "listedAt": 1747659245,
    "url": "https://usd.ai/",
    "sig": {
@@ -376,12 +376,12 @@
     "note": "taille solide, volatil, ⚠ sorties nettes 7j"
    },
    "yg": {
-    "apy": 6.78,
+    "apy": 6.77,
     "sigma": 0.039,
     "volpen": 0.78,
-    "rf": 3.75,
-    "fair": 12.23,
-    "spread": 3.03,
+    "rf": 3.73,
+    "fair": 12.22,
+    "spread": 3.04,
     "gap_bps": -545,
     "verdict": "rich"
    },
@@ -389,16 +389,16 @@
    "apac": null,
    "manager": "USD AI",
    "gapu": {
-    "apy": 6.78,
-    "fair": 12.23,
+    "apy": 6.77,
+    "fair": 12.22,
     "gap_bps": -545,
     "verdict": "rich",
     "src": "signal"
    },
    "gaprel": {
     "pctile": 29,
-    "z": -0.71,
-    "peer_med": 169,
+    "z": -0.74,
+    "peer_med": 192,
     "rv": "in-line",
     "n": 7
    }
@@ -411,9 +411,9 @@
    "chains": [
     "xDai"
    ],
-   "tvl": 155070981.66256493,
-   "chg7d": -0.017090444361869572,
-   "chg1d": 0.020907553028663983,
+   "tvl": 155047881.80539647,
+   "chg7d": -0.06125839983653236,
+   "chg1d": -0.014896311947481422,
    "listedAt": 1635878880,
    "url": "",
    "sig": {
@@ -434,7 +434,7 @@
     "jurisdiction": "US (RealT)",
     "note": "Immobilier locatif fractionné",
     "conf": "low",
-    "req": 12.95,
+    "req": 12.93,
     "offered": null,
     "gap_bps": null,
     "verdict": null
@@ -452,9 +452,9 @@
    "chains": [
     "Ethereum"
    ],
-   "tvl": 138570899.6440247,
-   "chg7d": 4.821168603822329,
-   "chg1d": 3.389417967980535e-05,
+   "tvl": 138581315.36797237,
+   "chg7d": 4.820035809439588,
+   "chg1d": 0.00033417042919836604,
    "listedAt": 1789001313,
    "url": "https://app.theo.xyz/",
    "sig": {
@@ -481,9 +481,9 @@
    "chains": [
     "Monad"
    ],
-   "tvl": 106291321.82929653,
-   "chg7d": 0.20277436227888757,
-   "chg1d": 0.12257890701965835,
+   "tvl": 106192942.60409646,
+   "chg7d": 0.04527741878710856,
+   "chg1d": -0.09255621579160334,
    "listedAt": 1784854075,
    "url": "https://valos.io/",
    "sig": {
@@ -491,7 +491,7 @@
     "band": "green",
     "stress": false,
     "size": 0.86,
-    "stability": 0.99,
+    "stability": 1.0,
     "resil": 0.33,
     "note": "taille solide, stable"
    },
@@ -503,49 +503,6 @@
    "gaprel": null
   },
   {
-   "name": "Anemoy Capital",
-   "symbol": "-",
-   "slug": "anemoy-capital",
-   "cls": "Private credit",
-   "chains": [
-    "Ethereum",
-    "Base",
-    "Celo"
-   ],
-   "tvl": 102334726.2394439,
-   "chg7d": -0.36400894056413335,
-   "chg1d": 0.1551860907166258,
-   "listedAt": 1733763997,
-   "url": "https://www.anemoy.io",
-   "sig": {
-    "ls": 94,
-    "band": "green",
-    "stress": false,
-    "size": 0.86,
-    "stability": 0.99,
-    "resil": 1.0,
-    "note": "taille solide, stable, multi-chaîne"
-   },
-   "yg": null,
-   "fv": {
-    "rating": "AAA",
-    "seniority": "senior_secured",
-    "liquidity": "daily",
-    "manager_tier": 1,
-    "jurisdiction": "Web3 (Anemoy/Centrifuge)",
-    "note": "Adossé fonds CLO AAA (JAAA) / trésorerie liquide",
-    "conf": "med",
-    "req": 3.45,
-    "offered": null,
-    "gap_bps": null,
-    "verdict": null
-   },
-   "apac": null,
-   "manager": "Anemoy",
-   "gapu": null,
-   "gaprel": null
-  },
-  {
    "name": "Lofty",
    "symbol": "-",
    "slug": "lofty",
@@ -553,9 +510,9 @@
    "chains": [
     "Algorand"
    ],
-   "tvl": 101113122.5658765,
-   "chg7d": -0.049932023867953035,
-   "chg1d": 0.03255045320247518,
+   "tvl": 101096418.4380966,
+   "chg7d": -0.09225611200146488,
+   "chg1d": -0.01601970423621424,
    "listedAt": 1659609505,
    "url": "https://www.lofty.ai",
    "sig": {
@@ -576,7 +533,7 @@
     "jurisdiction": "US (Lofty, Algorand)",
     "note": "Immobilier fractionné",
     "conf": "low",
-    "req": 12.95,
+    "req": 12.93,
     "offered": null,
     "gap_bps": null,
     "verdict": null
@@ -594,17 +551,17 @@
    "chains": [
     "Ethereum"
    ],
-   "tvl": 95880786.45583147,
-   "chg7d": -0.5251461173875924,
-   "chg1d": -0.1379964130892546,
+   "tvl": 95841260.73375557,
+   "chg7d": -1.8003881366916943,
+   "chg1d": -0.04122381487103155,
    "listedAt": 1755567417,
    "url": "https://frax.com/",
    "sig": {
-    "ls": 81,
+    "ls": 79,
     "band": "green",
     "stress": false,
     "size": 0.86,
-    "stability": 0.98,
+    "stability": 0.93,
     "resil": 0.33,
     "note": "taille solide, stable"
    },
@@ -617,7 +574,7 @@
     "jurisdiction": "Web3 (Frax)",
     "note": "Stable collatéralisé",
     "conf": "low",
-    "req": 5.55,
+    "req": 5.53,
     "offered": null,
     "gap_bps": null,
     "verdict": null
@@ -640,44 +597,44 @@
     "Monad",
     "Arbitrum"
    ],
-   "tvl": 95678065.5013201,
-   "chg7d": -0.7782618371756769,
-   "chg1d": -0.0469611257823459,
+   "tvl": 95742035.37122628,
+   "chg7d": -1.103518710199694,
+   "chg1d": 0.08448084411686807,
    "listedAt": 1758144089,
    "url": "https://ember.so/",
    "sig": {
-    "ls": 93,
+    "ls": 92,
     "band": "green",
     "stress": false,
     "size": 0.86,
-    "stability": 0.97,
+    "stability": 0.96,
     "resil": 1.0,
     "note": "taille solide, stable, multi-chaîne"
    },
    "yg": {
-    "apy": 15.25,
-    "sigma": 0.184,
+    "apy": 15.61,
+    "sigma": 0.185,
     "volpen": 3.0,
-    "rf": 3.75,
-    "fair": 9.45,
-    "spread": 11.5,
-    "gap_bps": 580,
+    "rf": 3.73,
+    "fair": 9.53,
+    "spread": 11.88,
+    "gap_bps": 608,
     "verdict": "cheap"
    },
    "fv": null,
    "apac": null,
    "manager": "Ember",
    "gapu": {
-    "apy": 15.25,
-    "fair": 9.45,
-    "gap_bps": 580,
+    "apy": 15.61,
+    "fair": 9.53,
+    "gap_bps": 608,
     "verdict": "cheap",
     "src": "signal"
    },
    "gaprel": {
     "pctile": 71,
-    "z": 0.41,
-    "peer_med": 169,
+    "z": 0.42,
+    "peer_med": 192,
     "rv": "in-line",
     "n": 7
    }
@@ -690,28 +647,28 @@
    "chains": [
     "Ethereum"
    ],
-   "tvl": 81977290.51903729,
-   "chg7d": -1.2596952472176781,
-   "chg1d": -0.04343493849684421,
+   "tvl": 81245281.03526306,
+   "chg7d": -2.148845080414631,
+   "chg1d": -0.8951923826198254,
    "listedAt": 1721046229,
    "url": "https://usual.money",
    "sig": {
-    "ls": 80,
+    "ls": 78,
     "band": "green",
     "stress": false,
     "size": 0.85,
-    "stability": 0.95,
+    "stability": 0.91,
     "resil": 0.33,
     "note": "taille solide, stable"
    },
    "yg": {
-    "apy": 5.45,
+    "apy": 5.02,
     "sigma": 0.522,
     "volpen": 3.0,
-    "rf": 3.75,
-    "fair": 10.75,
-    "spread": 1.7,
-    "gap_bps": -530,
+    "rf": 3.73,
+    "fair": 10.93,
+    "spread": 1.29,
+    "gap_bps": -591,
     "verdict": "rich"
    },
    "fv": {
@@ -722,17 +679,17 @@
     "jurisdiction": "Web3 (Usual)",
     "note": "Stable adossé T-bills",
     "conf": "low",
-    "req": 5.55,
-    "offered": 5.45,
-    "gap_bps": -10,
+    "req": 5.53,
+    "offered": 5.02,
+    "gap_bps": -51,
     "verdict": "fair"
    },
    "apac": null,
    "manager": "Usual USD0",
    "gapu": {
-    "apy": 5.45,
-    "fair": 5.55,
-    "gap_bps": -10,
+    "apy": 5.02,
+    "fair": 5.53,
+    "gap_bps": -51,
     "verdict": "fair",
     "src": "fond."
    },
@@ -746,9 +703,9 @@
    "chains": [
     "Ethereum"
    ],
-   "tvl": 61214950.17734118,
-   "chg7d": -5.814171307523395,
-   "chg1d": -6.047792705920003,
+   "tvl": 61204743.788224466,
+   "chg7d": -5.843784837529498,
+   "chg1d": -0.021730369974150676,
    "listedAt": 1697730940,
    "url": "https://sky.money/",
    "sig": {
@@ -768,6 +725,49 @@
    "gaprel": null
   },
   {
+   "name": "Anemoy Capital",
+   "symbol": "-",
+   "slug": "anemoy-capital",
+   "cls": "Private credit",
+   "chains": [
+    "Ethereum",
+    "Base",
+    "Celo"
+   ],
+   "tvl": 52213425.33579967,
+   "chg7d": -49.18632862401443,
+   "chg1d": -48.97780327898651,
+   "listedAt": 1733763997,
+   "url": "https://www.anemoy.io",
+   "sig": {
+    "ls": 53,
+    "band": "amber",
+    "stress": true,
+    "size": 0.83,
+    "stability": 0.0,
+    "resil": 1.0,
+    "note": "taille solide, volatil, ⚠ sorties nettes 7j, multi-chaîne"
+   },
+   "yg": null,
+   "fv": {
+    "rating": "AAA",
+    "seniority": "senior_secured",
+    "liquidity": "daily",
+    "manager_tier": 1,
+    "jurisdiction": "Web3 (Anemoy/Centrifuge)",
+    "note": "Adossé fonds CLO AAA (JAAA) / trésorerie liquide",
+    "conf": "med",
+    "req": 3.43,
+    "offered": null,
+    "gap_bps": null,
+    "verdict": null
+   },
+   "apac": null,
+   "manager": "Anemoy",
+   "gapu": null,
+   "gaprel": null
+  },
+  {
    "name": "stUSDT",
    "symbol": "STUSDT",
    "slug": "stusdt",
@@ -776,28 +776,28 @@
     "Tron",
     "Ethereum"
    ],
-   "tvl": 56240847.77294318,
-   "chg7d": 0.016427540796783546,
-   "chg1d": 0.03546714903673376,
+   "tvl": 47663100.19734869,
+   "chg7d": -15.270537968053446,
+   "chg1d": -15.253931955370575,
    "listedAt": 1688472910,
    "url": "https://stusdt.io/#/home",
    "sig": {
-    "ls": 87,
-    "band": "green",
-    "stress": false,
+    "ls": 62,
+    "band": "amber",
+    "stress": true,
     "size": 0.83,
-    "stability": 1.0,
+    "stability": 0.39,
     "resil": 0.67,
-    "note": "taille solide, stable"
+    "note": "taille solide, volatil, ⚠ sorties nettes 7j"
    },
    "yg": {
     "apy": 3.91,
     "sigma": 0.032,
-    "volpen": 0.64,
-    "rf": 3.75,
-    "fair": 7.69,
-    "spread": 0.16,
-    "gap_bps": -378,
+    "volpen": 0.65,
+    "rf": 3.73,
+    "fair": 10.18,
+    "spread": 0.18,
+    "gap_bps": -627,
     "verdict": "rich"
    },
    "fv": null,
@@ -805,8 +805,8 @@
    "manager": "stUSDT",
    "gapu": {
     "apy": 3.91,
-    "fair": 7.69,
-    "gap_bps": -378,
+    "fair": 10.18,
+    "gap_bps": -627,
     "verdict": "rich",
     "src": "signal"
    },
@@ -824,9 +824,9 @@
     "Avalanche",
     "Polygon"
    ],
-   "tvl": 42425115.902425945,
-   "chg7d": -0.02786086374632646,
-   "chg1d": 0.008105127012527191,
+   "tvl": 42419220.03092353,
+   "chg7d": -0.0579830715850278,
+   "chg1d": -0.013897125268840682,
    "listedAt": 1706108852,
    "url": "https://www.brickken.com",
    "sig": {
@@ -858,9 +858,9 @@
     "Base",
     "re.al"
    ],
-   "tvl": 41869737.27512619,
-   "chg7d": -0.2771744799233318,
-   "chg1d": -0.5621857562786516,
+   "tvl": 41854978.38921249,
+   "chg7d": -0.3464567497123596,
+   "chg1d": -0.03068988423039798,
    "listedAt": 1666883108,
    "url": "https://www.tangible.store",
    "sig": {
@@ -900,9 +900,9 @@
     "Cardano",
     "XDC"
    ],
-   "tvl": 34658338.45088328,
-   "chg7d": -10.495070683074744,
-   "chg1d": 0.007064008040231329,
+   "tvl": 34657114.46583715,
+   "chg7d": -10.510026095695707,
+   "chg1d": -0.0010400233182394913,
    "listedAt": 1738172664,
    "url": "https://www.kaio.xyz/",
    "sig": {
@@ -923,7 +923,7 @@
     "jurisdiction": "Singapour/ADGM (ex-Libre)",
     "note": "Feeder vers fonds institutionnels régulés",
     "conf": "med",
-    "req": 10.25,
+    "req": 10.23,
     "offered": null,
     "gap_bps": null,
     "verdict": null
@@ -941,9 +941,9 @@
    "chains": [
     "Binance"
    ],
-   "tvl": 23532536.320520423,
-   "chg7d": -0.014113624467000818,
-   "chg1d": 0.01290130017498825,
+   "tvl": 23529303.666436955,
+   "chg7d": -0.0496862174821473,
+   "chg1d": -0.020639055884288382,
    "listedAt": 1764702135,
    "url": "https://goldfinger.finance/",
    "sig": {
@@ -1000,13 +1000,13 @@
     "Flare",
     "Ethereum"
    ],
-   "tvl": 17776605.85094901,
-   "chg7d": -24.496763761465985,
-   "chg1d": 0.034809701127770154,
+   "tvl": 17767502.42050787,
+   "chg7d": -24.52380899073674,
+   "chg1d": -0.06078597878394021,
    "listedAt": 1720786477,
    "url": "https://vaults.clearpool.finance/",
    "sig": {
-    "ls": 46,
+    "ls": 45,
     "band": "red",
     "stress": true,
     "size": 0.78,
@@ -1023,7 +1023,7 @@
     "jurisdiction": "Web3 (Clearpool)",
     "note": "Pool orienté treasuries/crédit",
     "conf": "low",
-    "req": 9.25,
+    "req": 9.23,
     "offered": null,
     "gap_bps": null,
     "verdict": null
@@ -1041,9 +1041,9 @@
    "chains": [
     "zkSync Era"
    ],
-   "tvl": 14183687.076299997,
-   "chg7d": -7.49462644601995,
-   "chg1d": 0.03225787774591993,
+   "tvl": 14183687.076299999,
+   "chg7d": -7.494626446019936,
+   "chg1d": 2.842170943040401e-14,
    "listedAt": 1727294988,
    "url": "https://www.sygnum.com/",
    "sig": {
@@ -1070,9 +1070,9 @@
    "chains": [
     "Binance"
    ],
-   "tvl": 14105487.804419432,
-   "chg7d": 0.1017702925563384,
-   "chg1d": 0.05069508988296434,
+   "tvl": 14104024.526440708,
+   "chg7d": 0.06898155321263744,
+   "chg1d": -0.015219977106369242,
    "listedAt": 1771346975,
    "url": "https://paimon.finance/",
    "sig": {
@@ -1128,9 +1128,9 @@
    "chains": [
     "Etherlink"
    ],
-   "tvl": 10505680.402535738,
-   "chg7d": 36.404909406227716,
-   "chg1d": 0.6693614134220667,
+   "tvl": 10508748.778446151,
+   "chg7d": 36.01620452030278,
+   "chg1d": 0.02920682709586231,
    "listedAt": 1744378473,
    "url": "https://uranium.io/en",
    "sig": {
@@ -1157,9 +1157,9 @@
    "chains": [
     "Polygon"
    ],
-   "tvl": 8994429.960090958,
-   "chg7d": -0.006957257590343602,
-   "chg1d": 0.015132627491027506,
+   "tvl": 8992050.53940569,
+   "chg7d": -0.03298622568183873,
+   "chg1d": -0.014954785196792386,
    "listedAt": 1706795799,
    "url": "https://www.binaryx.com",
    "sig": {
@@ -1187,9 +1187,9 @@
     "Binance",
     "Mantle"
    ],
-   "tvl": 8714049.25613971,
-   "chg7d": -1.9087195288561674,
-   "chg1d": -0.0465787229053376,
+   "tvl": 8712670.986258117,
+   "chg7d": -2.1997073562053373,
+   "chg1d": -0.015816640933280723,
    "listedAt": 1695959397,
    "url": "https://solv.finance/",
    "sig": {
@@ -1197,7 +1197,7 @@
     "band": "green",
     "stress": false,
     "size": 0.75,
-    "stability": 0.92,
+    "stability": 0.91,
     "resil": 0.67,
     "note": "taille solide, stable"
    },
@@ -1219,8 +1219,8 @@
     "Starknet"
    ],
    "tvl": 7188516.5720874,
-   "chg7d": -0.013034643713751848,
-   "chg1d": 0.002698862594570528,
+   "chg7d": -0.026210854862569022,
+   "chg1d": -0.004854887813920072,
    "listedAt": 1772047122,
    "url": "https://imdefa.com/",
    "sig": {
@@ -1241,7 +1241,7 @@
     "jurisdiction": "Web3",
     "note": "Affacturage / financement de factures",
     "conf": "low",
-    "req": 11.25,
+    "req": 11.23,
     "offered": null,
     "gap_bps": null,
     "verdict": null
@@ -1259,9 +1259,9 @@
    "chains": [
     "Ethereum"
    ],
-   "tvl": 7039295.733289892,
-   "chg7d": -5.003674705620369,
-   "chg1d": 0.02588919595349637,
+   "tvl": 7041117.711359784,
+   "chg7d": -4.9966829681725216,
+   "chg1d": 0.025882959587491428,
    "listedAt": 1783704951,
    "url": "https://www.vaultstreet.com/",
    "sig": {
@@ -1274,29 +1274,29 @@
     "note": "taille solide, stable"
    },
    "yg": {
-    "apy": 7.87,
-    "sigma": 0.046,
-    "volpen": 0.93,
-    "rf": 3.75,
+    "apy": 8.27,
+    "sigma": 0.047,
+    "volpen": 0.95,
+    "rf": 3.73,
     "fair": 9.78,
-    "spread": 4.12,
-    "gap_bps": -191,
+    "spread": 4.53,
+    "gap_bps": -151,
     "verdict": "rich"
    },
    "fv": null,
    "apac": null,
    "manager": "Vault Street",
    "gapu": {
-    "apy": 7.87,
+    "apy": 8.27,
     "fair": 9.78,
-    "gap_bps": -191,
+    "gap_bps": -151,
     "verdict": "rich",
     "src": "signal"
    },
    "gaprel": {
     "pctile": 43,
-    "z": -0.36,
-    "peer_med": 169,
+    "z": -0.34,
+    "peer_med": 192,
     "rv": "in-line",
     "n": 7
    }
@@ -1314,9 +1314,9 @@
     "Monad",
     "Solana"
    ],
-   "tvl": 6087837.010656333,
-   "chg7d": -48.39745402976722,
-   "chg1d": -48.42619346045743,
+   "tvl": 6087860.690525927,
+   "chg7d": -48.409006435053925,
+   "chg1d": -0.007021412154969653,
    "listedAt": 1757469154,
    "url": "https://app.theo.xyz/",
    "sig": {
@@ -1329,13 +1329,13 @@
     "note": "taille solide, volatil, ⚠ sorties nettes 7j, multi-chaîne"
    },
    "yg": {
-    "apy": 4.84,
+    "apy": 4.53,
     "sigma": 0.034,
     "volpen": 0.68,
-    "rf": 3.75,
-    "fair": 11.53,
-    "spread": 1.09,
-    "gap_bps": -668,
+    "rf": 3.73,
+    "fair": 11.51,
+    "spread": 0.8,
+    "gap_bps": -698,
     "verdict": "rich"
    },
    "fv": {
@@ -1346,17 +1346,17 @@
     "jurisdiction": "Web3",
     "note": "Panier de T-bills tokenisés",
     "conf": "low",
-    "req": 10.45,
-    "offered": 4.84,
-    "gap_bps": -561,
+    "req": 10.43,
+    "offered": 4.53,
+    "gap_bps": -590,
     "verdict": "rich"
    },
    "apac": null,
    "manager": "Theo Network thBill",
    "gapu": {
-    "apy": 4.84,
-    "fair": 10.45,
-    "gap_bps": -561,
+    "apy": 4.53,
+    "fair": 10.43,
+    "gap_bps": -590,
     "verdict": "rich",
     "src": "fond."
    },
@@ -1371,9 +1371,9 @@
     "Binance",
     "Solana"
    ],
-   "tvl": 5854155.279116096,
-   "chg7d": -1.5073209089651982,
-   "chg1d": 0.21499041845186184,
+   "tvl": 5844327.940691176,
+   "chg7d": -1.6664180496221945,
+   "chg1d": -0.10509045629308389,
    "listedAt": 1757348655,
    "url": "https://www.mansory.com/",
    "sig": {
@@ -1381,7 +1381,7 @@
     "band": "green",
     "stress": false,
     "size": 0.73,
-    "stability": 0.94,
+    "stability": 0.93,
     "resil": 0.67,
     "note": "taille solide, stable"
    },
@@ -1400,9 +1400,9 @@
    "chains": [
     "Ethereum"
    ],
-   "tvl": 4973719.829188616,
-   "chg7d": -1.8659874360991182,
-   "chg1d": -0.541416383135001,
+   "tvl": 4944954.016334328,
+   "chg7d": -1.8546671608417569,
+   "chg1d": -0.574929896921418,
    "listedAt": 1777136758,
    "url": "https://www.eva.markets",
    "sig": {
@@ -1429,9 +1429,9 @@
    "chains": [
     "Ethereum"
    ],
-   "tvl": 4461642.241247805,
-   "chg7d": 6.144426587188832,
-   "chg1d": 0.018159419005868926,
+   "tvl": 4462693.891103598,
+   "chg7d": 6.14315593657642,
+   "chg1d": 0.013576330593735975,
    "listedAt": 1789412282,
    "url": "https://kamui.finance",
    "sig": {
@@ -1458,9 +1458,9 @@
    "chains": [
     "Ethereum"
    ],
-   "tvl": 4334284.43076314,
-   "chg7d": -36.54196421278952,
-   "chg1d": 0.021090160049340057,
+   "tvl": 4333860.27284085,
+   "chg7d": -36.56358266848656,
+   "chg1d": -0.007526018506752052,
    "listedAt": 1788455243,
    "url": "https://www.nara.io",
    "sig": {
@@ -1487,9 +1487,9 @@
    "chains": [
     "Algorand"
    ],
-   "tvl": 4193062.71614434,
-   "chg7d": 5.582294755095177,
-   "chg1d": 0.39844153809258387,
+   "tvl": 4190711.9487277865,
+   "chg7d": 5.569214193486303,
+   "chg1d": -0.056063254372574534,
    "listedAt": 1683800481,
    "url": "https://meld.gold",
    "sig": {
@@ -1517,9 +1517,9 @@
     "Binance",
     "Ethereum"
    ],
-   "tvl": 4055124.65958261,
-   "chg7d": -7.388086885094765,
-   "chg1d": 0.02536367678756335,
+   "tvl": 4054287.842314104,
+   "chg7d": -7.299687773940164,
+   "chg1d": -0.020636043001246662,
    "listedAt": 1765393199,
    "url": "https://lista.org/rwa",
    "sig": {
@@ -1527,7 +1527,7 @@
     "band": "green",
     "stress": false,
     "size": 0.71,
-    "stability": 0.7,
+    "stability": 0.71,
     "resil": 0.67,
     "note": "taille solide, stable"
    },
@@ -1548,9 +1548,9 @@
     "Ethereum",
     "CORE"
    ],
-   "tvl": 4036497.597513847,
-   "chg7d": 0.14209703499774662,
-   "chg1d": 0.033765578242125116,
+   "tvl": 4037077.1862559365,
+   "chg7d": 0.11942188375194007,
+   "chg1d": 0.017798014673672924,
    "listedAt": 1745590867,
    "url": "https://nawa.finance/",
    "sig": {
@@ -1558,18 +1558,18 @@
     "band": "green",
     "stress": false,
     "size": 0.71,
-    "stability": 0.99,
+    "stability": 1.0,
     "resil": 1.0,
     "note": "taille solide, stable, multi-chaîne"
    },
    "yg": {
-    "apy": 9.34,
-    "sigma": 0.164,
+    "apy": 9.33,
+    "sigma": 0.163,
     "volpen": 3.0,
-    "rf": 3.75,
-    "fair": 9.95,
-    "spread": 5.59,
-    "gap_bps": -61,
+    "rf": 3.73,
+    "fair": 9.93,
+    "spread": 5.6,
+    "gap_bps": -60,
     "verdict": "fair"
    },
    "fv": {
@@ -1580,17 +1580,17 @@
     "jurisdiction": "Web3 (Shariah)",
     "note": "Yield shariah-compliant, petite taille",
     "conf": "low",
-    "req": 11.65,
-    "offered": 9.34,
-    "gap_bps": -231,
+    "req": 11.63,
+    "offered": 9.33,
+    "gap_bps": -230,
     "verdict": "rich"
    },
    "apac": null,
    "manager": "Nawa Protocol",
    "gapu": {
-    "apy": 9.34,
-    "fair": 11.65,
-    "gap_bps": -231,
+    "apy": 9.33,
+    "fair": 11.63,
+    "gap_bps": -230,
     "verdict": "rich",
     "src": "fond."
    },
@@ -1607,9 +1607,9 @@
     "Polygon",
     "Telos"
    ],
-   "tvl": 3067594.4312508903,
-   "chg7d": 0.07836886156080425,
-   "chg1d": -0.42788971181001045,
+   "tvl": 3069068.9176738593,
+   "chg7d": 0.025660095923313975,
+   "chg1d": 0.054343299260267486,
    "listedAt": 1704837198,
    "url": "https://kuma.bond",
    "sig": {
@@ -1659,7 +1659,7 @@
     "jurisdiction": "Web3",
     "note": "Protocole DeFi de crédit, petite taille",
     "conf": "low",
-    "req": 11.65,
+    "req": 11.63,
     "offered": null,
     "gap_bps": null,
     "verdict": null
@@ -1677,17 +1677,17 @@
    "chains": [
     "Solana"
    ],
-   "tvl": 2410120.7640419076,
-   "chg7d": 0.6826474229742843,
-   "chg1d": 2.479554744715088,
+   "tvl": 2426233.937636129,
+   "chg7d": 1.0758901524919366,
+   "chg1d": 0.81407705936752,
    "listedAt": 1714244597,
    "url": "",
    "sig": {
-    "ls": 74,
+    "ls": 73,
     "band": "green",
     "stress": false,
     "size": 0.69,
-    "stability": 0.97,
+    "stability": 0.96,
     "resil": 0.33,
     "note": "taille moyenne, stable"
    },
@@ -1706,17 +1706,17 @@
    "chains": [
     "Solana"
    ],
-   "tvl": 2332049.211690594,
-   "chg7d": 3.5652824462440122,
-   "chg1d": -0.24643370008293175,
+   "tvl": 2345914.964973614,
+   "chg7d": 4.334607182818928,
+   "chg1d": 0.5850236539279621,
    "listedAt": 1760378121,
    "url": "https://app.oro.finance/",
    "sig": {
-    "ls": 69,
+    "ls": 68,
     "band": "green",
     "stress": false,
     "size": 0.68,
-    "stability": 0.86,
+    "stability": 0.83,
     "resil": 0.33,
     "note": "taille moyenne, stable"
    },
@@ -1735,9 +1735,9 @@
    "chains": [
     "Ethereum"
    ],
-   "tvl": 2197919.169831314,
-   "chg7d": -0.040525148673637545,
-   "chg1d": 0.01753697533595755,
+   "tvl": 2197971.0631177793,
+   "chg7d": -0.06513702337733207,
+   "chg1d": -0.0025505960437754993,
    "listedAt": 1737640913,
    "url": "https://zoth.io/",
    "sig": {
@@ -1758,7 +1758,7 @@
     "jurisdiction": "Web3 (Zoth)",
     "note": "Ecosystème RWAFi / restaking",
     "conf": "low",
-    "req": 10.45,
+    "req": 10.43,
     "offered": null,
     "gap_bps": null,
     "verdict": null
@@ -1778,9 +1778,9 @@
     "Solana",
     "Ethereum"
    ],
-   "tvl": 2148652.3047921676,
-   "chg7d": -0.01073874558478849,
-   "chg1d": 0.0017950623622198236,
+   "tvl": 2148724.5802100687,
+   "chg7d": -0.017028383693698856,
+   "chg1d": 0.0007407816540023759,
    "listedAt": 1783536377,
    "url": "https://markets.byzanlink.com",
    "sig": {
@@ -1801,7 +1801,7 @@
     "jurisdiction": "Web3",
     "note": "Plateforme RWA non-custodiale, yield",
     "conf": "low",
-    "req": 10.45,
+    "req": 10.43,
     "offered": null,
     "gap_bps": null,
     "verdict": null
@@ -1820,9 +1820,9 @@
     "Avalanche",
     "Canto"
    ],
-   "tvl": 1726348.374233,
-   "chg7d": 0.05866086214234656,
-   "chg1d": 0.008382827968247852,
+   "tvl": 1726493.534273,
+   "chg7d": 0.05897366522935954,
+   "chg1d": 0.008408502140497376,
    "listedAt": 1710944068,
    "url": "https://www.hiyield.xyz",
    "sig": {
@@ -1843,7 +1843,7 @@
     "jurisdiction": "Web3",
     "note": "Accès aux marchés de capitaux traditionnels pour natifs web3",
     "conf": "low",
-    "req": 10.05,
+    "req": 10.03,
     "offered": null,
     "gap_bps": null,
     "verdict": null
@@ -1861,9 +1861,9 @@
    "chains": [
     "Ethereum"
    ],
-   "tvl": 1563124.613083861,
-   "chg7d": -0.02214745588142364,
-   "chg1d": 0.015492742084461497,
+   "tvl": 1563444.0467228766,
+   "chg7d": -0.008928337250097229,
+   "chg1d": 0.021321088561450097,
    "listedAt": 1703552397,
    "url": "",
    "sig": {
@@ -1878,11 +1878,11 @@
    "yg": {
     "apy": 13.75,
     "sigma": 0.09,
-    "volpen": 1.8,
-    "rf": 3.75,
-    "fair": 10.15,
-    "spread": 10.0,
-    "gap_bps": 360,
+    "volpen": 1.81,
+    "rf": 3.73,
+    "fair": 10.14,
+    "spread": 10.02,
+    "gap_bps": 361,
     "verdict": "cheap"
    },
    "fv": null,
@@ -1890,8 +1890,8 @@
    "manager": "LandX Finance",
    "gapu": {
     "apy": 13.75,
-    "fair": 10.15,
-    "gap_bps": 360,
+    "fair": 10.14,
+    "gap_bps": 361,
     "verdict": "cheap",
     "src": "signal"
    },
@@ -1909,9 +1909,9 @@
     "Monad",
     "Base"
    ],
-   "tvl": 1426219.2682129692,
-   "chg7d": 0.27426668244592634,
-   "chg1d": 0.06878803219814245,
+   "tvl": 1428650.0579953901,
+   "chg7d": 0.3754728555908713,
+   "chg1d": 0.17164050989768498,
    "listedAt": 1776278881,
    "url": "https://www.travessiacredit.com/",
    "sig": {
@@ -1919,7 +1919,7 @@
     "band": "green",
     "stress": false,
     "size": 0.66,
-    "stability": 0.99,
+    "stability": 0.98,
     "resil": 1.0,
     "note": "taille moyenne, stable, multi-chaîne"
    },
@@ -1927,10 +1927,10 @@
     "apy": 17.14,
     "sigma": 0,
     "volpen": 0,
-    "rf": 3.75,
-    "fair": 7.25,
-    "spread": 13.39,
-    "gap_bps": 989,
+    "rf": 3.73,
+    "fair": 7.23,
+    "spread": 13.41,
+    "gap_bps": 991,
     "verdict": "cheap"
    },
    "fv": null,
@@ -1938,15 +1938,15 @@
    "manager": "Travessia Credit",
    "gapu": {
     "apy": 17.14,
-    "fair": 7.25,
-    "gap_bps": 989,
+    "fair": 7.23,
+    "gap_bps": 991,
     "verdict": "cheap",
     "src": "signal"
    },
    "gaprel": {
     "pctile": 86,
-    "z": 0.82,
-    "peer_med": 169,
+    "z": 0.8,
+    "peer_med": 192,
     "rv": "cheap",
     "n": 7
    }
@@ -1964,17 +1964,17 @@
     "Base",
     "Polygon"
    ],
-   "tvl": 1402477.6468048824,
-   "chg7d": -0.17265252744198278,
-   "chg1d": -0.03265201578203403,
+   "tvl": 1402557.258689397,
+   "chg7d": -0.05694078812753389,
+   "chg1d": 0.0524681670262197,
    "listedAt": 1696533115,
    "url": "https://mountainprotocol.com",
    "sig": {
-    "ls": 85,
+    "ls": 86,
     "band": "green",
     "stress": false,
     "size": 0.66,
-    "stability": 0.99,
+    "stability": 1.0,
     "resil": 1.0,
     "note": "taille moyenne, stable, multi-chaîne"
    },
@@ -1993,9 +1993,9 @@
    "chains": [
     "Aptos"
    ],
-   "tvl": 1382928.3514130593,
-   "chg7d": -0.6330750454148557,
-   "chg1d": 0.01643822298997577,
+   "tvl": 1383552.997887561,
+   "chg7d": -0.6882662019483661,
+   "chg1d": 0.04516839023970931,
    "listedAt": 1757960244,
    "url": "https://www.propbase.app/",
    "sig": {
@@ -2022,9 +2022,9 @@
    "chains": [
     "Plasma"
    ],
-   "tvl": 1024439.8171543946,
-   "chg7d": -0.014088325462964235,
-   "chg1d": -0.0019358293994145015,
+   "tvl": 1024500.9650487718,
+   "chg7d": -0.02487713771948563,
+   "chg1d": 0.005968910359911206,
    "listedAt": 1765948711,
    "url": "",
    "sig": {
@@ -2052,9 +2052,9 @@
     "Base",
     "Plume Mainnet"
    ],
-   "tvl": 1021575.5915519397,
-   "chg7d": -0.03851313051320915,
-   "chg1d": -0.4210614373456849,
+   "tvl": 1021464.1134790875,
+   "chg7d": 0.1427109810690439,
+   "chg1d": -0.011256599624147157,
    "listedAt": 1749485401,
    "url": "https://realtyx.co/",
    "sig": {
@@ -2062,7 +2062,7 @@
     "band": "green",
     "stress": false,
     "size": 0.65,
-    "stability": 1.0,
+    "stability": 0.99,
     "resil": 0.67,
     "note": "taille moyenne, stable"
    },
@@ -2081,9 +2081,9 @@
    "chains": [
     "Hedera"
    ],
-   "tvl": 954435.5829207716,
-   "chg7d": 0.23542066998662392,
-   "chg1d": 0.037079823073838725,
+   "tvl": 954690.9262680991,
+   "chg7d": 0.21012685015917043,
+   "chg1d": 0.03115939546525226,
    "listedAt": 1761266487,
    "url": "https://app.isle.finance/",
    "sig": {
@@ -2097,12 +2097,12 @@
    },
    "yg": {
     "apy": 30.55,
-    "sigma": 0.356,
+    "sigma": 0.357,
     "volpen": 3.0,
-    "rf": 3.75,
-    "fair": 11.45,
-    "spread": 26.8,
-    "gap_bps": 1910,
+    "rf": 3.73,
+    "fair": 11.43,
+    "spread": 26.82,
+    "gap_bps": 1912,
     "verdict": "cheap"
    },
    "fv": null,
@@ -2110,18 +2110,47 @@
    "manager": "Isle Finance",
    "gapu": {
     "apy": 30.55,
-    "fair": 11.45,
-    "gap_bps": 1910,
+    "fair": 11.43,
+    "gap_bps": 1912,
     "verdict": "cheap",
     "src": "signal"
    },
    "gaprel": {
     "pctile": 100,
-    "z": 1.74,
-    "peer_med": 169,
+    "z": 1.72,
+    "peer_med": 192,
     "rv": "cheap",
     "n": 7
    }
+  },
+  {
+   "name": "CANA Holdings California Carbon Credits",
+   "symbol": "CANA",
+   "slug": "cana-holdings-california-carbon-credits",
+   "cls": "Other (carbon/insurance/art)",
+   "chains": [
+    "Ethereum"
+   ],
+   "tvl": 893976.7415455879,
+   "chg7d": 0,
+   "chg1d": 47.11018788034451,
+   "listedAt": 1756916937,
+   "url": "https://maseer.finance/",
+   "sig": {
+    "ls": 73,
+    "band": "green",
+    "stress": false,
+    "size": 0.64,
+    "stability": 1.0,
+    "resil": 0.33,
+    "note": "taille moyenne, stable"
+   },
+   "yg": null,
+   "fv": null,
+   "apac": null,
+   "manager": "CANA Holdings California Carbon Credits",
+   "gapu": null,
+   "gaprel": null
   },
   {
    "name": "Solayer USD",
@@ -2131,9 +2160,9 @@
    "chains": [
     "Solana"
    ],
-   "tvl": 703903.8346997773,
-   "chg7d": -0.12206122198649894,
-   "chg1d": 0.001555595304836288,
+   "tvl": 703917.7477673908,
+   "chg7d": -0.13612398355978428,
+   "chg1d": -0.0005394177796063104,
    "listedAt": 1731623194,
    "url": "https://solayer.org",
    "sig": {
@@ -2141,7 +2170,7 @@
     "band": "green",
     "stress": false,
     "size": 0.63,
-    "stability": 1.0,
+    "stability": 0.99,
     "resil": 0.33,
     "note": "taille moyenne, stable"
    },
@@ -2182,35 +2211,6 @@
    "gaprel": null
   },
   {
-   "name": "CANA Holdings California Carbon Credits",
-   "symbol": "CANA",
-   "slug": "cana-holdings-california-carbon-credits",
-   "cls": "Other (carbon/insurance/art)",
-   "chains": [
-    "Ethereum"
-   ],
-   "tvl": 607691.9310800722,
-   "chg7d": -32.02374258311917,
-   "chg1d": -0.18360205207218883,
-   "listedAt": 1756916937,
-   "url": "https://maseer.finance/",
-   "sig": {
-    "ls": 32,
-    "band": "red",
-    "stress": true,
-    "size": 0.62,
-    "stability": 0.0,
-    "resil": 0.33,
-    "note": "taille moyenne, volatil, ⚠ sorties nettes 7j"
-   },
-   "yg": null,
-   "fv": null,
-   "apac": null,
-   "manager": "CANA Holdings California Carbon Credits",
-   "gapu": null,
-   "gaprel": null
-  },
-  {
    "name": "Exceed Finance exUSDC",
    "symbol": "-",
    "slug": "exceed-finance-exusdc",
@@ -2218,9 +2218,9 @@
    "chains": [
     "Solana"
    ],
-   "tvl": 596260.2852681021,
-   "chg7d": -17.707691907151997,
-   "chg1d": 0.025904323719288413,
+   "tvl": 596449.8544907043,
+   "chg7d": -17.507598415245482,
+   "chg1d": 0.03179303188321114,
    "listedAt": 1792712342,
    "url": "https://www.exceed.finance/",
    "sig": {
@@ -2228,7 +2228,7 @@
     "band": "red",
     "stress": true,
     "size": 0.62,
-    "stability": 0.29,
+    "stability": 0.3,
     "resil": 0.33,
     "note": "taille moyenne, volatil, ⚠ sorties nettes 7j"
    },
@@ -2250,13 +2250,13 @@
     "Base",
     "Regen"
    ],
-   "tvl": 546094.265353912,
-   "chg7d": 0.1401425888374348,
-   "chg1d": 0.016436161079312228,
+   "tvl": 544761.6688183467,
+   "chg7d": -0.3139268404712965,
+   "chg1d": -0.24402316964484783,
    "listedAt": 1659621481,
    "url": "",
    "sig": {
-    "ls": 84,
+    "ls": 83,
     "band": "green",
     "stress": false,
     "size": 0.62,
@@ -2280,9 +2280,9 @@
     "Plume Mainnet",
     "Polygon"
    ],
-   "tvl": 524074.07190947223,
-   "chg7d": -0.07608342880938324,
-   "chg1d": -0.8946172585467167,
+   "tvl": 523969.43509904685,
+   "chg7d": 0.17860811036321422,
+   "chg1d": -0.026596117547668996,
    "listedAt": 1752609742,
    "url": "https://www.harvestflow.io/?lng=en",
    "sig": {
@@ -2290,7 +2290,7 @@
     "band": "green",
     "stress": false,
     "size": 0.61,
-    "stability": 1.0,
+    "stability": 0.99,
     "resil": 0.67,
     "note": "taille moyenne, stable"
    },
@@ -2309,9 +2309,9 @@
    "chains": [
     "Ethereum"
    ],
-   "tvl": 522394.6044740083,
-   "chg7d": 4.727132450444188,
-   "chg1d": 0.6643351025115578,
+   "tvl": 522708.81837699725,
+   "chg7d": 4.936099252668285,
+   "chg1d": 0.060148764994494286,
    "listedAt": 1661139252,
    "url": "",
    "sig": {
@@ -2319,7 +2319,7 @@
     "band": "amber",
     "stress": false,
     "size": 0.61,
-    "stability": 0.81,
+    "stability": 0.8,
     "resil": 0.33,
     "note": "taille moyenne, stable"
    },
@@ -2339,19 +2339,19 @@
     "Klaytn",
     "Avalanche"
    ],
-   "tvl": 503830.9071891919,
-   "chg7d": -6.6743370938067414,
-   "chg1d": 6.12035403309838,
+   "tvl": 484708.8364051315,
+   "chg7d": -8.45811736815773,
+   "chg1d": 0.8948476190643078,
    "listedAt": 1729647602,
    "url": "https://goldstation.io",
    "sig": {
-    "ls": 67,
+    "ls": 64,
     "band": "amber",
-    "stress": false,
+    "stress": true,
     "size": 0.61,
-    "stability": 0.73,
+    "stability": 0.66,
     "resil": 0.67,
-    "note": "taille moyenne, stable"
+    "note": "taille moyenne, volatilité modérée, ⚠ sorties nettes 7j"
    },
    "yg": null,
    "fv": null,
@@ -2368,9 +2368,9 @@
    "chains": [
     "Ethereum"
    ],
-   "tvl": 455361.53164847573,
-   "chg7d": -0.00827995563412287,
-   "chg1d": 0.007563498915217792,
+   "tvl": 455338.6162327272,
+   "chg7d": -0.018614618313648634,
+   "chg1d": -0.0016677001860188057,
    "listedAt": 1720292689,
    "url": "https://www.arcalabs.com/",
    "sig": {
@@ -2397,19 +2397,19 @@
    "chains": [
     "Base"
    ],
-   "tvl": 441700.8073931678,
-   "chg7d": -9.95421975303205,
-   "chg1d": 3.7473154087566627,
+   "tvl": 439144.1982218444,
+   "chg7d": -16.71770531744346,
+   "chg1d": -0.5788241263743288,
    "listedAt": 1754371223,
    "url": "https://app.8lends.io",
    "sig": {
-    "ls": 56,
-    "band": "amber",
+    "ls": 45,
+    "band": "red",
     "stress": true,
     "size": 0.61,
-    "stability": 0.6,
+    "stability": 0.33,
     "resil": 0.33,
-    "note": "taille moyenne, volatilité modérée, ⚠ sorties nettes 7j"
+    "note": "taille moyenne, volatil, ⚠ sorties nettes 7j"
    },
    "yg": null,
    "fv": null,
@@ -2426,9 +2426,9 @@
    "chains": [
     "Ethereum"
    ],
-   "tvl": 436362.47506663,
-   "chg7d": -49.0487099974833,
-   "chg1d": 0.01006472078626075,
+   "tvl": 436360.18958912307,
+   "chg7d": -49.05538040989338,
+   "chg1d": 0.00197587856678183,
    "listedAt": 1792712065,
    "url": "https://forestroadvault.com",
    "sig": {
@@ -2459,9 +2459,9 @@
     "Optimism",
     "Arbitrum"
    ],
-   "tvl": 229617.21907574456,
-   "chg7d": -0.034513019854145455,
-   "chg1d": -0.005178672983177535,
+   "tvl": 229542.56209979998,
+   "chg7d": -0.08059095864533106,
+   "chg1d": -0.023616455976664952,
    "listedAt": 1721821003,
    "url": "https://www.bosonprotocol.io",
    "sig": {
@@ -2489,12 +2489,12 @@
     "Ethereum"
    ],
    "tvl": 227781.19793050096,
-   "chg7d": -0.46980419957736785,
-   "chg1d": -0.44726871948525115,
+   "chg7d": -0.4254198160334539,
+   "chg1d": 0,
    "listedAt": 1772047388,
    "url": "https://usual.money",
    "sig": {
-    "ls": 69,
+    "ls": 70,
     "band": "green",
     "stress": false,
     "size": 0.58,
@@ -2506,10 +2506,10 @@
     "apy": 3.56,
     "sigma": 0,
     "volpen": 0,
-    "rf": 3.75,
-    "fair": 8.85,
-    "spread": -0.19,
-    "gap_bps": -529,
+    "rf": 3.73,
+    "fair": 8.73,
+    "spread": -0.17,
+    "gap_bps": -517,
     "verdict": "rich"
    },
    "fv": null,
@@ -2517,8 +2517,8 @@
    "manager": "Usual EUR0",
    "gapu": {
     "apy": 3.56,
-    "fair": 8.85,
-    "gap_bps": -529,
+    "fair": 8.73,
+    "gap_bps": -517,
     "verdict": "rich",
     "src": "signal"
    },
@@ -2550,10 +2550,10 @@
     "apy": 4.0,
     "sigma": 0,
     "volpen": 0,
-    "rf": 3.75,
-    "fair": 8.75,
-    "spread": 0.25,
-    "gap_bps": -475,
+    "rf": 3.73,
+    "fair": 8.73,
+    "spread": 0.27,
+    "gap_bps": -473,
     "verdict": "rich"
    },
    "fv": null,
@@ -2561,8 +2561,8 @@
    "manager": "Frigg.eco",
    "gapu": {
     "apy": 4.0,
-    "fair": 8.75,
-    "gap_bps": -475,
+    "fair": 8.73,
+    "gap_bps": -473,
     "verdict": "rich",
     "src": "signal"
    },
@@ -2599,7 +2599,7 @@
     "jurisdiction": "Web3",
     "note": "Infra omnichain agrégeant du private lending",
     "conf": "low",
-    "req": 11.25,
+    "req": 11.23,
     "offered": null,
     "gap_bps": null,
     "verdict": null
@@ -2617,9 +2617,9 @@
    "chains": [
     "Stellar"
    ],
-   "tvl": 151524.12310829648,
-   "chg7d": 0.0011243777267964106,
-   "chg1d": -0.00445997667513609,
+   "tvl": 151514.265228957,
+   "chg7d": -0.02715845805715844,
+   "chg1d": 0.0019990252003765363,
    "listedAt": 1779964244,
    "url": "https://untangled.finance/",
    "sig": {
@@ -2640,7 +2640,7 @@
     "jurisdiction": "Web3/Singapour",
     "note": "Crédit institutionnel pour fintechs — trade/invoice finance",
     "conf": "med",
-    "req": 10.05,
+    "req": 10.03,
     "offered": null,
     "gap_bps": null,
     "verdict": null
@@ -2691,9 +2691,9 @@
     "Ethereum",
     "Base"
    ],
-   "tvl": 126711.94149053215,
-   "chg7d": 0.0074542017108854,
-   "chg1d": -0.010422545036718134,
+   "tvl": 126708.1383525828,
+   "chg7d": -0.029780196883891108,
+   "chg1d": -0.010485890779307283,
    "listedAt": 1754418921,
    "url": "https://www.verified.network/",
    "sig": {
@@ -2720,9 +2720,9 @@
    "chains": [
     "Ethereum"
    ],
-   "tvl": 112020.50248247995,
-   "chg7d": -0.10352602482996076,
-   "chg1d": -0.578113227033711,
+   "tvl": 111947.48767792292,
+   "chg7d": -0.11095443667826999,
+   "chg1d": -0.09375335018498276,
    "listedAt": 1784750567,
    "url": "https://wstgbp.com",
    "sig": {
@@ -2750,9 +2750,9 @@
     "Binance",
     "Base"
    ],
-   "tvl": 96107.65350783503,
-   "chg7d": -0.005600772797748732,
-   "chg1d": -0.005464916297910349,
+   "tvl": 96101.2280340816,
+   "chg7d": -0.03887331599972299,
+   "chg1d": 0.0008154353247533663,
    "listedAt": 1763415671,
    "url": "https://www.liveart.ai/",
    "sig": {
@@ -2779,9 +2779,9 @@
    "chains": [
     "Ethereum"
    ],
-   "tvl": 72975.47392382883,
-   "chg7d": 0.07342015237902899,
-   "chg1d": 0.015130210080926076,
+   "tvl": 72982.53083734312,
+   "chg7d": 0.07289923000801934,
+   "chg1d": 0.009698428150059613,
    "listedAt": 1683044490,
    "url": "https://legacy.tprotocol.io/",
    "sig": {
@@ -2802,7 +2802,7 @@
     "jurisdiction": "Web3",
     "note": "Lending RWA adossé T-bills/MMF (v1)",
     "conf": "low",
-    "req": 10.45,
+    "req": 10.43,
     "offered": null,
     "gap_bps": null,
     "verdict": null
@@ -2849,9 +2849,9 @@
    "chains": [
     "Ethereum"
    ],
-   "tvl": 32887.418493157784,
-   "chg7d": 0.0747721435760269,
-   "chg1d": 0.01554836970683482,
+   "tvl": 32890.662171430144,
+   "chg7d": 0.07477213400883898,
+   "chg1d": 0.009862976241308274,
    "listedAt": 1695705821,
    "url": "https://www.tprotocol.io",
    "sig": {
@@ -2872,7 +2872,7 @@
     "jurisdiction": "Web3",
     "note": "Lending RWA décentralisé (v2)",
     "conf": "low",
-    "req": 10.45,
+    "req": 10.43,
     "offered": null,
     "gap_bps": null,
     "verdict": null
@@ -2890,9 +2890,9 @@
    "chains": [
     "Algorand"
    ],
-   "tvl": 28444.42461587189,
-   "chg7d": 4.7799913449352545,
-   "chg1d": -0.9531682587299741,
+   "tvl": 28464.668712763105,
+   "chg7d": 5.032998619222369,
+   "chg1d": 0.07117070274615855,
    "listedAt": 1718187369,
    "url": "https://www.asa.gold",
    "sig": {
@@ -2900,7 +2900,7 @@
     "band": "amber",
     "stress": false,
     "size": 0.48,
-    "stability": 0.81,
+    "stability": 0.8,
     "resil": 0.33,
     "note": "taille moyenne, stable"
    },
@@ -2920,9 +2920,9 @@
     "Solana",
     "0G"
    ],
-   "tvl": 28301.89611341652,
-   "chg7d": 17.63094980924332,
-   "chg1d": 63.429511105340254,
+   "tvl": 28300.04822717753,
+   "chg7d": 17.792866276671475,
+   "chg1d": -0.0075196963842358855,
    "listedAt": 1761584407,
    "url": "https://credible.finance/",
    "sig": {
@@ -2949,9 +2949,9 @@
    "chains": [
     "Base"
    ],
-   "tvl": 23719.2124765464,
-   "chg7d": 0.24244247950868214,
-   "chg1d": 0.03008511251306345,
+   "tvl": 23727.61688662566,
+   "chg7d": 0.22683032381816304,
+   "chg1d": 0.04263423577862113,
    "listedAt": 1778006088,
    "url": "https://app.unblockequity.com/earn",
    "sig": {
@@ -2964,22 +2964,22 @@
     "note": "taille moyenne, stable"
    },
    "yg": {
-    "apy": 13.87,
+    "apy": 13.96,
     "sigma": 0.193,
     "volpen": 3.0,
-    "rf": 3.75,
-    "fair": 12.25,
-    "spread": 10.12,
-    "gap_bps": 162,
+    "rf": 3.73,
+    "fair": 12.23,
+    "spread": 10.23,
+    "gap_bps": 173,
     "verdict": "cheap"
    },
    "fv": null,
    "apac": null,
    "manager": "Unblock Equity",
    "gapu": {
-    "apy": 13.87,
-    "fair": 12.25,
-    "gap_bps": 162,
+    "apy": 13.96,
+    "fair": 12.23,
+    "gap_bps": 173,
     "verdict": "cheap",
     "src": "signal"
    },
@@ -2996,19 +2996,19 @@
     "Polygon",
     "Arbitrum"
    ],
-   "tvl": 21576.580483799902,
-   "chg7d": -6.630562058192339,
-   "chg1d": 1.6617989998417357,
+   "tvl": 20484.921090726108,
+   "chg7d": -10.950114612196842,
+   "chg1d": -9.584444291733746,
    "listedAt": 1650458739,
    "url": "https://solv.finance/",
    "sig": {
-    "ls": 67,
+    "ls": 60,
     "band": "amber",
-    "stress": false,
-    "size": 0.47,
-    "stability": 0.73,
+    "stress": true,
+    "size": 0.46,
+    "stability": 0.56,
     "resil": 1.0,
-    "note": "taille moyenne, stable, multi-chaîne"
+    "note": "taille moyenne, volatilité modérée, ⚠ sorties nettes 7j, multi-chaîne"
    },
    "yg": null,
    "fv": null,
@@ -3026,17 +3026,17 @@
     "Binance",
     "Ethereum"
    ],
-   "tvl": 19007.482245244893,
-   "chg7d": 0.8758503349910427,
-   "chg1d": 0.21807140360941446,
+   "tvl": 18900.855667206986,
+   "chg7d": 0.33291441897000595,
+   "chg1d": 0.19216633393878624,
    "listedAt": null,
    "url": "",
    "sig": {
-    "ls": 70,
+    "ls": 71,
     "band": "green",
     "stress": false,
     "size": 0.46,
-    "stability": 0.96,
+    "stability": 0.99,
     "resil": 0.67,
     "note": "taille moyenne, stable"
    },
@@ -3049,7 +3049,7 @@
     "jurisdiction": "Web3",
     "note": "Prêts PME",
     "conf": "low",
-    "req": 14.45,
+    "req": 14.43,
     "offered": null,
     "gap_bps": null,
     "verdict": null
@@ -3067,9 +3067,9 @@
    "chains": [
     "Solana"
    ],
-   "tvl": 11161.387091898589,
-   "chg7d": 0.09295106850295554,
-   "chg1d": 0.03448853313116729,
+   "tvl": 11162.668892300455,
+   "chg7d": 0.0927606537252359,
+   "chg1d": 0.00784816963393098,
    "listedAt": 1779908019,
    "url": "https://app.truyields.com",
    "sig": {
@@ -3102,9 +3102,9 @@
     "Optimism",
     "Binance"
    ],
-   "tvl": 8208.909027914626,
-   "chg7d": 0.016328400470385418,
-   "chg1d": 0.020214645595089564,
+   "tvl": 8208.659191604844,
+   "chg7d": 0.0117918245614419,
+   "chg1d": -0.0030434776281680342,
    "listedAt": 1700083684,
    "url": "https://sweepr.finance",
    "sig": {
@@ -3131,9 +3131,9 @@
    "chains": [
     "Sei"
    ],
-   "tvl": 7163.724634263042,
-   "chg7d": 0.4651073359038804,
-   "chg1d": -0.6921388499213208,
+   "tvl": 7124.055036998089,
+   "chg7d": -0.2991324206277852,
+   "chg1d": -0.5420380981778834,
    "listedAt": 1747867109,
    "url": "https://goldenasset.org",
    "sig": {
@@ -3141,7 +3141,7 @@
     "band": "amber",
     "stress": false,
     "size": 0.41,
-    "stability": 0.98,
+    "stability": 0.99,
     "resil": 0.33,
     "note": "taille moyenne, stable"
    },
@@ -3162,17 +3162,17 @@
     "Ethereum",
     "Polygon"
    ],
-   "tvl": 5274.748194672273,
-   "chg7d": 2.773265646912094,
-   "chg1d": 0.19742917445493902,
+   "tvl": 5257.4226577809595,
+   "chg7d": 2.375648487957747,
+   "chg1d": -0.08830816230845073,
    "listedAt": 1787016905,
    "url": "https://tokeshare.co/",
    "sig": {
-    "ls": 70,
+    "ls": 71,
     "band": "green",
     "stress": false,
     "size": 0.4,
-    "stability": 0.89,
+    "stability": 0.9,
     "resil": 1.0,
     "note": "taille moyenne, stable, multi-chaîne"
    },
@@ -3191,9 +3191,9 @@
    "chains": [
     "Ethereum"
    ],
-   "tvl": 3044.4097094968984,
-   "chg7d": -0.001934929807816843,
-   "chg1d": -0.0007221413844717972,
+   "tvl": 3044.309561694435,
+   "chg7d": -0.017265587108525438,
+   "chg1d": -0.006595394800811505,
    "listedAt": null,
    "url": "https://zivoe.com/",
    "sig": {
@@ -3214,7 +3214,7 @@
     "jurisdiction": "Web3",
     "note": "Crédit conso, tranche junior/first-loss",
     "conf": "low",
-    "req": 16.25,
+    "req": 16.23,
     "offered": null,
     "gap_bps": null,
     "verdict": null
@@ -3232,17 +3232,17 @@
    "chains": [
     "Ethereum"
    ],
-   "tvl": 2896.618226236624,
-   "chg7d": -0.21933889484462554,
-   "chg1d": -0.12054830852733289,
+   "tvl": 2898.1380287256784,
+   "chg7d": -0.056940788127562314,
+   "chg1d": 0.052468167026248125,
    "listedAt": 1718915196,
    "url": "https://www.tangible.store",
    "sig": {
-    "ls": 61,
+    "ls": 62,
     "band": "amber",
     "stress": false,
     "size": 0.37,
-    "stability": 0.99,
+    "stability": 1.0,
     "resil": 0.33,
     "note": "petite taille, stable"
    },
@@ -3261,9 +3261,9 @@
    "chains": [
     "Robinhood Chain"
    ],
-   "tvl": 2439.449056167288,
-   "chg7d": 3.06106242812902,
-   "chg1d": 0.054825992977384885,
+   "tvl": 2439.0782860706313,
+   "chg7d": 3.0448809435407185,
+   "chg1d": 0.22839135026939061,
    "listedAt": 1790195931,
    "url": "https://catch.exchange/",
    "sig": {
@@ -3290,9 +3290,9 @@
    "chains": [
     "Plume Mainnet"
    ],
-   "tvl": 1125.7106628595332,
-   "chg7d": -0.09820836945301892,
-   "chg1d": -0.00038548961494200285,
+   "tvl": 1124.0788749142014,
+   "chg7d": -0.07366773515893499,
+   "chg1d": -0.14495624845434918,
    "listedAt": 1747867094,
    "url": "http://spiceprotocol.xyz/",
    "sig": {
@@ -3319,9 +3319,9 @@
    "chains": [
     "Arbitrum"
    ],
-   "tvl": 567.4164557101324,
-   "chg7d": -0.013540111537054145,
-   "chg1d": 0.013708212012360832,
+   "tvl": 567.3295647481093,
+   "chg7d": -0.03960370788129808,
+   "chg1d": -0.012203542600374817,
    "listedAt": 1729685962,
    "url": "https://www.worldes.io",
    "sig": {
@@ -3349,16 +3349,16 @@
     "Robinhood Chain"
    ],
    "tvl": 474.6607026439759,
-   "chg7d": -23.128911652503263,
-   "chg1d": 2.4352956953197946,
+   "chg7d": -45.30592894056939,
+   "chg1d": 1.4934495495734694,
    "listedAt": 1791234702,
    "url": "https://solonpad.fun",
    "sig": {
-    "ls": 21,
+    "ls": 18,
     "band": "red",
     "stress": true,
     "size": 0.29,
-    "stability": 0.07,
+    "stability": 0.0,
     "resil": 0.33,
     "note": "petite taille, volatil, ⚠ sorties nettes 7j"
    },
@@ -3379,9 +3379,9 @@
     "Polygon",
     "Moonbeam"
    ],
-   "tvl": 447.3391202424022,
-   "chg7d": -41.84408060551556,
-   "chg1d": -38.83268081440397,
+   "tvl": 444.97332399754765,
+   "chg7d": -42.021139216863055,
+   "chg1d": -0.5288596811234783,
    "listedAt": 1744905680,
    "url": "https://tokeniza.com.br/",
    "sig": {
@@ -3408,9 +3408,9 @@
    "chains": [
     "Base"
    ],
-   "tvl": 434.68891317842855,
-   "chg7d": 0.002436826766000877,
-   "chg1d": 0.006059624246461226,
+   "tvl": 434.70839477627794,
+   "chg7d": -0.018679593008954498,
+   "chg1d": 0.003990554379740274,
    "listedAt": 1746099238,
    "url": "https://www.subunit.xyz",
    "sig": {
@@ -3439,9 +3439,9 @@
     "Celo",
     "xDai"
    ],
-   "tvl": 184.65511697918248,
-   "chg7d": -25.85436795109733,
-   "chg1d": -0.012907034946039175,
+   "tvl": 184.63133155638158,
+   "chg7d": -25.897243121561658,
+   "chg1d": -0.006148439199733957,
    "listedAt": 1663349441,
    "url": "https://ethichub.com",
    "sig": {
@@ -3468,9 +3468,9 @@
    "chains": [
     "Base"
    ],
-   "tvl": 99.984354795,
-   "chg7d": -0.000513881135475458,
-   "chg1d": 0.0025260540042211233,
+   "tvl": 99.98135625499998,
+   "chg7d": -0.01250150090056934,
+   "chg1d": -0.0049990771415906465,
    "listedAt": 1773153603,
    "url": "",
    "sig": {
@@ -3497,9 +3497,9 @@
    "chains": [
     "Ethereum"
    ],
-   "tvl": 81.01301964235272,
-   "chg7d": -0.08434783862728068,
-   "chg1d": -0.07003001140219567,
+   "tvl": 81.02153592470184,
+   "chg7d": -0.08981229478990826,
+   "chg1d": -0.061035406391440006,
    "listedAt": 1789518875,
    "url": "https://qiro.fi",
    "sig": {
@@ -3526,9 +3526,9 @@
    "chains": [
     "Berachain"
    ],
-   "tvl": 54.19430570488393,
-   "chg7d": 0.029253320382906622,
-   "chg1d": -0.02767892829314178,
+   "tvl": 54.1781090253435,
+   "chg7d": -0.038963402400057134,
+   "chg1d": -0.11358030700984045,
    "listedAt": 1783401477,
    "url": "https://sukuk.fi",
    "sig": {
@@ -3557,9 +3557,9 @@
     "Binance",
     "Klaytn"
    ],
-   "tvl": 39.20038995037302,
-   "chg7d": -0.004747873737386499,
-   "chg1d": 0.010829756171432336,
+   "tvl": 39.186629910394046,
+   "chg7d": -0.0579144146031183,
+   "chg1d": -0.020065469812195147,
    "listedAt": 1645646372,
    "url": "",
    "sig": {
@@ -3580,7 +3580,7 @@
     "jurisdiction": "Web3",
     "note": "Prêts crypto adossés à de l'immobilier",
     "conf": "low",
-    "req": 13.25,
+    "req": 13.23,
     "offered": null,
     "gap_bps": null,
     "verdict": null
@@ -3599,9 +3599,9 @@
     "Plume Mainnet",
     "Botanix"
    ],
-   "tvl": 8.998260961538895,
-   "chg7d": -0.08805432426092352,
-   "chg1d": -0.015713379168175834,
+   "tvl": 8.996610029280413,
+   "chg7d": 0.014919246703598787,
+   "chg1d": -0.03340025486510001,
    "listedAt": 1758815161,
    "url": "",
    "sig": {
@@ -3628,9 +3628,9 @@
    "chains": [
     "Mantle"
    ],
-   "tvl": 4.8406806775163345,
-   "chg7d": 0.007191720144632541,
-   "chg1d": 0.0056031783881422825,
+   "tvl": 4.83943602534374,
+   "chg7d": -0.06704501225200943,
+   "chg1d": -0.01261181875861439,
    "listedAt": 1788459471,
    "url": "https://opn.st/",
    "sig": {
@@ -3657,9 +3657,9 @@
    "chains": [
     "Solana"
    ],
-   "tvl": 0.9998119976,
-   "chg7d": -0.00242886821244781,
-   "chg1d": -0.007294676879880058,
+   "tvl": 0.9998255603127504,
+   "chg7d": -0.01614365399434803,
+   "chg1d": -0.0014971017065619208,
    "listedAt": 1653591974,
    "url": "https://credix.finance",
    "sig": {
@@ -3675,10 +3675,10 @@
     "apy": 0.03,
     "sigma": 0.274,
     "volpen": 3.0,
-    "rf": 3.75,
-    "fair": 14.15,
-    "spread": -3.72,
-    "gap_bps": -1412,
+    "rf": 3.73,
+    "fair": 14.13,
+    "spread": -3.7,
+    "gap_bps": -1410,
     "verdict": "rich"
    },
    "fv": null,
@@ -3686,15 +3686,15 @@
    "manager": "Credix",
    "gapu": {
     "apy": 0.03,
-    "fair": 14.15,
-    "gap_bps": -1412,
+    "fair": 14.13,
+    "gap_bps": -1410,
     "verdict": "rich",
     "src": "signal"
    },
    "gaprel": {
     "pctile": 14,
-    "z": -1.58,
-    "peer_med": 169,
+    "z": -1.6,
+    "peer_med": 192,
     "rv": "rich",
     "n": 7
    }
@@ -3709,9 +3709,9 @@
    "chains": [
     "Solana"
    ],
-   "tvl": 596260.2852681021,
-   "chg7d": -17.707691907151997,
-   "chg1d": 0.025904323719288413,
+   "tvl": 596449.8544907043,
+   "chg7d": -17.507598415245482,
+   "chg1d": 0.03179303188321114,
    "listedAt": 1792712342,
    "url": "https://www.exceed.finance/",
    "sig": {
@@ -3719,7 +3719,7 @@
     "band": "red",
     "stress": true,
     "size": 0.62,
-    "stability": 0.29,
+    "stability": 0.3,
     "resil": 0.33,
     "note": "taille moyenne, volatil, ⚠ sorties nettes 7j"
    },
@@ -3738,9 +3738,9 @@
    "chains": [
     "Ethereum"
    ],
-   "tvl": 436362.47506663,
-   "chg7d": -49.0487099974833,
-   "chg1d": 0.01006472078626075,
+   "tvl": 436360.18958912307,
+   "chg7d": -49.05538040989338,
+   "chg1d": 0.00197587856678183,
    "listedAt": 1792712065,
    "url": "https://forestroadvault.com",
    "sig": {
@@ -3768,16 +3768,16 @@
     "Robinhood Chain"
    ],
    "tvl": 474.6607026439759,
-   "chg7d": -23.128911652503263,
-   "chg1d": 2.4352956953197946,
+   "chg7d": -45.30592894056939,
+   "chg1d": 1.4934495495734694,
    "listedAt": 1791234702,
    "url": "https://solonpad.fun",
    "sig": {
-    "ls": 21,
+    "ls": 18,
     "band": "red",
     "stress": true,
     "size": 0.29,
-    "stability": 0.07,
+    "stability": 0.0,
     "resil": 0.33,
     "note": "petite taille, volatil, ⚠ sorties nettes 7j"
    },
@@ -3796,9 +3796,9 @@
    "chains": [
     "Robinhood Chain"
    ],
-   "tvl": 2439.449056167288,
-   "chg7d": 3.06106242812902,
-   "chg1d": 0.054825992977384885,
+   "tvl": 2439.0782860706313,
+   "chg7d": 3.0448809435407185,
+   "chg1d": 0.22839135026939061,
    "listedAt": 1790195931,
    "url": "https://catch.exchange/",
    "sig": {
@@ -3825,9 +3825,9 @@
    "chains": [
     "Ethereum"
    ],
-   "tvl": 81.01301964235272,
-   "chg7d": -0.08434783862728068,
-   "chg1d": -0.07003001140219567,
+   "tvl": 81.02153592470184,
+   "chg7d": -0.08981229478990826,
+   "chg1d": -0.061035406391440006,
    "listedAt": 1789518875,
    "url": "https://qiro.fi",
    "sig": {
@@ -3854,9 +3854,9 @@
    "chains": [
     "Ethereum"
    ],
-   "tvl": 4461642.241247805,
-   "chg7d": 6.144426587188832,
-   "chg1d": 0.018159419005868926,
+   "tvl": 4462693.891103598,
+   "chg7d": 6.14315593657642,
+   "chg1d": 0.013576330593735975,
    "listedAt": 1789412282,
    "url": "https://kamui.finance",
    "sig": {
@@ -3883,9 +3883,9 @@
    "chains": [
     "Ethereum"
    ],
-   "tvl": 138570899.6440247,
-   "chg7d": 4.821168603822329,
-   "chg1d": 3.389417967980535e-05,
+   "tvl": 138581315.36797237,
+   "chg7d": 4.820035809439588,
+   "chg1d": 0.00033417042919836604,
    "listedAt": 1789001313,
    "url": "https://app.theo.xyz/",
    "sig": {
@@ -3912,9 +3912,9 @@
    "chains": [
     "Mantle"
    ],
-   "tvl": 4.8406806775163345,
-   "chg7d": 0.007191720144632541,
-   "chg1d": 0.0056031783881422825,
+   "tvl": 4.83943602534374,
+   "chg7d": -0.06704501225200943,
+   "chg1d": -0.01261181875861439,
    "listedAt": 1788459471,
    "url": "https://opn.st/",
    "sig": {
@@ -3941,9 +3941,9 @@
    "chains": [
     "Ethereum"
    ],
-   "tvl": 4334284.43076314,
-   "chg7d": -36.54196421278952,
-   "chg1d": 0.021090160049340057,
+   "tvl": 4333860.27284085,
+   "chg7d": -36.56358266848656,
+   "chg1d": -0.007526018506752052,
    "listedAt": 1788455243,
    "url": "https://www.nara.io",
    "sig": {
@@ -3972,17 +3972,17 @@
     "Ethereum",
     "Polygon"
    ],
-   "tvl": 5274.748194672273,
-   "chg7d": 2.773265646912094,
-   "chg1d": 0.19742917445493902,
+   "tvl": 5257.4226577809595,
+   "chg7d": 2.375648487957747,
+   "chg1d": -0.08830816230845073,
    "listedAt": 1787016905,
    "url": "https://tokeshare.co/",
    "sig": {
-    "ls": 70,
+    "ls": 71,
     "band": "green",
     "stress": false,
     "size": 0.4,
-    "stability": 0.89,
+    "stability": 0.9,
     "resil": 1.0,
     "note": "taille moyenne, stable, multi-chaîne"
    },
@@ -4001,9 +4001,9 @@
    "chains": [
     "Monad"
    ],
-   "tvl": 106291321.82929653,
-   "chg7d": 0.20277436227888757,
-   "chg1d": 0.12257890701965835,
+   "tvl": 106192942.60409646,
+   "chg7d": 0.04527741878710856,
+   "chg1d": -0.09255621579160334,
    "listedAt": 1784854075,
    "url": "https://valos.io/",
    "sig": {
@@ -4011,7 +4011,7 @@
     "band": "green",
     "stress": false,
     "size": 0.86,
-    "stability": 0.99,
+    "stability": 1.0,
     "resil": 0.33,
     "note": "taille solide, stable"
    },
@@ -4030,9 +4030,9 @@
    "chains": [
     "Ethereum"
    ],
-   "tvl": 112020.50248247995,
-   "chg7d": -0.10352602482996076,
-   "chg1d": -0.578113227033711,
+   "tvl": 111947.48767792292,
+   "chg7d": -0.11095443667826999,
+   "chg1d": -0.09375335018498276,
    "listedAt": 1784750567,
    "url": "https://wstgbp.com",
    "sig": {
@@ -4053,16 +4053,17 @@
   }
  ],
  "pc_bands": {
-  "green": 12,
-  "amber": 3,
+  "green": 11,
+  "amber": 4,
   "red": 1
  },
  "pc_stress": [
+  "Anemoy Capital",
   "KAIO",
   "Clearpool TPOOL"
  ],
- "pc_avg_ls": 74,
- "rf": 3.75,
+ "pc_avg_ls": 71,
+ "rf": 3.73,
  "pc_yield_n": 1,
  "pc_rich": [],
  "pc_cheap": [],
@@ -4070,7 +4071,7 @@
   {
    "name": "USD AI",
    "symbol": "CHIP",
-   "tvl": 158160608.98844865,
+   "tvl": 157837905.80111417,
    "slug": "usd-ai",
    "cls": "Other RWA",
    "ls": 43,
@@ -4078,7 +4079,7 @@
    "level": "high",
    "sev": 9.0,
    "reasons": [
-    "Sorties nettes 7j (-42.3%) — pression de rachat",
+    "Sorties nettes 7j (-42.4%) — pression de rachat",
     "Survalorisé (signal) : offre 6.8% vs juste 12.2% (-545 bps)",
     "Score qualité faible (43/100)"
    ]
@@ -4086,21 +4087,22 @@
   {
    "name": "stUSDT",
    "symbol": "STUSDT",
-   "tvl": 56240847.77294318,
+   "tvl": 47663100.19734869,
    "slug": "stusdt",
    "cls": "Cash / yield stablecoin",
-   "ls": 87,
-   "band": "green",
-   "level": "med",
-   "sev": 3.1,
+   "ls": 62,
+   "band": "amber",
+   "level": "high",
+   "sev": 7.0,
    "reasons": [
-    "Survalorisé (signal) : offre 3.9% vs juste 7.7% (-378 bps)"
+    "Sorties nettes 7j (-15.3%) — pression de rachat",
+    "Survalorisé (signal) : offre 3.9% vs juste 10.2% (-627 bps)"
    ]
   },
   {
    "name": "Ethena USDtb",
    "symbol": "ENA",
-   "tvl": 416348997.89109135,
+   "tvl": 416432988.0066538,
    "slug": "ethena-usdtb",
    "cls": "Cash / yield stablecoin",
    "ls": 62,
@@ -4108,13 +4110,27 @@
    "level": "med",
    "sev": 3.0,
    "reasons": [
-    "Sorties nettes 7j (-14.0%) — pression de rachat"
+    "Sorties nettes 7j (-14.1%) — pression de rachat"
+   ]
+  },
+  {
+   "name": "Anemoy Capital",
+   "symbol": "-",
+   "tvl": 52213425.33579967,
+   "slug": "anemoy-capital",
+   "cls": "Private credit",
+   "ls": 53,
+   "band": "amber",
+   "level": "med",
+   "sev": 3.0,
+   "reasons": [
+    "Sorties nettes 7j (-49.2%) — pression de rachat"
    ]
   },
   {
    "name": "KAIO",
    "symbol": "KAIO",
-   "tvl": 34658338.45088328,
+   "tvl": 34657114.46583715,
    "slug": "kaio",
    "cls": "Private credit",
    "ls": 75,
@@ -4128,25 +4144,25 @@
   {
    "name": "Ember",
    "symbol": "-",
-   "tvl": 95678065.5013201,
+   "tvl": 95742035.37122628,
    "slug": "ember",
    "cls": "Other RWA",
-   "ls": 93,
+   "ls": 92,
    "band": "green",
    "level": "low",
    "sev": 1.8,
    "reasons": [
     "Rendement instable (σ=0.18)",
-    "Rendement excédentaire (+580 bps) — vérifier risque caché"
+    "Rendement excédentaire (+608 bps) — vérifier risque caché"
    ]
   },
   {
    "name": "Usual USD0",
    "symbol": "USUAL",
-   "tvl": 81977290.51903729,
+   "tvl": 81245281.03526306,
    "slug": "usual-usd0",
    "cls": "Cash / yield stablecoin",
-   "ls": 80,
+   "ls": 78,
    "band": "green",
    "level": "low",
    "sev": 1.0,
@@ -4157,7 +4173,7 @@
   {
    "name": "OnRe",
    "symbol": "-",
-   "tvl": 308603953.62367713,
+   "tvl": 308578382.70638347,
    "slug": "onre",
    "cls": "Other (carbon/insurance/art)",
    "ls": 84,
@@ -4165,151 +4181,151 @@
    "level": "low",
    "sev": 0.8,
    "reasons": [
-    "Rendement excédentaire (+315 bps) — vérifier risque caché"
+    "Rendement excédentaire (+316 bps) — vérifier risque caché"
    ]
   },
   {
    "name": "Plume Vaults",
    "symbol": "-",
-   "tvl": 218256116.12790108,
+   "tvl": 218971288.82641834,
    "slug": "plume-vaults",
    "cls": "Other RWA",
-   "ls": 87,
+   "ls": 89,
    "band": "green",
    "level": "low",
    "sev": 0.8,
    "reasons": [
-    "Rendement excédentaire (+169 bps) — vérifier risque caché"
+    "Rendement excédentaire (+192 bps) — vérifier risque caché"
    ]
   }
  ],
  "apac_n": 2,
- "apac_tvl": 48842025.52718327,
+ "apac_tvl": 48840801.542137146,
  "fv_n": 16,
  "networks": [
   {
    "chain": "Ethereum",
-   "value": 1717223536.226498,
+   "value": 1667182522.5012305,
    "n": 52
   },
   {
    "chain": "Solana",
-   "value": 581598151.3587656,
+   "value": 580925409.721967,
    "n": 14
   },
   {
    "chain": "Pharos",
-   "value": 193326656.53319696,
+   "value": 193373656.10952726,
    "n": 2
   },
   {
    "chain": "Arbitrum",
-   "value": 172159697.69177088,
+   "value": 171836996.10261512,
    "n": 12
   },
   {
    "chain": "Avalanche",
-   "value": 159724209.71044785,
+   "value": 159738711.56511614,
    "n": 9
   },
   {
    "chain": "xDai",
-   "value": 155071043.2142706,
+   "value": 155047943.34917367,
    "n": 2
   },
   {
    "chain": "Binance",
-   "value": 110290464.29995024,
+   "value": 110790816.51077291,
    "n": 13
   },
   {
    "chain": "Monad",
-   "value": 109395288.65758184,
+   "value": 109298387.68698259,
    "n": 5
   },
   {
    "chain": "Algorand",
-   "value": 105334629.70663671,
+   "value": 105315595.05553715,
    "n": 3
   },
   {
    "chain": "Plume Mainnet",
-   "value": 100243103.44513015,
+   "value": 100287612.71602283,
    "n": 6
   },
   {
    "chain": "Base",
-   "value": 54771981.16390912,
+   "value": 54775829.51585838,
    "n": 20
   },
   {
-   "chain": "Tron",
-   "value": 54408604.414804846,
-   "n": 1
-  },
-  {
    "chain": "Polygon",
-   "value": 51708428.26387805,
+   "value": 51691149.52888853,
    "n": 14
   },
   {
+   "chain": "Tron",
+   "value": 45830776.603767894,
+   "n": 1
+  },
+  {
    "chain": "Sui",
-   "value": 43554859.680099696,
+   "value": 43608423.100300476,
    "n": 3
   },
   {
    "chain": "Flare",
-   "value": 17627720.781853378,
+   "value": 17618693.595712278,
    "n": 1
   },
   {
    "chain": "Sei",
-   "value": 14686895.234190814,
+   "value": 14686337.138937501,
    "n": 2
   },
   {
    "chain": "zkSync Era",
-   "value": 14242407.242158275,
+   "value": 14242410.575418577,
    "n": 2
   },
   {
    "chain": "Etherlink",
-   "value": 10505680.402535738,
+   "value": 10508748.778446151,
    "n": 1
   },
   {
    "chain": "Aptos",
-   "value": 7121790.226306168,
+   "value": 7122214.240775879,
    "n": 3
   },
   {
    "chain": "Stellar",
-   "value": 6892404.636535921,
+   "value": 6892435.055024246,
    "n": 3
   },
   {
    "chain": "Immutable zkEVM",
-   "value": 6268729.1061574975,
+   "value": 6268507.7213183185,
    "n": 1
   },
   {
    "chain": "ZIGChain",
-   "value": 5575451.811008776,
+   "value": 5576086.042781136,
    "n": 2
   },
   {
    "chain": "Hedera",
-   "value": 5126426.814004255,
+   "value": 5126706.789396297,
    "n": 4
   },
   {
    "chain": "Stable",
-   "value": 4036264.8024747577,
+   "value": 4036099.754017867,
    "n": 1
   },
   {
    "chain": "Near",
-   "value": 3996526.357541598,
+   "value": 3996385.217235492,
    "n": 1
   },
   {
@@ -4319,22 +4335,22 @@
   },
   {
    "chain": "Plasma",
-   "value": 1024439.8171543946,
+   "value": 1024500.9650487718,
    "n": 1
   },
   {
    "chain": "Mantle",
-   "value": 947567.5574949139,
+   "value": 947368.4608601427,
    "n": 2
   },
   {
    "chain": "Klaytn",
-   "value": 503830.9071891919,
+   "value": 484708.8364051315,
    "n": 2
   },
   {
    "chain": "Celo",
-   "value": 158736.1638556305,
+   "value": 157625.1982066531,
    "n": 3
   },
   {
@@ -4344,17 +4360,17 @@
   },
   {
    "chain": "Regen",
-   "value": 29159.18515626331,
+   "value": 29154.388659387834,
    "n": 1
   },
   {
    "chain": "Optimism",
-   "value": 5174.925716814902,
+   "value": 5175.115211549239,
    "n": 4
   },
   {
    "chain": "Robinhood Chain",
-   "value": 2914.109758811264,
+   "value": 2913.7389887146073,
    "n": 2
   },
   {
@@ -4364,17 +4380,17 @@
   },
   {
    "chain": "Berachain",
-   "value": 54.19430570488393,
+   "value": 54.1781090253435,
    "n": 1
   },
   {
    "chain": "CORE",
-   "value": 0.06816734454851998,
+   "value": 0.0682316768718,
    "n": 1
   },
   {
    "chain": "0G",
-   "value": 0.009998536422000001,
+   "value": 0.0099978,
    "n": 1
   },
   {
@@ -4426,7 +4442,7 @@
  "managers": [
   {
    "name": "Re",
-   "value": 484739194.8002492,
+   "value": 485113540.4367226,
    "n": 1,
    "classes": [
     "Other (carbon/insurance/art)"
@@ -4435,7 +4451,7 @@
   },
   {
    "name": "Ethena USDtb",
-   "value": 416348997.89109135,
+   "value": 416432988.0066538,
    "n": 1,
    "classes": [
     "Cash / yield stablecoin"
@@ -4444,7 +4460,7 @@
   },
   {
    "name": "Huma",
-   "value": 345740732.09411705,
+   "value": 345033494.73541844,
    "n": 1,
    "classes": [
     "Other RWA"
@@ -4453,7 +4469,7 @@
   },
   {
    "name": "OnRe",
-   "value": 308603953.62367713,
+   "value": 308578382.70638347,
    "n": 1,
    "classes": [
     "Other (carbon/insurance/art)"
@@ -4462,7 +4478,7 @@
   },
   {
    "name": "OpenTrade",
-   "value": 245570550.07536325,
+   "value": 245592910.27270696,
    "n": 1,
    "classes": [
     "U.S. Treasuries"
@@ -4471,7 +4487,7 @@
   },
   {
    "name": "Plume Vaults",
-   "value": 218256116.12790108,
+   "value": 218971288.82641834,
    "n": 1,
    "classes": [
     "Other RWA"
@@ -4480,7 +4496,7 @@
   },
   {
    "name": "R25",
-   "value": 197599350.11109522,
+   "value": 197648147.6019225,
    "n": 1,
    "classes": [
     "Other RWA"
@@ -4489,7 +4505,7 @@
   },
   {
    "name": "USD AI",
-   "value": 158160608.98844865,
+   "value": 157837905.80111417,
    "n": 1,
    "classes": [
     "Other RWA"
@@ -4498,7 +4514,7 @@
   },
   {
    "name": "RealT Tokens",
-   "value": 155070981.66256493,
+   "value": 155047881.80539647,
    "n": 1,
    "classes": [
     "Real estate"
@@ -4507,7 +4523,7 @@
   },
   {
    "name": "Theo Network thUSD",
-   "value": 138570899.6440247,
+   "value": 138581315.36797237,
    "n": 1,
    "classes": [
     "U.S. Treasuries"
@@ -4516,7 +4532,7 @@
   },
   {
    "name": "Valos",
-   "value": 106291321.82929653,
+   "value": 106192942.60409646,
    "n": 1,
    "classes": [
     "Other RWA"
@@ -4524,17 +4540,8 @@
    "nchains": 1
   },
   {
-   "name": "Anemoy",
-   "value": 102334726.2394439,
-   "n": 1,
-   "classes": [
-    "Private credit"
-   ],
-   "nchains": 3
-  },
-  {
    "name": "Lofty",
-   "value": 101113122.5658765,
+   "value": 101096418.4380966,
    "n": 1,
    "classes": [
     "Real estate"
@@ -4543,7 +4550,7 @@
   },
   {
    "name": "Frax USD",
-   "value": 95880786.45583147,
+   "value": 95841260.73375557,
    "n": 1,
    "classes": [
     "Cash / yield stablecoin"
@@ -4552,7 +4559,7 @@
   },
   {
    "name": "Ember",
-   "value": 95678065.5013201,
+   "value": 95742035.37122628,
    "n": 1,
    "classes": [
     "Other RWA"
@@ -4561,7 +4568,7 @@
   },
   {
    "name": "Usual USD0",
-   "value": 81977290.51903729,
+   "value": 81245281.03526306,
    "n": 1,
    "classes": [
     "Cash / yield stablecoin"
@@ -4570,7 +4577,7 @@
   },
   {
    "name": "Sky RWA",
-   "value": 61214950.17734118,
+   "value": 61204743.788224466,
    "n": 1,
    "classes": [
     "U.S. Treasuries"
@@ -4578,8 +4585,17 @@
    "nchains": 1
   },
   {
+   "name": "Anemoy",
+   "value": 52213425.33579967,
+   "n": 1,
+   "classes": [
+    "Private credit"
+   ],
+   "nchains": 3
+  },
+  {
    "name": "stUSDT",
-   "value": 56240847.77294318,
+   "value": 47663100.19734869,
    "n": 1,
    "classes": [
     "Cash / yield stablecoin"
@@ -4588,7 +4604,7 @@
   },
   {
    "name": "Brickken",
-   "value": 42425115.902425945,
+   "value": 42419220.03092353,
    "n": 1,
    "classes": [
     "Other RWA"
@@ -4597,7 +4613,7 @@
   },
   {
    "name": "Tangible RWA",
-   "value": 41869737.27512619,
+   "value": 41854978.38921249,
    "n": 1,
    "classes": [
     "Real estate"
@@ -4606,7 +4622,7 @@
   },
   {
    "name": "Libre / KAIO",
-   "value": 34658338.45088328,
+   "value": 34657114.46583715,
    "n": 1,
    "classes": [
     "Private credit"
@@ -4615,7 +4631,7 @@
   },
   {
    "name": "GoldFinger",
-   "value": 23532536.320520423,
+   "value": 23529303.666436955,
    "n": 1,
    "classes": [
     "Commodities"
@@ -4633,7 +4649,7 @@
   },
   {
    "name": "Clearpool TPOOL",
-   "value": 17776605.85094901,
+   "value": 17767502.42050787,
    "n": 1,
    "classes": [
     "Private credit"
@@ -4642,7 +4658,7 @@
   },
   {
    "name": "Sygnum",
-   "value": 14183687.076299997,
+   "value": 14183687.076299999,
    "n": 1,
    "classes": [
     "U.S. Treasuries"
@@ -4651,7 +4667,7 @@
   },
   {
    "name": "Paimon",
-   "value": 14105487.804419432,
+   "value": 14104024.526440708,
    "n": 1,
    "classes": [
     "Other RWA"
@@ -4669,7 +4685,7 @@
   },
   {
    "name": "Uranium.io",
-   "value": 10505680.402535738,
+   "value": 10508748.778446151,
    "n": 1,
    "classes": [
     "Commodities"
@@ -4678,7 +4694,7 @@
   },
   {
    "name": "Binaryx Platform",
-   "value": 8994429.960090958,
+   "value": 8992050.53940569,
    "n": 1,
    "classes": [
     "Real estate"
@@ -4687,7 +4703,7 @@
   },
   {
    "name": "Solv RWA",
-   "value": 8714049.25613971,
+   "value": 8712670.986258117,
    "n": 1,
    "classes": [
     "Other RWA"
@@ -4705,7 +4721,7 @@
   },
   {
    "name": "Vault Street",
-   "value": 7039295.733289892,
+   "value": 7041117.711359784,
    "n": 1,
    "classes": [
     "Other RWA"
@@ -4714,7 +4730,7 @@
   },
   {
    "name": "Theo Network thBill",
-   "value": 6087837.010656333,
+   "value": 6087860.690525927,
    "n": 1,
    "classes": [
     "U.S. Treasuries"
@@ -4723,7 +4739,7 @@
   },
   {
    "name": "Mansory",
-   "value": 5854155.279116096,
+   "value": 5844327.940691176,
    "n": 1,
    "classes": [
     "Other RWA"
@@ -4732,7 +4748,7 @@
   },
   {
    "name": "eva Markets",
-   "value": 4973719.829188616,
+   "value": 4944954.016334328,
    "n": 1,
    "classes": [
     "Other RWA"
@@ -4741,7 +4757,7 @@
   },
   {
    "name": "Kamui Finance",
-   "value": 4461642.241247805,
+   "value": 4462693.891103598,
    "n": 1,
    "classes": [
     "Other RWA"
@@ -4750,7 +4766,7 @@
   },
   {
    "name": "NaraUSD",
-   "value": 4334284.43076314,
+   "value": 4333860.27284085,
    "n": 1,
    "classes": [
     "Other RWA"
@@ -4759,7 +4775,7 @@
   },
   {
    "name": "Meld Gold",
-   "value": 4193062.71614434,
+   "value": 4190711.9487277865,
    "n": 1,
    "classes": [
     "Commodities"
@@ -4768,7 +4784,7 @@
   },
   {
    "name": "Lista RWA",
-   "value": 4055124.65958261,
+   "value": 4054287.842314104,
    "n": 1,
    "classes": [
     "Other RWA"
@@ -4777,7 +4793,7 @@
   },
   {
    "name": "Nawa Protocol",
-   "value": 4036497.597513847,
+   "value": 4037077.1862559365,
    "n": 1,
    "classes": [
     "Private credit"
@@ -4786,7 +4802,7 @@
   },
   {
    "name": "KUMA Protocol",
-   "value": 3067594.4312508903,
+   "value": 3069068.9176738593,
    "n": 1,
    "classes": [
     "U.S. Treasuries"
@@ -4804,7 +4820,7 @@
   },
   {
    "name": "International Stable Currency",
-   "value": 2410120.7640419076,
+   "value": 2426233.937636129,
    "n": 1,
    "classes": [
     "Cash / yield stablecoin"
@@ -4813,7 +4829,7 @@
   },
   {
    "name": "Oro Finance",
-   "value": 2332049.211690594,
+   "value": 2345914.964973614,
    "n": 1,
    "classes": [
     "Commodities"
@@ -4822,7 +4838,7 @@
   },
   {
    "name": "ZTLN-P",
-   "value": 2197919.169831314,
+   "value": 2197971.0631177793,
    "n": 1,
    "classes": [
     "Private credit"
@@ -4831,7 +4847,7 @@
   },
   {
    "name": "Byzanlink RWA Markets",
-   "value": 2148652.3047921676,
+   "value": 2148724.5802100687,
    "n": 1,
    "classes": [
     "Private credit"
@@ -4840,7 +4856,7 @@
   },
   {
    "name": "HiYield",
-   "value": 1726348.374233,
+   "value": 1726493.534273,
    "n": 1,
    "classes": [
     "Private credit"
@@ -4849,7 +4865,7 @@
   },
   {
    "name": "LandX Finance",
-   "value": 1563124.613083861,
+   "value": 1563444.0467228766,
    "n": 1,
    "classes": [
     "Real estate"
@@ -4858,7 +4874,7 @@
   },
   {
    "name": "Travessia Credit",
-   "value": 1426219.2682129692,
+   "value": 1428650.0579953901,
    "n": 1,
    "classes": [
     "Other RWA"
@@ -4867,7 +4883,7 @@
   },
   {
    "name": "Mountain Protocol",
-   "value": 1402477.6468048824,
+   "value": 1402557.258689397,
    "n": 1,
    "classes": [
     "U.S. Treasuries"
@@ -4876,7 +4892,7 @@
   },
   {
    "name": "Propbase",
-   "value": 1382928.3514130593,
+   "value": 1383552.997887561,
    "n": 1,
    "classes": [
     "Real estate"
@@ -4885,7 +4901,7 @@
   },
   {
    "name": "CHATEAU",
-   "value": 1024439.8171543946,
+   "value": 1024500.9650487718,
    "n": 1,
    "classes": [
     "Real estate"
@@ -4894,7 +4910,7 @@
   },
   {
    "name": "RealtyX",
-   "value": 1021575.5915519397,
+   "value": 1021464.1134790875,
    "n": 1,
    "classes": [
     "Real estate"
@@ -4903,7 +4919,7 @@
   },
   {
    "name": "Isle Finance",
-   "value": 954435.5829207716,
+   "value": 954690.9262680991,
    "n": 1,
    "classes": [
     "Other RWA"
@@ -4911,8 +4927,17 @@
    "nchains": 1
   },
   {
+   "name": "CANA Holdings California Carbon Credits",
+   "value": 893976.7415455879,
+   "n": 1,
+   "classes": [
+    "Other (carbon/insurance/art)"
+   ],
+   "nchains": 1
+  },
+  {
    "name": "Solayer USD",
-   "value": 703903.8346997773,
+   "value": 703917.7477673908,
    "n": 1,
    "classes": [
     "Cash / yield stablecoin"
@@ -4929,17 +4954,8 @@
    "nchains": 1
   },
   {
-   "name": "CANA Holdings California Carbon Credits",
-   "value": 607691.9310800722,
-   "n": 1,
-   "classes": [
-    "Other (carbon/insurance/art)"
-   ],
-   "nchains": 1
-  },
-  {
    "name": "Exceed Finance exUSDC",
-   "value": 596260.2852681021,
+   "value": 596449.8544907043,
    "n": 1,
    "classes": [
     "Other RWA"
@@ -4948,7 +4964,7 @@
   },
   {
    "name": "Toucan Protocol",
-   "value": 546094.265353912,
+   "value": 544761.6688183467,
    "n": 1,
    "classes": [
     "Other (carbon/insurance/art)"
@@ -4957,7 +4973,7 @@
   },
   {
    "name": "HARVEST FLOW",
-   "value": 524074.07190947223,
+   "value": 523969.43509904685,
    "n": 1,
    "classes": [
     "Other RWA"
@@ -4966,7 +4982,7 @@
   },
   {
    "name": "CACHE.Gold",
-   "value": 522394.6044740083,
+   "value": 522708.81837699725,
    "n": 1,
    "classes": [
     "Commodities"
@@ -4975,7 +4991,7 @@
   },
   {
    "name": "GOLDSTATION RWA",
-   "value": 503830.9071891919,
+   "value": 484708.8364051315,
    "n": 1,
    "classes": [
     "Commodities"
@@ -4984,7 +5000,7 @@
   },
   {
    "name": "Arca Labs ArCoin",
-   "value": 455361.53164847573,
+   "value": 455338.6162327272,
    "n": 1,
    "classes": [
     "U.S. Treasuries"
@@ -4993,7 +5009,7 @@
   },
   {
    "name": "8lends",
-   "value": 441700.8073931678,
+   "value": 439144.1982218444,
    "n": 1,
    "classes": [
     "Other RWA"
@@ -5002,7 +5018,7 @@
   },
   {
    "name": "Forest Road Vault",
-   "value": 436362.47506663,
+   "value": 436360.18958912307,
    "n": 1,
    "classes": [
     "Other RWA"
@@ -5011,7 +5027,7 @@
   },
   {
    "name": "Boson Protocol",
-   "value": 229617.21907574456,
+   "value": 229542.56209979998,
    "n": 1,
    "classes": [
     "Other (carbon/insurance/art)"
@@ -5047,7 +5063,7 @@
   },
   {
    "name": "Untangled RWA",
-   "value": 151524.12310829648,
+   "value": 151514.265228957,
    "n": 1,
    "classes": [
     "Private credit"
@@ -5065,7 +5081,7 @@
   },
   {
    "name": "Verified Network",
-   "value": 126711.94149053215,
+   "value": 126708.1383525828,
    "n": 1,
    "classes": [
     "Other RWA"
@@ -5074,7 +5090,7 @@
   },
   {
    "name": "wstGBP",
-   "value": 112020.50248247995,
+   "value": 111947.48767792292,
    "n": 1,
    "classes": [
     "Cash / yield stablecoin"
@@ -5083,7 +5099,7 @@
   },
   {
    "name": "LiveArt",
-   "value": 96107.65350783503,
+   "value": 96101.2280340816,
    "n": 1,
    "classes": [
     "Other (carbon/insurance/art)"
@@ -5092,7 +5108,7 @@
   },
   {
    "name": "TProtocol V1",
-   "value": 72975.47392382883,
+   "value": 72982.53083734312,
    "n": 1,
    "classes": [
     "Private credit"
@@ -5110,7 +5126,7 @@
   },
   {
    "name": "TProtocol V2",
-   "value": 32887.418493157784,
+   "value": 32890.662171430144,
    "n": 1,
    "classes": [
     "Private credit"
@@ -5119,7 +5135,7 @@
   },
   {
    "name": "ASA.Gold",
-   "value": 28444.42461587189,
+   "value": 28464.668712763105,
    "n": 1,
    "classes": [
     "Commodities"
@@ -5128,7 +5144,7 @@
   },
   {
    "name": "Credible Finance",
-   "value": 28301.89611341652,
+   "value": 28300.04822717753,
    "n": 1,
    "classes": [
     "Other RWA"
@@ -5137,7 +5153,7 @@
   },
   {
    "name": "Unblock Equity",
-   "value": 23719.2124765464,
+   "value": 23727.61688662566,
    "n": 1,
    "classes": [
     "Tokenized stocks / equity"
@@ -5146,7 +5162,7 @@
   },
   {
    "name": "Solv Vesting",
-   "value": 21576.580483799902,
+   "value": 20484.921090726108,
    "n": 1,
    "classes": [
     "Other RWA"
@@ -5155,7 +5171,7 @@
   },
   {
    "name": "NAOS Finance",
-   "value": 19007.482245244893,
+   "value": 18900.855667206986,
    "n": 1,
    "classes": [
     "Private credit"
@@ -5164,7 +5180,7 @@
   },
   {
    "name": "TruCore",
-   "value": 11161.387091898589,
+   "value": 11162.668892300455,
    "n": 1,
    "classes": [
     "U.S. Treasuries"
@@ -5173,7 +5189,7 @@
   },
   {
    "name": "Sweep",
-   "value": 8208.909027914626,
+   "value": 8208.659191604844,
    "n": 1,
    "classes": [
     "Other RWA"
@@ -5182,7 +5198,7 @@
   },
   {
    "name": "GemSwap by Golden Swan Solutions",
-   "value": 7163.724634263042,
+   "value": 7124.055036998089,
    "n": 1,
    "classes": [
     "Commodities"
@@ -5191,7 +5207,7 @@
   },
   {
    "name": "Tokeshare",
-   "value": 5274.748194672273,
+   "value": 5257.4226577809595,
    "n": 1,
    "classes": [
     "Other RWA"
@@ -5200,7 +5216,7 @@
   },
   {
    "name": "Zivoe",
-   "value": 3044.4097094968984,
+   "value": 3044.309561694435,
    "n": 1,
    "classes": [
     "Private credit"
@@ -5209,7 +5225,7 @@
   },
   {
    "name": "Tangible USTB",
-   "value": 2896.618226236624,
+   "value": 2898.1380287256784,
    "n": 1,
    "classes": [
     "U.S. Treasuries"
@@ -5218,7 +5234,7 @@
   },
   {
    "name": "Catch Exchange",
-   "value": 2439.449056167288,
+   "value": 2439.0782860706313,
    "n": 1,
    "classes": [
     "Other RWA"
@@ -5227,7 +5243,7 @@
   },
   {
    "name": "SPICE Protocol",
-   "value": 1125.7106628595332,
+   "value": 1124.0788749142014,
    "n": 1,
    "classes": [
     "Other RWA"
@@ -5236,7 +5252,7 @@
   },
   {
    "name": "WorldEs",
-   "value": 567.4164557101324,
+   "value": 567.3295647481093,
    "n": 1,
    "classes": [
     "Real estate"
@@ -5254,7 +5270,7 @@
   },
   {
    "name": "Tokeniza",
-   "value": 447.3391202424022,
+   "value": 444.97332399754765,
    "n": 1,
    "classes": [
     "Real estate"
@@ -5263,7 +5279,7 @@
   },
   {
    "name": "Subunit",
-   "value": 434.68891317842855,
+   "value": 434.70839477627794,
    "n": 1,
    "classes": [
     "Real estate"
@@ -5272,7 +5288,7 @@
   },
   {
    "name": "EthicHub",
-   "value": 184.65511697918248,
+   "value": 184.63133155638158,
    "n": 1,
    "classes": [
     "Other RWA"
@@ -5281,7 +5297,7 @@
   },
   {
    "name": "BasaFish",
-   "value": 99.984354795,
+   "value": 99.98135625499998,
    "n": 1,
    "classes": [
     "Other RWA"
@@ -5290,7 +5306,7 @@
   },
   {
    "name": "Qiro Finance",
-   "value": 81.01301964235272,
+   "value": 81.02153592470184,
    "n": 1,
    "classes": [
     "Cash / yield stablecoin"
@@ -5299,7 +5315,7 @@
   },
   {
    "name": "SukukFi",
-   "value": 54.19430570488393,
+   "value": 54.1781090253435,
    "n": 1,
    "classes": [
     "Other RWA"
@@ -5308,7 +5324,7 @@
   },
   {
    "name": "ELYFI",
-   "value": 39.20038995037302,
+   "value": 39.186629910394046,
    "n": 1,
    "classes": [
     "Private credit"
@@ -5317,7 +5333,7 @@
   },
   {
    "name": "Fractit Fleet",
-   "value": 8.998260961538895,
+   "value": 8.996610029280413,
    "n": 1,
    "classes": [
     "Other RWA"
@@ -5326,7 +5342,7 @@
   },
   {
    "name": "OpenStock",
-   "value": 4.8406806775163345,
+   "value": 4.83943602534374,
    "n": 1,
    "classes": [
     "Tokenized stocks / equity"
@@ -5335,7 +5351,7 @@
   },
   {
    "name": "Credix",
-   "value": 0.9998119976,
+   "value": 0.9998255603127504,
    "n": 1,
    "classes": [
     "Other RWA"
@@ -5405,7 +5421,7 @@
      1003389045.0,
      1268605019.0,
      1352818839.0,
-     1201240793.0
+     1200949055.0
     ]
    },
    {
@@ -5438,7 +5454,7 @@
      613753766.0,
      685150578.0,
      777308244.0,
-     793343147.0
+     793801830.0
     ]
    },
    {
@@ -5471,7 +5487,7 @@
      749659758.0,
      746132549.0,
      673296690.0,
-     650447920.0
+     641182629.0
     ]
    },
    {
@@ -5504,7 +5520,7 @@
      496677366.0,
      493907950.0,
      458478649.0,
-     459540086.0
+     459562655.0
     ]
    },
    {
@@ -5537,7 +5553,7 @@
      312013896.0,
      311688807.0,
      311987738.0,
-     311996992.0
+     311944845.0
     ]
    },
    {
@@ -5570,7 +5586,7 @@
      929663180.0,
      393660996.0,
      164813899.0,
-     154771373.0
+     104638041.0
     ]
    },
    {
@@ -5603,11 +5619,11 @@
      31380902.0,
      31101398.0,
      31201827.0,
-     34038216.0
+     34038051.0
     ]
    }
   ]
  },
- "stbl_tvl": 292539898330.1735,
+ "stbl_tvl": 293709363298.4092,
  "stbl_n": 453
 }
