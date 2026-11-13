@@ -633,7 +633,7 @@ document.getElementById('ov-cards').innerHTML=[
   ['Total RWA Value',fmt(D.total_tvl)],
   ['Total Tokenized Value',fmt(D.total_tvl+(D.stbl_tvl||0))],
   ['Total Stablecoin Value',fmt(D.stbl_tvl||0)],
-  ['Tracked RWA Assets',D.n_assets.toLocaleString()],
+  ['Tracked RWA Assets',D.n_assets.toLocaleString('en-US')],
   ['Private Credit TVL',fmt(D.pc_total)],
 ].map(c=>`<div class="card"><div class="k">${c[0]}</div><div class="v">${c[1]}</div></div>`).join('');
 
@@ -1038,7 +1038,7 @@ document.getElementById('krbody').innerHTML=KR.map(k=>`<tr data-slug="${k.slug}"
 const TR=D.track||{};
 if(TR.backtest){const bt=TR.backtest,lv=TR.live,st=bt.stress,BN={green:'Green (68+)',amber:'Amber (48-67)',red:'Red (under 48)'},BC={green:'var(--up)',amber:'var(--gold)',red:'var(--down)'};
 document.getElementById('tr-sub').textContent=`Live ledger since ${lv.since} · ${lv.grades} grades frozen · backtest ${bt.n} grades on ${bt.funds} funds`;
-document.getElementById('tr-live').innerHTML=[['Grades frozen',lv.grades.toLocaleString()],['Days recorded',lv.days],['Scored (30d old)',lv.scored],['First live readout',lv.first_readout],['Ledger head hash',(lv.head_hash||'').slice(0,12)]].map(c=>`<div class="card"><div class="k">${c[0]}</div><div class="v" style="font-size:18px">${c[1]}</div></div>`).join('');
+document.getElementById('tr-live').innerHTML=[['Grades frozen',lv.grades.toLocaleString('en-US')],['Days recorded',lv.days],['Scored (30d old)',lv.scored],['First live readout',lv.first_readout],['Ledger head hash',(lv.head_hash||'').slice(0,12)]].map(c=>`<div class="card"><div class="k">${c[0]}</div><div class="v" style="font-size:18px">${c[1]}</div></div>`).join('');
 const pct=x=>x==null?'–':(x>0?'+':'')+x+'%';
 document.getElementById('trbody').innerHTML=bt.bands.map(b=>`<tr><td><span class="chip" style="background:${BC[b.band]};color:#fff;font-weight:700">${BN[b.band]}</span></td><td class="num">${b.n}</td><td class="num"><b>${b.n?b.hit_dd+'%':'–'}</b></td><td class="num">${pct(b.med_dd)}</td><td class="num">${pct(b.med_chg)}</td></tr>`).join('');
 document.getElementById('trstress').innerHTML=`<tr><td>Flagged (7d outflow 8%+)</td><td class="num">${st.n_flag}</td><td class="num"><b>${st.flag_hit}%</b></td><td class="num">${pct(st.flag_med_chg)}</td></tr><tr><td>Not flagged</td><td class="num">${st.n_clean}</td><td class="num"><b>${st.clean_hit}%</b></td><td class="num">${pct(st.clean_med_chg)}</td></tr>`;
