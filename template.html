@@ -1,4 +1,6 @@
-<title>Ledgerscope Terminal</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ledgerscope</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   /* Identité institutionnelle « agence de notation » : papier chaud, encre marine, accent oxblood, sidebar marine. */
   :root{--ground:#f3f1ec;--panel:#ffffff;--panel-2:#faf8f3;--side:#0e2135;--ink:#182b40;--ink-soft:#4a5b6e;--ink-faint:#8a95a2;--line:#e3ded4;--line-soft:#eeeae1;--accent:#8a1c2b;--accent-soft:#f2e4e2;--up:#1a7a4c;--down:#b3231f;--gold:#9c7a1a;--chip:#efece4;--mono-bg:#f4f1ea;}
@@ -255,44 +257,78 @@
   .lg-go{width:100%;padding:11px;font-size:14px;margin-top:4px;}
   .lg-note{font-size:11px;color:var(--ink-faint);margin-top:12px;text-align:center;}
   @media(max-width:860px){.app{grid-template-columns:1fr;}.sidebar{position:static;height:auto;display:none;}.cards{grid-template-columns:1fr 1fr;}.grid2{grid-template-columns:1fr;}.mgrid{grid-template-columns:1fr;}}
+
+/* ===== v3 clean institutional theme (light only) ===== */
+:root,:root[data-theme=dark],:root:not([data-theme=light]){--ground:#f6f7f9;--panel:#ffffff;--panel-2:#f9fafb;--side:#ffffff;--ink:#0f1b2d;--ink-soft:#4b5869;--ink-faint:#8792a2;--line:#e4e7ec;--line-soft:#eef0f3;--accent:#0b3d91;--accent-soft:#e8eef9;--up:#137a4b;--down:#b42318;--gold:#a15c07;--chip:#f1f3f6;--mono-bg:#f4f6f8;color-scheme:light;}
+body,button,input,select{font-family:"Inter",-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif!important;}
+body{background:var(--ground);font-size:14px;}
+.h-title,.brand,.modal .nm,.memohd .nm,.chartbox h3,.box h3,.panelhd h3,.welcome b,.card .v,.mgrid .v,.sidebar .brand{font-family:"Inter",-apple-system,sans-serif!important;letter-spacing:-.015em;}
+.mono,.crumb,.navsec,th.num,td.num,.tk .v,.tk .c{font-family:"IBM Plex Mono","SF Mono",Menlo,monospace!important;}
+.h-title{font-size:26px;font-weight:650;color:var(--ink);}
+.h-sub{color:var(--ink-soft);}
+.crumb{font-size:11px;letter-spacing:.08em;color:var(--accent);}
+.sidebar{background:#fff!important;border-right:1px solid var(--line)!important;}
+.sidebar .brand{color:var(--ink)!important;font-weight:700;}
+.brand .mk,.sidebar .brand .mk{background:var(--accent)!important;color:#fff!important;border-radius:4px!important;}
+.brand em{color:var(--accent)!important;}
+.sidebar .tagline,.sidebar .navsec{color:var(--ink-faint)!important;}
+.sidebar .nav button{color:var(--ink-soft)!important;border-radius:6px;font-size:13.5px;}
+.sidebar .nav button:hover{background:var(--chip)!important;color:var(--ink)!important;}
+.sidebar .nav button.on{background:var(--accent-soft)!important;color:var(--accent)!important;font-weight:600;box-shadow:inset 2px 0 0 var(--accent);}
+.sidebar .sidesearch{background:var(--chip)!important;border:1px solid var(--line)!important;color:var(--ink-faint)!important;}
+.sidebar .sidefoot{color:var(--ink-faint)!important;}
+.auth{background:var(--accent)!important;color:#fff!important;border:1px solid var(--accent)!important;border-radius:6px!important;font-weight:600;}
+.auth.ghost{background:#fff!important;color:var(--accent)!important;}
+.badge{background:var(--down)!important;color:#fff!important;}
+.card,.box,.tablewrap,.chartbox,.methodbox{border:1px solid var(--line)!important;border-radius:8px!important;box-shadow:0 1px 2px rgba(16,24,40,.04)!important;background:var(--panel)!important;}
+.methodbox{background:var(--panel-2)!important;color:var(--ink-soft);line-height:1.55;}
+.card .k{text-transform:uppercase;font-size:11px;letter-spacing:.06em;color:var(--ink-faint);}
+.card .v{font-weight:650;color:var(--ink);}
+thead th{background:var(--panel-2)!important;color:var(--ink-faint)!important;font-size:11px!important;text-transform:uppercase;letter-spacing:.05em;font-weight:600!important;border-bottom:1px solid var(--line)!important;}
+tbody tr{border-bottom:1px solid var(--line-soft);}
+tbody tr:hover{background:#f8fafc!important;}
+.ticker{background:#fff!important;border-bottom:1px solid var(--line)!important;color:var(--ink-soft)!important;}
+.csv,.btn-reg{background:#fff!important;color:var(--accent)!important;border:1px solid var(--line)!important;border-radius:6px!important;font-weight:600;}
+.chip{border-radius:4px!important;}
+.chatw,.tag-new{display:none!important;}
 </style>
 
 <div class="app">
   <aside class="sidebar" id="sidebar">
     <div class="brand"><span class="mk">L</span><span class="bname">Ledger<em>scope</em></span>
-      <button class="collapse" id="collapseBtn" title="Réduire">«</button></div>
+      <button class="collapse" id="collapseBtn" title="Collapse">«</button></div>
     <div class="tagline bname">RWA Credit Intelligence</div>
-    <button class="sidesearch" id="sideSearch"><span>🔍</span><span class="ss-t">Rechercher…</span><span class="kbd">⌘K</span></button>
+    <button class="sidesearch" id="sideSearch"><span class="ss-t">Search…</span><span class="kbd">⌘K</span></button>
     <div class="authrow" id="authRow">
-      <button class="auth ghost" id="loginBtn"><span class="lbl">Connexion</span></button>
-      <button class="auth" id="signupBtn"><span class="lbl">Inscription</span></button>
+      <button class="auth ghost" id="loginBtn"><span class="lbl">Sign in</span></button>
+      <button class="auth" id="signupBtn"><span class="lbl">Request access</span></button>
     </div>
     <div class="navsec">Latest</div>
     <div class="nav">
-      <button data-v="credit" class="on"><span class="ic">▦</span><span class="lbl">Private Debt Desk</span></button>
-      <button data-v="home"><span class="ic">◧</span><span class="lbl">Market Overview</span></button>
-      <button data-v="screener"><span class="ic">▤</span><span class="lbl">Asset Screener</span></button>
-      <button data-v="monitor"><span class="ic">✦</span><span class="lbl">New Asset Monitor</span></button>
+      <button data-v="credit" class="on"><span class="lbl">Private Debt Desk</span></button>
+      <button data-v="home"><span class="lbl">Market Overview</span></button>
+      <button data-v="screener"><span class="lbl">Asset Screener</span></button>
+      <button data-v="monitor"><span class="lbl">New Asset Monitor</span></button>
     </div>
-    <div class="navsec hl">✦ Ledgerscope Signals</div>
+    <div class="navsec">Ratings &amp; Signals</div>
     <div class="nav">
-      <button data-v="alerts"><span class="ic">▲</span><span class="lbl">Alerts</span> <span class="badge" id="navalertn"></span></button>
-      <button data-v="analytics"><span class="ic">◈</span><span class="lbl">Credit Signals</span></button>
-      <button data-v="valuation"><span class="ic">⊟</span><span class="lbl">Valuation</span></button>
-      <button data-v="keyrisk"><span class="ic">🔑</span><span class="lbl">Key Risk (Launchscope)</span></button>
-      <button data-v="track"><span class="ic">✓</span><span class="lbl">Track Record</span></button>
+      <button data-v="alerts"><span class="lbl">Alerts</span> <span class="badge" id="navalertn"></span></button>
+      <button data-v="analytics"><span class="lbl">Credit Signals</span></button>
+      <button data-v="valuation"><span class="lbl">Valuation</span></button>
+      <button data-v="keyrisk"><span class="lbl">Key Risk</span></button>
+      <button data-v="track"><span class="lbl">Track Record</span></button>
     </div>
     <div class="navsec">Market Intelligence</div>
     <div class="nav">
-      <button data-v="networks"><span class="ic">🌐</span><span class="lbl">Networks</span></button>
-      <button data-v="platforms"><span class="ic">🏢</span><span class="lbl">Platforms</span></button>
-      <button data-v="managers"><span class="ic">👥</span><span class="lbl">Asset Managers</span></button>
-      <button data-v="apac"><span class="ic">🌏</span><span class="lbl">APAC</span></button>
+      <button data-v="networks"><span class="lbl">Networks</span></button>
+      <button data-v="platforms"><span class="lbl">Platforms</span></button>
+      <button data-v="managers"><span class="lbl">Asset Managers</span></button>
+      <button data-v="apac"><span class="lbl">APAC</span></button>
     </div>
     <div class="navsec">Data &amp; API</div>
     <div class="nav">
-      <button data-v="datacatalog"><span class="ic">🗂️</span><span class="lbl">Data Catalog</span></button>
-      <button class="apibtn"><span class="ic">⚡</span><span class="lbl">Enterprise API</span> <span class="tag-new">NEW</span></button>
+      <button data-v="datacatalog"><span class="lbl">Data Catalog</span></button>
+      <button class="apibtn"><span class="lbl">Enterprise API</span></button>
     </div>
     <div class="navsec">Asset Classes</div>
     <div class="nav" id="clsnav"></div>
@@ -321,27 +357,27 @@
         </div>
         <div class="grid2">
           <div class="box"><h3>Value by asset class</h3><div class="hint">TVL on-chain live</div><div id="classbars"></div></div>
-          <div class="box"><h3>Net flows (7j)</h3><div class="hint">Variation nette de TVL par classe</div><div id="flowbars"></div></div>
+          <div class="box"><h3>Net flows (7d)</h3><div class="hint">Net value change by class</div><div id="flowbars"></div></div>
         </div>
         <div class="chartbox">
-          <div class="bar"><h3>Performance par classe (croissance TVL indexée)</h3></div>
+          <div class="bar"><h3>Performance by class (indexed value growth)</h3></div>
           <canvas id="perfChart" width="1080" height="280"></canvas>
           <div class="legend" id="perfLegend"></div>
         </div>
-        <div class="panelhd"><h3>Croissance par classe d'actif</h3><button class="csv" data-csv="perf">⬇ CSV</button></div>
+        <div class="panelhd"><h3>Growth by asset class</h3><button class="csv" data-csv="perf">⬇ CSV</button></div>
         <div class="tablewrap"><div class="scroll"><table id="perftable">
-          <thead><tr><th data-s="cls">Classe</th><th class="num" data-s="tvl">TVL</th><th class="num" data-s="m1">1M</th><th class="num" data-s="m3">3M</th><th class="num" data-s="ytd">YTD</th><th class="num" data-s="y1">1A</th></tr></thead>
+          <thead><tr><th data-s="cls">Class</th><th class="num" data-s="tvl">TVL</th><th class="num" data-s="m1">1M</th><th class="num" data-s="m3">3M</th><th class="num" data-s="ytd">YTD</th><th class="num" data-s="y1">1A</th></tr></thead>
           <tbody id="perfbody"></tbody></table></div></div>
       </div>
 
       <!-- SCREENER -->
       <div class="view" id="v-screener">
         <div class="crumb">Data</div><div class="h-title">Asset Screener</div>
-        <div class="h-sub">Base filtrable des actifs réels tokenisés — donnée on-chain live.</div>
+        <div class="h-sub">Every tokenized real-world asset we track, filterable. Live on-chain data.</div>
         <div class="toolbar">
-          <div class="search">🔍 <input id="q" placeholder="Rechercher protocole, ticker…"></div>
-          <select class="filter" id="fClass"><option value="">Toutes classes</option></select>
-          <select class="filter" id="fNet"><option value="">Tous réseaux</option></select>
+          <div class="search"><input id="q" placeholder="Search asset, ticker…"></div>
+          <select class="filter" id="fClass"><option value="">All classes</option></select>
+          <select class="filter" id="fNet"><option value="">All networks</option></select>
           <span class="count" id="scount"></span>
         </div>
         <div class="tablewrap"><div class="scroll"><table id="stable">
@@ -353,7 +389,7 @@
       <!-- MONITOR -->
       <div class="view" id="v-monitor">
         <div class="crumb">Latest</div><div class="h-title">New Asset Monitor</div>
-        <div class="h-sub">Protocoles RWA les plus récemment listés.</div>
+        <div class="h-sub">Most recently listed RWA assets.</div>
         <div class="tablewrap"><div class="scroll"><table>
           <thead><tr><th>Protocol</th><th>Class</th><th>Networks</th><th class="num">TVL</th><th>Listed</th></tr></thead>
           <tbody id="mbody"></tbody></table></div></div>
@@ -373,13 +409,13 @@
         <div class="h-sub" id="an-sub"></div>
         <div class="cards" id="an-cards"></div>
         <div class="methodbox" style="margin-top:16px;">
-          <b>Notation propriétaire, toutes classes d'actifs.</b> <b>① LS Score</b> (0–100) : taille 42% + stabilité TVL 40% + résilience multi-chaîne 18%. <span class="g-green">🟢≥68</span>/<span class="g-amber">🟡48–67</span>/<span class="g-red">🔴&lt;48</span>. <b>② NAV gap</b> : rendement juste = taux sans risque (<span id="rfval"></span>) + prime[2% + (1−LS/100)×10% + volatilité σ]. <span class="g-red">RICH</span>=survalorisé / <span class="g-green">CHEAP</span>=sous-valorisé. Clique une ligne pour la fiche détaillée.
+          <b>Proprietary rating, all asset classes.</b> <b>LS Score</b> (0-100): size 42% + value stability 40% + multi-chain resilience 18%. Bands: <span class="g-green">Green 68+</span> / <span class="g-amber">Amber 48-67</span> / <span class="g-red">Red under 48</span>. <b>NAV gap</b>: fair yield = risk-free rate (<span id="rfval"></span>) + premium [2% + (1 - LS/100) x 10% + volatility]. <span class="g-red">RICH</span> = overvalued, <span class="g-green">CHEAP</span> = undervalued. Click a row for the full profile.
         </div>
         <div class="toolbar">
-          <div class="search">🔍 <input id="anq" placeholder="Filtrer…"></div>
-          <select class="filter" id="anClass"><option value="">Toutes classes</option></select>
-          <select class="filter" id="anBand"><option value="">Toutes bandes</option><option value="green">🟢 Green</option><option value="amber">🟡 Amber</option><option value="red">🔴 Red</option></select>
-          <select class="filter" id="anVerd"><option value="">Tous verdicts</option><option value="rich">RICH</option><option value="fair">Fair</option><option value="cheap">CHEAP</option><option value="_y">Rendement matché</option></select>
+          <div class="search"><input id="anq" placeholder="Filtrer…"></div>
+          <select class="filter" id="anClass"><option value="">All classes</option></select>
+          <select class="filter" id="anBand"><option value="">All bands</option><option value="green">Green</option><option value="amber">Amber</option><option value="red">Red</option></select>
+          <select class="filter" id="anVerd"><option value="">All verdicts</option><option value="rich">RICH</option><option value="fair">Fair</option><option value="cheap">CHEAP</option><option value="_y">Yield matched</option></select>
           <span class="count" id="ancount"></span>
         </div>
         <div class="tablewrap"><div class="scroll"><table id="antable">
@@ -393,7 +429,7 @@
         <div class="crumb">✦ Ledgerscope Valuation</div><div class="h-title">Fundamental Valuation</div>
         <div class="h-sub" id="fv-sub"></div>
         <div class="methodbox">
-          <b>Modèle fondamental, indépendant du signal on-chain.</b> Depuis une base de fondamentaux curés (rating, séniorité, collatéral, lockup, gérant) : <span class="mono">requis = sans risque + 2% + spread(rating) + ajust(séniorité/lockup/gérant)</span>. <b>NAV gap = offert − requis.</b> <b>Conf.</b> 🟢/🟡/🔴 = qualité de la donnée. La base curée (<span id="fv-count"></span> fonds) est l'actif de l'agence.
+          <b>Fundamental model, independent of the on-chain signal.</b> Built from curated fundamentals (rating, seniority, collateral, lockup, manager): <span class="mono">required yield = risk-free + 2% + rating spread + seniority / lockup / manager adjustments</span>. <b>NAV gap = offered minus required.</b> Confidence reflects data quality. Curated base: <span id="fv-count"></span> funds.
         </div>
         <div class="tablewrap"><div class="scroll"><table id="fvtable">
           <thead><tr><th>Fund</th><th>Profil fondamental</th><th class="num">Offered</th><th class="num">Fair (fond.)</th><th class="num">NAV gap ✦</th><th>Verdict</th><th>Conf</th></tr></thead>
@@ -406,7 +442,7 @@
         <div class="h-sub" id="ap-sub"></div>
         <div class="cards" id="ap-cards"></div>
         <div class="methodbox" style="margin-top:16px;">
-          <b>La thèse.</b> L'exposition on-chain rattachée à l'APAC est encore mince — <span id="ap-inline"></span> — mais c'est l'opportunité : bâtir la couche data locale <b>maintenant</b>, alignée <b>MAS / Project Guardian</b>, avant que les fonds VCC tokenisés singapouriens passent à l'échelle.
+          <b>APAC view.</b> On-chain exposure linked to Asia-Pacific issuers is still small (<span id="ap-inline"></span>). Coverage is aligned with <b>MAS Project Guardian</b> and Singapore VCC fund structures as they scale.
         </div>
         <div class="tablewrap"><div class="scroll"><table>
           <thead><tr><th>Protocol</th><th>Class</th><th>Rattachement APAC</th><th class="num">TVL</th><th class="num">LS</th><th>Networks</th></tr></thead>
@@ -430,7 +466,7 @@
               <thead><tr><th>#</th><th id="lg-h">League</th><th class="num">Value</th><th class="num">Assets</th></tr></thead>
               <tbody id="lgbody"></tbody></table></div></div>
           </div>
-          <div class="box"><h3>Network breakdown</h3><div class="hint">Répartition de la classe par chaîne</div><div id="clnw"></div></div>
+          <div class="box"><h3>Network breakdown</h3><div class="hint">Class value by chain</div><div id="clnw"></div></div>
         </div>
         <div class="panelhd"><h3>Assets in class</h3><button class="csv" data-csv="cl">⬇ CSV</button></div>
         <div class="tablewrap"><div class="scroll"><table id="cltable">
@@ -482,8 +518,8 @@
         <div class="h-sub" id="nw-sub"></div>
         <div class="cards" id="nw-cards"></div>
         <div class="grid2">
-          <div class="box"><h3>Value by network</h3><div class="hint">TVL RWA agrégée par chaîne</div><div id="nwbars"></div></div>
-          <div class="box"><h3>Network share</h3><div class="hint">Répartition</div><canvas id="nwpie" width="360" height="300"></canvas></div>
+          <div class="box"><h3>Value by network</h3><div class="hint">RWA value aggregated by chain</div><div id="nwbars"></div></div>
+          <div class="box"><h3>Network share</h3><div class="hint">Share of total</div><canvas id="nwpie" width="360" height="300"></canvas></div>
         </div>
         <div class="panelhd"><h3>Network ranking</h3><button class="csv" data-csv="nw">⬇ CSV</button></div>
         <div class="tablewrap"><div class="scroll"><table id="nwtable">
@@ -508,8 +544,8 @@
         <div class="h-sub" id="mg-sub"></div>
         <div class="cards" id="mg-cards"></div>
         <div class="grid2">
-          <div class="box"><h3>Top managers by value</h3><div class="hint">Encours tokenisé agrégé</div><div id="mgbars"></div></div>
-          <div class="box"><h3>Manager concentration</h3><div class="hint">Part des 5 plus gros</div><canvas id="mgpie" width="360" height="300"></canvas></div>
+          <div class="box"><h3>Top managers by value</h3><div class="hint">Aggregate tokenized assets</div><div id="mgbars"></div></div>
+          <div class="box"><h3>Manager concentration</h3><div class="hint">Top 5 share</div><canvas id="mgpie" width="360" height="300"></canvas></div>
         </div>
         <div class="panelhd"><h3>Manager ranking</h3><button class="csv" data-csv="mg">⬇ CSV</button></div>
         <div class="tablewrap"><div class="scroll"><table id="mgtable">
@@ -522,7 +558,7 @@
         <div class="crumb">Data &amp; API</div><div class="h-title">Data Catalog</div>
         <div class="h-sub" id="dc-sub"></div>
         <div id="dc-groups"></div>
-        <div class="methodbox" style="margin-top:16px;">Contact données &amp; API : <b>data@ledgerscope.io</b> · Accès Enterprise API sur demande. Couverture rafraîchie quotidiennement via pipeline on-chain.</div>
+        <div class="methodbox" style="margin-top:16px;">Data licensing and API access on request. Coverage refreshed daily from on-chain sources.</div>
       </div>
 
       <div class="disc" id="footdisc"></div>
@@ -530,11 +566,11 @@
       <!-- footer -->
       <div class="sitefoot">
         <div class="regblock">
-          <div><b>Pour les émetteurs &amp; plateformes</b><div class="sub">Faites indexer et analyser vos fonds tokenisés par Ledgerscope.</div></div>
-          <button class="btn-reg">Enregistrer vos actifs →</button>
+          <div><b>For issuers and platforms</b><div class="sub">Get your tokenized funds independently rated by Ledgerscope.</div></div>
+          <button class="btn-reg">Get rated →</button>
         </div>
         <div class="footlinks">
-          <span>Ledgerscope · Singapore</span><span>Documentation</span><span>Research</span><span>API</span><span>Press &amp; Citations</span><span>Confidentialité</span>
+          <span>Ledgerscope · Singapore</span><span>Documentation</span><span>Research</span><span>API</span><span>Press &amp; Citations</span><span>Privacy</span>
         </div>
       </div>
     </div>
@@ -544,23 +580,22 @@
   <div class="overlay" id="detailOverlay"><div class="modal" id="detailModal"></div></div>
   <!-- GLOBAL SEARCH -->
   <div class="overlay" id="searchOverlay"><div class="searchbox">
-    <input id="gSearch" placeholder="Rechercher un actif, protocole, ticker…" autocomplete="off">
+    <input id="gSearch" placeholder="Search an asset, platform, ticker…" autocomplete="off">
     <div class="sresults" id="sResults"></div>
-    <div class="shint">↑↓ naviguer · ↵ ouvrir · Esc fermer</div>
+    <div class="shint">↑↓ navigate · ↵ open · Esc close</div>
   </div></div>
   <!-- LOGIN MODAL -->
   <div class="overlay" id="loginOverlay"><div class="loginbox">
     <button class="x" id="loginX">✕</button>
     <div class="lg-brand"><span class="mk">L</span>Ledger<em>scope</em></div>
     <div class="lg-t" id="lg-title">Se connecter</div>
-    <div class="lg-sub">Débloquez les colonnes premium : notation, régulateur, juridiction, league tables complètes.</div>
+    <div class="lg-sub">Unlock premium columns: rating, regulator, jurisdiction and full league tables.</div>
     <input class="lg-in" id="lgEmail" placeholder="email@institution.com" autocomplete="off">
-    <input class="lg-in" id="lgPwd" type="password" placeholder="Mot de passe">
-    <button class="auth lg-go" id="lgGo">Continuer</button>
-    <div class="lg-note">Démo — aucune donnée n'est envoyée. « Continuer » débloque le contenu premium localement.</div>
+    <input class="lg-in" id="lgPwd" type="password" placeholder="Password">
+    <button class="auth lg-go" id="lgGo">Continue</button>
+    <div class="lg-note">Preview access. No data is sent; continuing unlocks premium views in this browser.</div>
   </div></div>
-  <!-- chat widget -->
-  <button class="chatw" title="Support">💬</button>
+
 </div>
 
 <script>
@@ -572,8 +607,8 @@ const CLR={'U.S. Treasuries':'#3b82f6','Private credit':'#22b8a6','Commodities':
 const clr=c=>CLR[c]||'#8b929b';
 
 /* welcome + footer */
-document.getElementById('welcome').innerHTML=`<b>Ledgerscope, by RWA Credit Intelligence.</b> The independent rating layer for tokenized private credit. We rate the funds. Issuers, exchanges and funds buy the score. Source: ${D.source}. Snapshot ${D.generated}.`;
-document.getElementById('sidefoot').innerHTML=`✦ = analytique propriétaire<br>Données ${D.generated}<br>APAC · Singapore-first`;
+document.getElementById('welcome').innerHTML=`<b>Ledgerscope, by RWA Credit Intelligence.</b> The independent rating layer for tokenized private credit. Independent ratings, valuation signals and contract risk for tokenized funds. Source: ${D.source}. Snapshot ${D.generated}.`;
+document.getElementById('sidefoot').innerHTML=`Data as of ${D.generated}<br>Singapore`;
 document.getElementById('footdisc').innerHTML=`Ledgerscope by RWA Credit Intelligence · live data (${D.generated}). Sources: CoinGecko fund market caps (units outstanding x NAV), DefiLlama protocol value for platforms with no priced token (Maple, Huma, OpenTrade, KAIO, RealT), DefiLlama yields, on-chain contract reads. Registry-only records (e.g. Figure HELOC) excluded. Classification, LS Score, NAV gap and Key Risk are proprietary models. <b>Limits:</b> history covers funds alive today (survivorship bias); backtests are labelled as such. Independent research, not investment advice, not a credit rating under any regulation. Full method: <span class="mono">METHODOLOGY.md</span>.`;
 
 /* ticker : top actifs */
@@ -737,8 +772,8 @@ document.getElementById('rfval').textContent=(D.rf!=null?D.rf.toFixed(2):'—')+
 const allRich=sigAssets.filter(a=>a.gapu&&a.gapu.verdict==='rich').length;
 const allCheap=sigAssets.filter(a=>a.gapu&&a.gapu.verdict==='cheap').length;
 const allStress=sigAssets.filter(a=>a.sig.stress).length;
-document.getElementById('an-sub').textContent=`LS Score + NAV gap sur ${sigAssets.length} actifs (toutes classes) · ${sigAssets.filter(a=>a.gapu).length} avec valorisation · taux sans risque ${D.rf}% · ${D.generated}`;
-document.getElementById('an-cards').innerHTML=[['On-chain risk-free',D.rf+'%'],['🔴 RICH',allRich],['🟢 CHEAP',allCheap],['⚠ Stress',allStress]].map(c=>`<div class="card"><div class="k">${c[0]}</div><div class="v">${c[1]}</div></div>`).join('');
+document.getElementById('an-sub').textContent=`LS Score + NAV gap on ${sigAssets.length} assets · ${sigAssets.filter(a=>a.gapu).length} valued · risk-free rate ${D.rf}% · ${D.generated}`;
+document.getElementById('an-cards').innerHTML=[['On-chain risk-free',D.rf+'%'],['RICH',allRich],['🟢 CHEAP',allCheap],['Stress',allStress]].map(c=>`<div class="card"><div class="k">${c[0]}</div><div class="v">${c[1]}</div></div>`).join('');
 const anClass=document.getElementById('anClass');
 [...new Set(sigAssets.map(a=>a.cls))].sort().forEach(c=>anClass.add(new Option(c,c)));
 const gapCell=yg=>{if(!yg)return '<span class="sub">no yield</span>';const cl=yg.gap_bps<=-75?'g-red':yg.gap_bps>=150?'g-green':'';return `<span class="${cl}" style="font-weight:700">${yg.gap_bps>=0?'+':''}${yg.gap_bps} bps</span>`;};
@@ -751,7 +786,7 @@ function anRender(){
   r.sort((x,y)=>{let A,B;if(ank==='gap'){A=gv(x);B=gv(y);}else if(ank==='apy'){A=x.gapu?x.gapu.apy:-1;B=y.gapu?y.gapu.apy:-1;}else if(ank==='fair'){A=x.gapu?x.gapu.fair:-1;B=y.gapu?y.gapu.fair:-1;}else if(ank==='ls'){A=x.sig.ls;B=y.sig.ls;}else if(ank==='name'){A=x.name;B=y.name;}else if(ank==='cls'){A=x.cls;B=y.cls;}else{A=x.tvl;B=y.tvl;}
     if(typeof A==='string')return A.localeCompare(B)*and_;return (A-B)*and_;});
   document.getElementById('anbody').innerHTML=r.map(a=>`<tr data-slug="${a.slug}"><td class="asset">${a.name} <span class="sub">${a.symbol}</span></td><td><span class="chip ${a.cls==='Private credit'?'credit':''}">${a.cls}</span></td><td class="num">${fmt(a.tvl)}</td><td class="num">${scoreCell(a.sig)}</td><td class="num">${a.gapu?a.gapu.apy.toFixed(2)+'%':'<span class=sub>—</span>'}</td><td class="num">${a.gapu?a.gapu.fair.toFixed(2)+'%'+(a.gapu.src==='fond.'?'':' <span class="sub" style="font-size:9px">sig</span>'):'<span class=sub>—</span>'}</td><td class="num">${gapCell(a.gapu)}</td><td>${verdCell(a.gapu)}</td></tr>`).join('');
-  document.getElementById('ancount').textContent=r.length+' actifs';
+  document.getElementById('ancount').textContent=r.length+' assets';
 }
 ['anq','anClass','anBand','anVerd'].forEach(id=>document.getElementById(id).addEventListener('input',anRender));
 document.querySelectorAll('#antable th').forEach(th=>th.addEventListener('click',()=>{const k=th.dataset.s;if(!k)return;if(ank===k)and_*=-1;else{ank=k;and_=(k==='name'||k==='cls')?1:-1;}anRender();}));
@@ -759,7 +794,7 @@ anRender();
 
 /* valuation */
 const fvAssets=D.assets.filter(a=>a.fv);
-document.getElementById('fv-sub').textContent=`Rendement requis fondamental sur ${fvAssets.length} actifs curés (toutes classes) · ${fvAssets.filter(a=>a.fv.gap_bps!=null).length} avec rendement · ${D.generated}`;
+document.getElementById('fv-sub').textContent=`Fundamental required yield on ${fvAssets.length} curated assets · ${fvAssets.filter(a=>a.fv.gap_bps!=null).length} with observed yield · ${D.generated}`;
 document.getElementById('fv-count').textContent=fvAssets.length;
 const confDot={high:'🟢',med:'🟡',low:'🔴'};
 const ratingChip=r=>{const g=r&&['AAA','AA','A'].includes(r)?'g-green':r==='NR'?'':'g-amber';return `<span class="chip ${g}" style="font-weight:700">${r||'NR'}</span>`;};
@@ -770,28 +805,28 @@ document.getElementById('fvbody').innerHTML=fvAssets.slice().sort((a,b)=>(a.fv.g
 /* apac */
 const apac=D.assets.filter(a=>a.apac);
 const apShare=D.total_tvl?(D.apac_tvl/D.total_tvl*100):0;
-document.getElementById('ap-sub').textContent=`${D.apac_n} protocoles rattachés à l'APAC · ${fmt(D.apac_tvl)} on-chain · vue de relocalisation Singapour.`;
-document.getElementById('ap-inline').textContent=`${D.apac_n} émetteurs, ${fmt(D.apac_tvl)}, ${apShare.toFixed(1)}% du total`;
-document.getElementById('ap-cards').innerHTML=[['Émetteurs APAC',D.apac_n],['TVL APAC',fmt(D.apac_tvl)],['Part du RWA',apShare.toFixed(1)+'%'],['Cadre','MAS·Guardian']].map(c=>`<div class="card"><div class="k">${c[0]}</div><div class="v" style="font-size:${(''+c[1]).length>9?'19px':'25px'}">${c[1]}</div></div>`).join('');
+document.getElementById('ap-sub').textContent=`${D.apac_n} APAC-linked issuers · ${fmt(D.apac_tvl)} on-chain`;
+document.getElementById('ap-inline').textContent=`${D.apac_n} issuers, ${fmt(D.apac_tvl)}, ${apShare.toFixed(1)}% of total`;
+document.getElementById('ap-cards').innerHTML=[['APAC issuers',D.apac_n],['APAC value',fmt(D.apac_tvl)],['Share of RWA',apShare.toFixed(1)+'%'],['Framework','MAS·Guardian']].map(c=>`<div class="card"><div class="k">${c[0]}</div><div class="v" style="font-size:${(''+c[1]).length>9?'19px':'25px'}">${c[1]}</div></div>`).join('');
 document.getElementById('apbody').innerHTML=apac.sort((a,b)=>b.tvl-a.tvl).map(a=>`<tr data-slug="${a.slug}"><td class="asset">${a.name} <span class="sub">${a.symbol}</span></td><td><span class="chip ${a.cls==='Private credit'?'credit':''}">${a.cls}</span></td><td class="sub" style="color:var(--accent)">${a.apac}</td><td class="num">${fmt(a.tvl)}</td><td class="num">${scoreCell(a.sig)}</td><td class="sub">${a.chains.slice(0,3).join(', ')}</td></tr>`).join('');
 
 /* alerts */
 const AL=D.alerts||[];
 document.getElementById('navalertn').textContent=AL.length||'';
 if(!AL.length)document.getElementById('navalertn').style.display='none';
-document.getElementById('al-sub').textContent=`${AL.length} signaux actionnables (toutes classes, TVL ≥ $20M) · triés par sévérité · clique pour la fiche · ${D.generated}`;
-document.getElementById('al-cards').innerHTML=[['Signaux',AL.length],['🔴 Haute',AL.filter(a=>a.level==='high').length],['🟡 Moyenne',AL.filter(a=>a.level==='med').length],['Classes touchées',new Set(AL.map(a=>a.cls)).size]].map(c=>`<div class="card"><div class="k">${c[0]}</div><div class="v">${c[1]}</div></div>`).join('');
-document.getElementById('al-list').innerHTML=AL.length?AL.map(a=>`<div class="alert ${a.level}" data-slug="${a.slug}" style="cursor:pointer"><div class="top"><span class="nm">${a.name} <span class="sym">${a.symbol}</span></span><span class="chip ${a.cls==='Private credit'?'credit':''}" style="font-size:10px">${a.cls}</span><span class="lvl">${a.level==='high'?'Haute':a.level==='med'?'Moyenne':'Info'}</span><span class="meta">LS ${a.ls} · ${fmt(a.tvl)} · sev ${a.sev}</span></div><ul>${a.reasons.map(r=>`<li>${r}</li>`).join('')}</ul></div>`).join(''):'<div class="disc">Aucun signal actif.</div>';
+document.getElementById('al-sub').textContent=`${AL.length} active signals (all classes, value $20M+) · sorted by severity · ${D.generated}`;
+document.getElementById('al-cards').innerHTML=[['Signals',AL.length],['High',AL.filter(a=>a.level==='high').length],['Medium',AL.filter(a=>a.level==='med').length],['Classes affected',new Set(AL.map(a=>a.cls)).size]].map(c=>`<div class="card"><div class="k">${c[0]}</div><div class="v">${c[1]}</div></div>`).join('');
+document.getElementById('al-list').innerHTML=AL.length?AL.map(a=>`<div class="alert ${a.level}" data-slug="${a.slug}" style="cursor:pointer"><div class="top"><span class="nm">${a.name} <span class="sym">${a.symbol}</span></span><span class="chip ${a.cls==='Private credit'?'credit':''}" style="font-size:10px">${a.cls}</span><span class="lvl">${a.level==='high'?'High':a.level==='med'?'Medium':'Info'}</span><span class="meta">LS ${a.ls} · ${fmt(a.tvl)} · sev ${a.sev}</span></div><ul>${a.reasons.map(r=>`<li>${r}</li>`).join('')}</ul></div>`).join(''):'<div class="disc">No active signals.</div>';
 document.getElementById('al-list').addEventListener('click',e=>{const el=e.target.closest('.alert[data-slug]');if(el)openDetail(el.dataset.slug);});
 
 /* ===== PRIVATE CREDIT VIEW ===== */
-document.getElementById('cr-sub').textContent=`Independent ratings on ${pc.length} tokenized private-credit funds · ${fmt(D.pc_total)} on-chain · we rate, issuers and exchanges buy the score · ${D.generated}`;
-document.getElementById('cr-cards').innerHTML=[['Private Credit TVL',fmt(D.pc_total)],['Fonds',pc.length],['🔴 RICH',D.pc_rich.length],['⚠ Stress',D.pc_stress.length]].map(c=>`<div class="card"><div class="k">${c[0]}</div><div class="v">${c[1]}</div></div>`).join('');
+document.getElementById('cr-sub').textContent=`Independent ratings on ${pc.length} tokenized private-credit funds · ${fmt(D.pc_total)} on-chain · ${D.generated}`;
+document.getElementById('cr-cards').innerHTML=[['Private Credit TVL',fmt(D.pc_total)],['Funds',pc.length],['RICH',D.pc_rich.length],['Stress',D.pc_stress.length]].map(c=>`<div class="card"><div class="k">${c[0]}</div><div class="v">${c[1]}</div></div>`).join('');
 document.getElementById('crbody').innerHTML=pc.slice().sort((a,b)=>b.tvl-a.tvl).map(a=>`<tr data-slug="${a.slug}"><td class="asset">${a.name} <span class="sub">${a.symbol}</span></td><td class="sub">${a.chains.slice(0,3).join(', ')}</td><td class="num">${fmt(a.tvl)}</td><td class="num ${a.chg7d>=0?'up':'down'}">${pct(a.chg7d)}</td><td class="num">${scoreCell(a.sig)}</td><td class="num">${a.yg?gapCell(a.yg):'<span class=sub>—</span>'}</td></tr>`).join('');
 
 /* ===== NETWORKS VIEW ===== */
 const NW=D.networks||[];const nwTot=NW.reduce((s,n)=>s+n.value,0)||1;
-document.getElementById('nw-sub').textContent=`${NW.length} réseaux · ${fmt(nwTot)} de RWA on-chain répartis · ${D.generated}`;
+document.getElementById('nw-sub').textContent=`${NW.length} networks · ${fmt(nwTot)} RWA value on-chain · ${D.generated}`;
 document.getElementById('nw-cards').innerHTML=[['Networks',NW.length],['Top network',NW[0]?NW[0].chain:'—'],['Top value',NW[0]?fmt(NW[0].value):'—'],['Total RWA',fmt(D.total_tvl)]].map(c=>`<div class="card"><div class="k">${c[0]}</div><div class="v" style="font-size:${(''+c[1]).length>9?'19px':'25px'}">${c[1]}</div></div>`).join('');
 const nwMax=NW[0]?NW[0].value:1;const NWC=['#4d94f5','#22b8a6','#d0a84a','#a855f7','#38bdf8','#ef5a56','#8b98b0','#3ec37e','#c084fc','#f59e0b'];
 document.getElementById('nwbars').innerHTML=NW.slice(0,10).map((n,i)=>`<div class="barrow"><div class="lbl">${n.chain}</div><div class="bartrack"><div class="barfill" style="width:${n.value/nwMax*100}%;background:${NWC[i%NWC.length]}"></div></div><div class="amt">${fmt(n.value)}</div></div>`).join('');
@@ -800,13 +835,13 @@ document.getElementById('nwbody').innerHTML=NW.map((n,i)=>`<tr data-net="${n.cha
 
 /* ===== PLATFORMS VIEW ===== */
 const plats=D.assets.slice();
-document.getElementById('pf-sub').textContent=`${plats.length} protocoles / plateformes classés par valeur · ${D.generated}`;
+document.getElementById('pf-sub').textContent=`${plats.length} platforms ranked by value · ${D.generated}`;
 document.getElementById('pf-cards').innerHTML=[['Platforms',plats.length],['Top',plats[0].name],['Top value',fmt(plats[0].tvl)],['Total',fmt(D.total_tvl)]].map(c=>`<div class="card"><div class="k">${c[0]}</div><div class="v" style="font-size:${(''+c[1]).length>9?'19px':'25px'}">${c[1]}</div></div>`).join('');
 document.getElementById('pfbody').innerHTML=plats.map((a,i)=>`<tr data-slug="${a.slug}"><td class="num">${i+1}</td><td class="asset">${a.name} <span class="sub">${a.symbol}</span></td><td><span class="chip ${a.cls==='Private credit'?'credit':''}">${a.cls}</span></td><td class="num">${fmt(a.tvl)}</td><td class="num">${a.chains.length}</td><td class="num ${a.chg7d>=0?'up':'down'}">${pct(a.chg7d)}</td></tr>`).join('');
 
 /* ===== ASSET MANAGERS VIEW ===== */
 const MG=D.managers||[];const mgTot=MG.reduce((s,m)=>s+m.value,0)||1;
-document.getElementById('mg-sub').textContent=`${MG.length} gestionnaires · ${fmt(mgTot)} d'encours tokenisé · ${D.generated}`;
+document.getElementById('mg-sub').textContent=`${MG.length} managers · ${fmt(mgTot)} tokenized · ${D.generated}`;
 document.getElementById('mg-cards').innerHTML=[['Managers',MG.length],['Top manager',MG[0]?MG[0].name:'—'],['Top encours',MG[0]?fmt(MG[0].value):'—'],['Top-5 share',(MG.slice(0,5).reduce((s,m)=>s+m.value,0)/mgTot*100).toFixed(0)+'%']].map(c=>`<div class="card"><div class="k">${c[0]}</div><div class="v" style="font-size:${(''+c[1]).length>10?'18px':'25px'}">${c[1]}</div></div>`).join('');
 const mgMax=MG[0]?MG[0].value:1;
 document.getElementById('mgbars').innerHTML=MG.slice(0,10).map((m,i)=>`<div class="barrow"><div class="lbl">${m.name}</div><div class="bartrack"><div class="barfill" style="width:${m.value/mgMax*100}%;background:${NWC[i%NWC.length]}"></div></div><div class="amt">${fmt(m.value)}</div></div>`).join('');
@@ -815,8 +850,8 @@ function openManager(name){
   const list=D.assets.filter(a=>a.manager===name).sort((a,b)=>b.tvl-a.tvl);if(!list.length)return;
   const tot=list.reduce((s,a)=>s+a.tvl,0);const cls={};list.forEach(a=>cls[a.cls]=(cls[a.cls]||0)+1);
   let h=`<div class="mhd"><button class="x" onclick="closeDetail()">✕</button><div><span class="nm">👥 ${name}</span></div><div class="chips"><span class="chip">Asset manager</span></div></div><div class="mbody">`;
-  h+=`<div class="mgrid"><div><div class="k">Encours tokenisé</div><div class="v">${fmt(tot)}</div></div><div><div class="k">Actifs</div><div class="v">${list.length}</div></div><div><div class="k">Classes</div><div class="v">${Object.keys(cls).length}</div></div><div><div class="k">Réseaux</div><div class="v">${new Set(list.flatMap(a=>a.chains)).size}</div></div></div>`;
-  h+=`<div class="msec">Actifs gérés</div>`+list.slice(0,15).map(a=>`<div class="mrow" style="cursor:pointer" onclick="closeDetail();openDetail('${a.slug}')"><span class="k">${a.name} <span style="color:var(--ink-faint)">${a.symbol}</span></span><span class="v">${fmt(a.tvl)}</span></div>`).join('');
+  h+=`<div class="mgrid"><div><div class="k">Tokenized value</div><div class="v">${fmt(tot)}</div></div><div><div class="k">Assets</div><div class="v">${list.length}</div></div><div><div class="k">Classes</div><div class="v">${Object.keys(cls).length}</div></div><div><div class="k">Networks</div><div class="v">${new Set(list.flatMap(a=>a.chains)).size}</div></div></div>`;
+  h+=`<div class="msec">Managed assets</div>`+list.slice(0,15).map(a=>`<div class="mrow" style="cursor:pointer" onclick="closeDetail();openDetail('${a.slug}')"><span class="k">${a.name} <span style="color:var(--ink-faint)">${a.symbol}</span></span><span class="v">${fmt(a.tvl)}</span></div>`).join('');
   h+=`</div>`;md.innerHTML=h;ov.classList.add('on');
 }
 (function(){const cv=document.getElementById('mgpie'),x=cv.getContext('2d');const cx=cv.width/2,cy=cv.height/2,R=110;let a0=-Math.PI/2;const top=MG.slice(0,7);const other=MG.slice(7).reduce((s,m)=>s+m.value,0);const segs=top.map((m,i)=>[m.name,m.value,NWC[i%NWC.length]]);if(other>0)segs.push(['Other',other,'#5a6782']);const tot=segs.reduce((s,g)=>s+g[1],0)||1;segs.forEach(g=>{const a1=a0+g[1]/tot*Math.PI*2;x.beginPath();x.moveTo(cx,cy);x.arc(cx,cy,R,a0,a1);x.closePath();x.fillStyle=g[2];x.fill();a0=a1;});x.fillStyle=getComputedStyle(document.documentElement).getPropertyValue('--panel').trim();x.beginPath();x.arc(cx,cy,58,0,7);x.fill();})();
@@ -826,19 +861,19 @@ function openNetwork(chain){
   const net=NW.find(n=>n.chain===chain);if(!net)return;
   const list=D.assets.filter(a=>a.chains.includes(chain)).sort((a,b)=>b.tvl-a.tvl);
   const cls={};list.forEach(a=>cls[a.cls]=(cls[a.cls]||0)+1);
-  let h=`<div class="mhd"><button class="x" onclick="closeDetail()">✕</button><div><span class="nm">🌐 ${chain}</span></div><div class="chips"><span class="chip">Réseau blockchain</span></div></div><div class="mbody">`;
-  h+=`<div class="mgrid"><div><div class="k">RWA value</div><div class="v">${fmt(net.value)}</div></div><div><div class="k">Assets hébergés</div><div class="v">${list.length}</div></div><div><div class="k">Part du RWA</div><div class="v">${(net.value/nwTot*100).toFixed(1)}%</div></div><div><div class="k">Classes</div><div class="v">${Object.keys(cls).length}</div></div></div>`;
-  h+=`<div class="msec">Actifs sur ${chain} (top 15)</div>`;
+  let h=`<div class="mhd"><button class="x" onclick="closeDetail()">✕</button><div><span class="nm">${chain}</span></div><div class="chips"><span class="chip">Blockchain network</span></div></div><div class="mbody">`;
+  h+=`<div class="mgrid"><div><div class="k">RWA value</div><div class="v">${fmt(net.value)}</div></div><div><div class="k">Assets hosted</div><div class="v">${list.length}</div></div><div><div class="k">Share of RWA</div><div class="v">${(net.value/nwTot*100).toFixed(1)}%</div></div><div><div class="k">Classes</div><div class="v">${Object.keys(cls).length}</div></div></div>`;
+  h+=`<div class="msec">Assets on ${chain} (top 15)</div>`;
   h+=list.slice(0,15).map(a=>`<div class="mrow" style="cursor:pointer" onclick="closeDetail();openDetail('${a.slug}')"><span class="k">${a.name} <span style="color:var(--ink-faint)">${a.symbol}</span></span><span class="v">${fmt(a.tvl)}</span></div>`).join('');
   h+=`</div>`;md.innerHTML=h;ov.classList.add('on');
 }
 
 /* ===== DATA CATALOG VIEW ===== */
-document.getElementById('dc-sub').textContent=`Couverture : ${D.n_assets} actifs RWA · ${pc.length} fonds de crédit privé curés · données rafraîchies quotidiennement.`;
+document.getElementById('dc-sub').textContent=`Coverage: ${D.n_assets} RWA assets · ${pc.length} private credit funds · refreshed daily.`;
 const dcGroups=[
-  ['Métriques historisées',['TVL / valeur on-chain (28 mois)','Rendement (APY, base, volatilité σ)','Variation 1j / 7d','Flux nets par classe','Détenteurs (à venir)']],
-  ['Données de référence',['Classe d\'actif (liste blanche curée)','Réseaux / chaînes','Émetteur & juridiction','Rating, séniorité, collatéral (fondamentaux)','Structure du fonds & liquidité']],
-  ['Signaux propriétaires ✦',['LS Score (qualité/risque)','NAV gap (rendement vs risque)','Valorisation fondamentale','Alertes priorisées','Rattachement APAC']],
+  ['Time series',['On-chain value (12 months)','Yield (APY, base, volatility)','1d / 7d change','Net flows by class','Daily ratings ledger']],
+  ['Reference data',['Asset class','Networks','Issuer and jurisdiction','Rating, seniority, collateral','Fund structure and liquidity']],
+  ['Proprietary signals',['LS Score (quality / risk)','NAV gap (yield vs risk)','Fundamental valuation','Prioritized alerts','Key Risk (contract control)']],
 ];
 document.getElementById('dc-groups').innerHTML=dcGroups.map(g=>`<div class="box" style="margin-bottom:14px;"><h3>${g[0]}</h3><div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px 20px;">${g[1].map(m=>`<div style="font-size:13.5px;color:var(--ink-soft);display:flex;gap:8px;"><span style="color:var(--accent)">●</span>${m}</div>`).join('')}</div></div>`).join('');
 
@@ -849,11 +884,11 @@ function openDetail(slug){
   const a=bySlug[slug];if(!a)return;const s=a.sig,yg=a.yg,fv=a.fv;
   let h=`<div class="mhd"><button class="x" onclick="closeDetail()">✕</button><div><span class="nm">${a.name}</span><span class="sym">${a.symbol}</span></div><div class="chips"><span class="chip ${a.cls==='Private credit'?'credit':''}">${a.cls}</span>${a.apac?`<span class="chip" style="color:var(--accent)">🌏 ${a.apac}</span>`:''}<button class="memobtn" onclick="creditMemo('${slug}')">📄 Credit Memo</button></div></div><div class="mbody">`;
   h+=`<div class="mgrid"><div><div class="k">TVL on-chain</div><div class="v">${fmt(a.tvl)}</div></div><div><div class="k">LS Score</div><div class="v g-${s.band}">${s.ls}/100${s.stress?' ⚠':''}</div></div><div><div class="k">7d</div><div class="v ${a.chg7d>=0?'up':'down'}">${pct(a.chg7d)}</div></div><div><div class="k">1d</div><div class="v ${a.chg1d>=0?'up':'down'}">${pct(a.chg1d)}</div></div></div>`;
-  h+=`<div class="msec">Analytique · signal</div><div class="mrow"><span class="k">Qualité (LS)</span><span class="v g-${s.band}">${s.ls} · ${s.note}</span></div>`;
-  if(yg){h+=`<div class="mrow"><span class="k">Rendement offert</span><span class="v">${yg.apy.toFixed(2)}%</span></div><div class="mrow"><span class="k">Rendement juste (signal)</span><span class="v">${yg.fair.toFixed(2)}%</span></div><div class="mrow"><span class="k">NAV gap (signal)</span><span class="v ${yg.gap_bps<=-75?'g-red':yg.gap_bps>=150?'g-green':''}">${yg.gap_bps>=0?'+':''}${yg.gap_bps} bps · ${yg.verdict}</span></div>`;}
-  if(fv){h+=`<div class="msec">Valorisation fondamentale</div><div class="mrow"><span class="k">Rating / séniorité</span><span class="v">${fv.rating} · ${(fv.seniority||'').replace('_',' ')}</span></div><div class="mrow"><span class="k">Liquidité / gérant</span><span class="v">${fv.liquidity} · T${fv.manager_tier}</span></div><div class="mrow"><span class="k">Rendement requis (fond.)</span><span class="v">${fv.req.toFixed(2)}%</span></div>${fv.gap_bps!=null?`<div class="mrow"><span class="k">NAV gap (fond.)</span><span class="v ${fv.gap_bps<=-75?'g-red':fv.gap_bps>=150?'g-green':''}">${fv.gap_bps>=0?'+':''}${fv.gap_bps} bps</span></div>`:''}<div class="mrow"><span class="k">Confiance donnée</span><span class="v">${confDot[fv.conf]||'🔴'} ${fv.conf}</span></div><div class="mrow"><span class="k">Note</span><span class="v" style="font-weight:400">${fv.note||''}</span></div>`;}
-  if(a.gaprel){h+=`<div class="msec">Valorisation relative (pairs)</div><div class="mrow"><span class="k">Position vs ${a.gaprel.n} pairs</span><span class="v ${a.gaprel.rv==='cheap'?'g-green':a.gaprel.rv==='rich'?'g-red':''}">${a.gaprel.rv.toUpperCase()} · ${a.gaprel.pctile}ᵉ pctile · z=${a.gaprel.z}</span></div><div class="mrow"><span class="k">Médiane des pairs</span><span class="v">${a.gaprel.peer_med>=0?'+':''}${a.gaprel.peer_med} bps</span></div>`;}
-  h+=`<div class="msec">On-chain</div><div class="mrow"><span class="k">Réseaux</span><span class="v">${a.chains.join(', ')}</span></div><div class="mrow"><span class="k">Listé (DefiLlama)</span><span class="v">${a.listedAt?new Date(a.listedAt*1000).toISOString().slice(0,10):'—'}</span></div>${a.url?`<div class="mrow"><span class="k">Site</span><span class="v" style="font-weight:400">${a.url.replace(/^https?:\/\//,'').slice(0,40)}</span></div>`:''}`;
+  h+=`<div class="msec">Analytics</div><div class="mrow"><span class="k">Quality (LS)</span><span class="v g-${s.band}">${s.ls} · ${s.note}</span></div>`;
+  if(yg){h+=`<div class="mrow"><span class="k">Offered yield</span><span class="v">${yg.apy.toFixed(2)}%</span></div><div class="mrow"><span class="k">Fair yield (signal)</span><span class="v">${yg.fair.toFixed(2)}%</span></div><div class="mrow"><span class="k">NAV gap (signal)</span><span class="v ${yg.gap_bps<=-75?'g-red':yg.gap_bps>=150?'g-green':''}">${yg.gap_bps>=0?'+':''}${yg.gap_bps} bps · ${yg.verdict}</span></div>`;}
+  if(fv){h+=`<div class="msec">Fundamental valuation</div><div class="mrow"><span class="k">Rating / seniority</span><span class="v">${fv.rating} · ${(fv.seniority||'').replace('_',' ')}</span></div><div class="mrow"><span class="k">Liquidity / manager</span><span class="v">${fv.liquidity} · T${fv.manager_tier}</span></div><div class="mrow"><span class="k">Required yield</span><span class="v">${fv.req.toFixed(2)}%</span></div>${fv.gap_bps!=null?`<div class="mrow"><span class="k">NAV gap (fundamental)</span><span class="v ${fv.gap_bps<=-75?'g-red':fv.gap_bps>=150?'g-green':''}">${fv.gap_bps>=0?'+':''}${fv.gap_bps} bps</span></div>`:''}<div class="mrow"><span class="k">Data confidence</span><span class="v">${confDot[fv.conf]||'🔴'} ${fv.conf}</span></div><div class="mrow"><span class="k">Note</span><span class="v" style="font-weight:400">${fv.note||''}</span></div>`;}
+  if(a.gaprel){h+=`<div class="msec">Relative value (peers)</div><div class="mrow"><span class="k">Position vs ${a.gaprel.n} peers</span><span class="v ${a.gaprel.rv==='cheap'?'g-green':a.gaprel.rv==='rich'?'g-red':''}">${a.gaprel.rv.toUpperCase()} · ${a.gaprel.pctile}th pctile · z=${a.gaprel.z}</span></div><div class="mrow"><span class="k">Peer median</span><span class="v">${a.gaprel.peer_med>=0?'+':''}${a.gaprel.peer_med} bps</span></div>`;}
+  h+=`<div class="msec">On-chain</div><div class="mrow"><span class="k">Networks</span><span class="v">${a.chains.join(', ')}</span></div><div class="mrow"><span class="k">First seen</span><span class="v">${a.listedAt?new Date(a.listedAt*1000).toISOString().slice(0,10):'—'}</span></div>${a.url?`<div class="mrow"><span class="k">Website</span><span class="v" style="font-weight:400">${a.url.replace(/^https?:\/\//,'').slice(0,40)}</span></div>`:''}`;
   h+=`</div>`;md.innerHTML=h;ov.classList.add('on');
 }
 function closeDetail(){ov.classList.remove('on');}
@@ -861,24 +896,24 @@ function creditMemo(slug){
   const a=bySlug[slug];if(!a)return;const s=a.sig,fv=a.fv,gu=a.gapu;
   // recommandation dérivée
   let reco,rc;
-  if(s.stress||s.band==='red'){reco='SURVEILLER / ÉVITER';rc='g-red';}
-  else if(gu&&gu.verdict==='rich'){reco='SURVALORISÉ — sous-pondérer';rc='g-red';}
-  else if(gu&&gu.verdict==='cheap'){reco='OPPORTUNITÉ — à creuser';rc='g-green';}
+  if(s.stress||s.band==='red'){reco='WATCH / AVOID';rc='g-red';}
+  else if(gu&&gu.verdict==='rich'){reco='OVERVALUED: underweight';rc='g-red';}
+  else if(gu&&gu.verdict==='cheap'){reco='OPPORTUNITY: investigate';rc='g-green';}
   else {reco='NEUTRE / conforme';rc='';}
   const today=new Date().toISOString().slice(0,10);
-  const val=gu?`Le fonds offre <b>${gu.apy.toFixed(2)}%</b> face à un rendement requis de <b>${gu.fair.toFixed(2)}%</b> (${gu.src==='fond.'?'modèle fondamental':'signal on-chain'}), soit un écart de <b class="${gu.gap_bps<=-75?'g-red':gu.gap_bps>=150?'g-green':''}">${gu.gap_bps>=0?'+':''}${gu.gap_bps} bps</b>. ${gu.gap_bps<=-75?'Le token rémunère insuffisamment son risque : NAV probablement survalorisée.':gu.gap_bps>=150?'Coussin de rendement au-dessus du risque — vérifier un éventuel risque caché.':'Rémunération alignée sur le risque.'}`:'Aucun rendement on-chain observable pour ce fonds — valorisation par signal uniquement.';
-  const struct=fv?`Notation <b>${fv.rating}</b>, séniorité <b>${(fv.seniority||'').replace('_',' ')}</b>, liquidité <b>${fv.liquidity}</b>, gérant tier <b>${fv.manager_tier}</b>. ${fv.note||''} <span class="sub">(juridiction : ${fv.jurisdiction||'n.d.'} · confiance donnée : ${fv.conf})</span>`:'Fondamentaux non curés pour ce fonds — profil structurel à compléter.';
+  const val=gu?`The fund offers <b>${gu.apy.toFixed(2)}%</b> against a required yield of <b>${gu.fair.toFixed(2)}%</b> (${gu.src==='fond.'?'fundamental model':'on-chain signal'}), a gap of <b class="${gu.gap_bps<=-75?'g-red':gu.gap_bps>=150?'g-green':''}">${gu.gap_bps>=0?'+':''}${gu.gap_bps} bps</b>. ${gu.gap_bps<=-75?'The token under-pays its risk: NAV is likely overstated.':gu.gap_bps>=150?'Yield cushion above risk: check for hidden risk.':'Yield is in line with risk.'}`:'No observable on-chain yield for this fund: assessed on signals only.';
+  const struct=fv?`Rating <b>${fv.rating}</b>, seniority <b>${(fv.seniority||'').replace('_',' ')}</b>, liquidity <b>${fv.liquidity}</b>, manager tier <b>${fv.manager_tier}</b>. ${fv.note||''} <span class="sub">(jurisdiction: ${fv.jurisdiction||'n/a'} · data confidence: ${fv.conf})</span>`:'Fundamentals not yet curated for this fund.';
   let h=`<div class="mhd"><button class="x" onclick="closeDetail()">✕</button><div class="memohd"><span class="memo-eyebrow">✦ LEDGERSCOPE · CREDIT MEMO</span><span class="nm">${a.name} <span class="sym">${a.symbol}</span></span></div><div class="chips"><button class="memobtn" onclick="openDetail('${slug}')">← Fiche</button><button class="memobtn" onclick="window.print()">🖨️ Imprimer / PDF</button></div></div><div class="mbody memo">`;
   h+=`<div class="memo-reco"><div><span class="k">Recommandation</span><div class="reco ${rc}">${reco}</div></div><div style="text-align:right"><span class="k">LS Score</span><div class="reco g-${s.band}">${s.ls}/100</div></div></div>`;
-  h+=`<div class="mgrid"><div><div class="k">Classe</div><div class="v" style="font-size:14px">${a.cls}</div></div><div><div class="k">TVL on-chain</div><div class="v">${fmt(a.tvl)}</div></div><div><div class="k">NAV gap</div><div class="v ${gu&&gu.gap_bps<=-75?'g-red':gu&&gu.gap_bps>=150?'g-green':''}">${gu?(gu.gap_bps>=0?'+':'')+gu.gap_bps+' bps':'—'}</div></div><div><div class="k">Tendance 7j</div><div class="v ${a.chg7d>=0?'up':'down'}">${pct(a.chg7d)}</div></div></div>`;
-  h+=`<div class="msec">1 · Synthèse</div><p>${a.name} est un actif tokenisé de classe <b>${a.cls.toLowerCase()}</b>, déployé sur ${a.chains.join(', ')}, pesant <b>${fmt(a.tvl)}</b> on-chain. Notre notation propriétaire lui attribue un LS Score de <b class="g-${s.band}">${s.ls}/100</b> (${s.note}).</p>`;
-  h+=`<div class="msec">2 · Qualité &amp; risque (LS Score)</div><p>Le score agrège les signaux on-chain observables : taille (échelle log), stabilité de la TVL et résilience multi-chaîne. ${s.stress?'<b class="g-red">⚠ Un stress de rachat est détecté (sortie nette ≥8% sur 7 jours) — signal de vigilance immédiat.</b>':'Aucun stress de rachat détecté sur les 7 derniers jours.'}</p>`;
+  h+=`<div class="mgrid"><div><div class="k">Class</div><div class="v" style="font-size:14px">${a.cls}</div></div><div><div class="k">TVL on-chain</div><div class="v">${fmt(a.tvl)}</div></div><div><div class="k">NAV gap</div><div class="v ${gu&&gu.gap_bps<=-75?'g-red':gu&&gu.gap_bps>=150?'g-green':''}">${gu?(gu.gap_bps>=0?'+':'')+gu.gap_bps+' bps':'—'}</div></div><div><div class="k">Tendance 7j</div><div class="v ${a.chg7d>=0?'up':'down'}">${pct(a.chg7d)}</div></div></div>`;
+  h+=`<div class="msec">1 · Summary</div><p>${a.name} is a tokenized <b>${a.cls.toLowerCase()}</b> asset on ${a.chains.join(', ')}, with <b>${fmt(a.tvl)}</b> on-chain. Our proprietary LS Score is <b class="g-${s.band}">${s.ls}/100</b> (${s.note}).</p>`;
+  h+=`<div class="msec">2 · Quality &amp; risk (LS Score)</div><p>The score combines observable on-chain signals: size (log scale), value stability and multi-chain resilience. ${s.stress?'<b class="g-red">Redemption stress detected (net outflow of 8%+ over 7 days).</b>':'No redemption stress over the last 7 days.'}</p>`;
   h+=`<div class="msec">3 · Valorisation</div><p>${val}</p>`;
   h+=`<div class="msec">4 · Structure &amp; fondamentaux</div><p>${struct}</p>`;
-  const flags=[];if(s.stress)flags.push('Pression de rachat active (sorties nettes 7j)');if(gu&&gu.gap_bps<=-75)flags.push('Rémunération inférieure au risque (survalorisation NAV)');if(s.band==='red')flags.push('Score de qualité faible');if(fv&&fv.conf==='low')flags.push('Confiance faible sur les fondamentaux — due diligence complémentaire requise');
-  h+=`<div class="msec">5 · Points d'attention</div>${flags.length?'<ul class="memo-flags">'+flags.map(f=>`<li>${f}</li>`).join('')+'</ul>':'<p>Aucun signal d\'alerte majeur à la date de cette note.</p>'}`;
-  h+=`<div class="msec">6 · Conclusion</div><p>Sur la base des données on-chain et du modèle de valorisation Ledgerscope, la position se qualifie <b class="${rc}">${reco}</b>. ${gu&&gu.gap_bps<=-75?'Nous recommandons la prudence tant que l\'écart de valorisation ne se resserre pas.':gu&&gu.gap_bps>=150?'L\'écart positif mérite une analyse du sous-jacent avant toute allocation.':'Profil conforme, à réévaluer au prochain rafraîchissement.'}</p>`;
-  h+=`<div class="memo-foot">Ledgerscope Research · Credit Memo généré le ${today} · Données on-chain DefiLlama (${D.generated}). Avis indépendant à visée informative, fondé sur des données publiques et des modèles propriétaires — ne constitue ni un conseil en investissement, ni une valorisation officielle, ni une sollicitation.</div>`;
+  const flags=[];if(s.stress)flags.push('Active redemption pressure (7-day net outflows)');if(gu&&gu.gap_bps<=-75)flags.push('Yield below risk (NAV likely overstated)');if(s.band==='red')flags.push('Low quality score');if(fv&&fv.conf==='low')flags.push('Low confidence on fundamentals: further due diligence needed');
+  h+=`<div class="msec">5 · Watch points</div>${flags.length?'<ul class="memo-flags">'+flags.map(f=>`<li>${f}</li>`).join('')+'</ul>':'<p>No major warning signal as of this note.</p>'}`;
+  h+=`<div class="msec">6 · Conclusion</div><p>Based on on-chain data and the Ledgerscope valuation model, the position is assessed as <b class="${rc}">${reco}</b>. ${gu&&gu.gap_bps<=-75?'Caution is warranted until the valuation gap narrows.':gu&&gu.gap_bps>=150?'The positive gap warrants a look at the underlying before any allocation.':'Profile in line; reassessed at the next refresh.'}</p>`;
+  h+=`<div class="memo-foot">Ledgerscope Research · Credit memo generated ${today} · On-chain data as of ${D.generated}. Independent research based on public data and proprietary models. Not investment advice, not an official valuation, not a solicitation.</div>`;
   h+=`</div>`;md.innerHTML=h;ov.classList.add('on');md.scrollTop=0;
 }
 ov.addEventListener('click',e=>{if(e.target===ov)closeDetail();});
@@ -893,7 +928,7 @@ function renderSearch(){
   const q=gS.value.toLowerCase();
   sHits=D.assets.filter(a=>!q||(a.name+a.symbol+a.cls).toLowerCase().includes(q)).slice(0,12);
   selIdx=0;
-  sR.innerHTML=sHits.map((a,i)=>`<div class="sr ${i===0?'sel':''}" data-slug="${a.slug}"><span class="nm">${a.name}</span> <span class="chip ${a.cls==='Private credit'?'credit':''}" style="font-size:10px">${a.cls}</span><span class="sub">${fmt(a.tvl)}</span></div>`).join('')||'<div class="shint" style="padding:20px">Aucun résultat</div>';
+  sR.innerHTML=sHits.map((a,i)=>`<div class="sr ${i===0?'sel':''}" data-slug="${a.slug}"><span class="nm">${a.name}</span> <span class="chip ${a.cls==='Private credit'?'credit':''}" style="font-size:10px">${a.cls}</span><span class="sub">${fmt(a.tvl)}</span></div>`).join('')||'<div class="shint" style="padding:20px">No results</div>';
 }
 gS.addEventListener('input',renderSearch);
 gS.addEventListener('keydown',e=>{
@@ -927,7 +962,7 @@ document.querySelectorAll('.csv').forEach(btn=>btn.addEventListener('click',()=>
 /* ===== LOGIN / FREEMIUM ===== */
 let LOGGED=false,CUR_CLASS=null;
 const loginOv=document.getElementById('loginOverlay');
-function openLogin(mode){document.getElementById('lg-title').textContent=mode==='signup'?'Créer un compte':'Se connecter';loginOv.classList.add('on');setTimeout(()=>document.getElementById('lgEmail').focus(),50);}
+function openLogin(mode){document.getElementById('lg-title').textContent=mode==='signup'?'Request access':'Sign in';loginOv.classList.add('on');setTimeout(()=>document.getElementById('lgEmail').focus(),50);}
 window.openLoginGlobal=()=>openLogin('login');
 function closeLogin(){loginOv.classList.remove('on');}
 document.getElementById('loginBtn').addEventListener('click',()=>openLogin('login'));
@@ -936,7 +971,7 @@ document.getElementById('loginX').addEventListener('click',closeLogin);
 loginOv.addEventListener('click',e=>{if(e.target===loginOv)closeLogin();});
 document.getElementById('lgGo').addEventListener('click',()=>{
   LOGGED=true;closeLogin();
-  document.getElementById('authRow').innerHTML='<button class="auth ghost" style="flex:1" id="logoutBtn"><span class="lbl">✓ Premium débloqué</span></button>';
+  document.getElementById('authRow').innerHTML='<button class="auth ghost" style="flex:1" id="logoutBtn"><span class="lbl">✓ Premium unlocked</span></button>';
   document.getElementById('logoutBtn').addEventListener('click',()=>location.reload());
   if(CUR_CLASS){openClass(CUR_CLASS);renderLeague(document.querySelector('#cl-tabs button.on').dataset.lg);}
 });
@@ -951,7 +986,7 @@ function openClass(cls){
   const chgs=list.filter(a=>a.chg7d!=null);const avg=chgs.length?chgs.reduce((s,a)=>s+a.chg7d,0)/chgs.length:0;
   document.getElementById('cl-title').textContent=cls;
   document.getElementById('cl-crumb').textContent='Asset Classes › '+cls;
-  document.getElementById('cl-sub').textContent=`${list.length} actifs · ${fmt(tot)} on-chain · ${(tot/D.total_tvl*100).toFixed(1)}% du RWA total · ${D.generated}`;
+  document.getElementById('cl-sub').textContent=`${list.length} assets · ${fmt(tot)} on-chain · ${(tot/D.total_tvl*100).toFixed(1)}% of total RWA · ${D.generated}`;
   document.getElementById('cl-cards').innerHTML=[['Class TVL',fmt(tot)],['Assets',list.length],['Top asset',list[0]?list[0].name:'—'],['Avg 7d',pct(avg)]].map(c=>`<div class="card"><div class="k">${c[0]}</div><div class="v" style="font-size:${(''+c[1]).length>11?'18px':'25px'}">${c[1]}</div></div>`).join('');
   // network breakdown
   const nb={};list.forEach(a=>a.chains.forEach(ch=>nb[ch]=(nb[ch]||0)+a.tvl/a.chains.length));
@@ -967,7 +1002,7 @@ function renderLeague(kind){
   const list=D.assets.filter(a=>a.cls===CUR_CLASS);
   const locked=(kind==='jurisdiction'&&!LOGGED);
   document.getElementById('lg-h').textContent={platform:'Platform',manager:'Manager',network:'Network',jurisdiction:'Jurisdiction'}[kind];
-  if(locked){document.getElementById('lgbody').innerHTML=`<tr><td colspan="4" style="padding:0"><div class="lockbanner"><b>🔒 League table par juridiction réservée aux comptes.</b><button onclick="openLoginGlobal()">Se connecter</button></div></td></tr>`;return;}
+  if(locked){document.getElementById('lgbody').innerHTML=`<tr><td colspan="4" style="padding:0"><div class="lockbanner"><b>League table by jurisdiction is available to registered users.</b><button onclick="openLoginGlobal()">Sign in</button></div></td></tr>`;return;}
   let agg={};
   if(kind==='platform')list.forEach(a=>addAgg(agg,a.name,a.tvl));
   else if(kind==='manager')list.forEach(a=>addAgg(agg,a.manager,a.tvl));

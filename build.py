@@ -260,10 +260,10 @@ def credit_signals(a):
     stress = (c7 is not None and c7 <= -8 and a.get("cls") in INCOME_CLASSES)
     # 6. Commentaire auto
     bits = []
-    bits.append("taille solide" if size>0.7 else "petite taille" if size<0.4 else "taille moyenne")
-    bits.append("stable" if stability>0.7 else "volatil" if stability<0.4 else "volatilité modérée")
-    if stress: bits.append("⚠ sorties nettes 7j")
-    if nch>=3: bits.append("multi-chaîne")
+    bits.append("large size" if size>0.7 else "small size" if size<0.4 else "mid size")
+    bits.append("stable" if stability>0.7 else "volatile" if stability<0.4 else "moderate volatility")
+    if stress: bits.append("7d net outflows")
+    if nch>=3: bits.append("multi-chain")
     return {"ls": ls, "band": band, "stress": stress,
             "size": round(size,2), "stability": round(stability,2), "resil": round(resil,2),
             "note": ", ".join(bits)}
@@ -472,19 +472,19 @@ def build_dataset(raw, ymap, rf, fund, hist_ds=None):
     for a in [x for x in assets if x["tvl"] >= 20e6]:
         sig = a["sig"]; yg = a.get("yg"); gu = a.get("gapu"); reasons = []; sev = 0.0
         if sig["stress"]:
-            reasons.append(f"Sorties nettes 7j ({a['chg7d']:+.1f}%) — pression de rachat")
+            reasons.append(f"7-day net outflows ({a['chg7d']:+.1f}%): redemption pressure")
             sev += 3
         if gu and gu["gap_bps"] <= -75:
-            reasons.append(f"Survalorisé ({gu['src']}) : offre {gu['apy']:.1f}% vs juste {gu['fair']:.1f}% ({gu['gap_bps']:+d} bps)")
+            reasons.append(f"Overvalued ({gu['src']}): offers {gu['apy']:.1f}% vs fair {gu['fair']:.1f}% ({gu['gap_bps']:+d} bps)")
             sev += min(4.0, abs(gu["gap_bps"])/120)
         if sig["band"] == "red":
-            reasons.append(f"Score qualité faible ({sig['ls']}/100)")
+            reasons.append(f"Low quality score ({sig['ls']}/100)")
             sev += 2
         if yg and (yg.get("sigma") or 0) >= 0.10:
-            reasons.append(f"Rendement instable (σ={yg['sigma']:.2f})")
+            reasons.append(f"Unstable yield (volatility {yg['sigma']:.2f})")
             sev += 1
         if gu and gu["verdict"] == "cheap":
-            reasons.append(f"Rendement excédentaire ({gu['gap_bps']:+d} bps) — vérifier risque caché")
+            reasons.append(f"Excess yield ({gu['gap_bps']:+d} bps): check for hidden risk")
             sev += 0.8
         if reasons:
             level = "high" if sev >= 4 else "med" if sev >= 2 else "low"
