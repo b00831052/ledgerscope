@@ -446,7 +446,7 @@ tbody tr:hover{background:var(--hover)!important;}
           <b>Fundamental model, independent of the on-chain signal.</b> Built from curated fundamentals (rating, seniority, collateral, lockup, manager): <span class="mono">required yield = risk-free + 2% + rating spread + seniority / lockup / manager adjustments</span>. <b>NAV gap = offered minus required.</b> Confidence reflects data quality. Curated base: <span id="fv-count"></span> funds.
         </div>
         <div class="tablewrap"><div class="scroll"><table id="fvtable">
-          <thead><tr><th>Fund</th><th>Profil fondamental</th><th class="num">Offered</th><th class="num">Fair (fond.)</th><th class="num">NAV gap </th><th>Verdict</th><th>Conf</th></tr></thead>
+          <thead><tr><th>Fund</th><th>Fundamental profile</th><th class="num">Offered</th><th class="num">Fair (fundamental)</th><th class="num">NAV gap </th><th>Verdict</th><th>Conf</th></tr></thead>
           <tbody id="fvbody"></tbody></table></div></div>
       </div>
 
@@ -459,7 +459,7 @@ tbody tr:hover{background:var(--hover)!important;}
           <b>APAC view.</b> On-chain exposure linked to Asia-Pacific issuers is still small (<span id="ap-inline"></span>). Coverage is aligned with <b>MAS Project Guardian</b> and Singapore VCC fund structures as they scale.
         </div>
         <div class="tablewrap"><div class="scroll"><table>
-          <thead><tr><th>Protocol</th><th>Class</th><th>Rattachement APAC</th><th class="num">TVL</th><th class="num">LS</th><th>Networks</th></tr></thead>
+          <thead><tr><th>Protocol</th><th>Class</th><th>APAC link</th><th class="num">TVL</th><th class="num">LS</th><th>Networks</th></tr></thead>
           <tbody id="apbody"></tbody></table></div></div>
       </div>
 
@@ -918,12 +918,12 @@ function creditMemo(slug){
   const val=gu?`The fund offers <b>${gu.apy.toFixed(2)}%</b> against a required yield of <b>${gu.fair.toFixed(2)}%</b> (${gu.src==='fond.'?'fundamental model':'on-chain signal'}), a gap of <b class="${gu.gap_bps<=-75?'g-red':gu.gap_bps>=150?'g-green':''}">${gu.gap_bps>=0?'+':''}${gu.gap_bps} bps</b>. ${gu.gap_bps<=-75?'The token under-pays its risk: NAV is likely overstated.':gu.gap_bps>=150?'Yield cushion above risk: check for hidden risk.':'Yield is in line with risk.'}`:'No observable on-chain yield for this fund: assessed on signals only.';
   const struct=fv?`Rating <b>${fv.rating}</b>, seniority <b>${(fv.seniority||'').replace('_',' ')}</b>, liquidity <b>${fv.liquidity}</b>, manager tier <b>${fv.manager_tier}</b>. ${fv.note||''} <span class="sub">(jurisdiction: ${fv.jurisdiction||'n/a'} · data confidence: ${fv.conf})</span>`:'Fundamentals not yet curated for this fund.';
   let h=`<div class="mhd"><button class="x" onclick="closeDetail()"></button><div class="memohd"><span class="memo-eyebrow"> LEDGERSCOPE · CREDIT MEMO</span><span class="nm">${a.name} <span class="sym">${a.symbol}</span></span></div><div class="chips"><button class="memobtn" onclick="openDetail('${slug}')">← Profile</button><button class="memobtn" onclick="window.print()">Print / PDF</button></div></div><div class="mbody memo">`;
-  h+=`<div class="memo-reco"><div><span class="k">Recommandation</span><div class="reco ${rc}">${reco}</div></div><div style="text-align:right"><span class="k">LS Score</span><div class="reco g-${s.band}">${s.ls}/100</div></div></div>`;
-  h+=`<div class="mgrid"><div><div class="k">Class</div><div class="v" style="font-size:14px">${a.cls}</div></div><div><div class="k">TVL on-chain</div><div class="v">${fmt(a.tvl)}</div></div><div><div class="k">NAV gap</div><div class="v ${gu&&gu.gap_bps<=-75?'g-red':gu&&gu.gap_bps>=150?'g-green':''}">${gu?(gu.gap_bps>=0?'+':'')+gu.gap_bps+' bps':'–'}</div></div><div><div class="k">Tendance 7j</div><div class="v ${a.chg7d>=0?'up':'down'}">${pct(a.chg7d)}</div></div></div>`;
+  h+=`<div class="memo-reco"><div><span class="k">Recommendation</span><div class="reco ${rc}">${reco}</div></div><div style="text-align:right"><span class="k">LS Score</span><div class="reco g-${s.band}">${s.ls}/100</div></div></div>`;
+  h+=`<div class="mgrid"><div><div class="k">Class</div><div class="v" style="font-size:14px">${a.cls}</div></div><div><div class="k">TVL on-chain</div><div class="v">${fmt(a.tvl)}</div></div><div><div class="k">NAV gap</div><div class="v ${gu&&gu.gap_bps<=-75?'g-red':gu&&gu.gap_bps>=150?'g-green':''}">${gu?(gu.gap_bps>=0?'+':'')+gu.gap_bps+' bps':'–'}</div></div><div><div class="k">7d trend</div><div class="v ${a.chg7d>=0?'up':'down'}">${pct(a.chg7d)}</div></div></div>`;
   h+=`<div class="msec">1 · Summary</div><p>${a.name} is a tokenized <b>${a.cls.toLowerCase()}</b> asset on ${a.chains.join(', ')}, with <b>${fmt(a.tvl)}</b> on-chain. Our proprietary LS Score is <b class="g-${s.band}">${s.ls}/100</b> (${s.note}).</p>`;
   h+=`<div class="msec">2 · Quality &amp; risk (LS Score)</div><p>The score combines observable on-chain signals: size (log scale), value stability and multi-chain resilience. ${s.stress?'<b class="g-red">Redemption stress detected (net outflow of 8%+ over 7 days).</b>':'No redemption stress over the last 7 days.'}</p>`;
-  h+=`<div class="msec">3 · Valorisation</div><p>${val}</p>`;
-  h+=`<div class="msec">4 · Structure &amp; fondamentaux</div><p>${struct}</p>`;
+  h+=`<div class="msec">3 · Valuation</div><p>${val}</p>`;
+  h+=`<div class="msec">4 · Structure &amp; fundamentals</div><p>${struct}</p>`;
   const flags=[];if(s.stress)flags.push('Active redemption pressure (7-day net outflows)');if(gu&&gu.gap_bps<=-75)flags.push('Yield below risk (NAV likely overstated)');if(s.band==='red')flags.push('Low quality score');if(fv&&fv.conf==='low')flags.push('Low confidence on fundamentals: further due diligence needed');
   h+=`<div class="msec">5 · Watch points</div>${flags.length?'<ul class="memo-flags">'+flags.map(f=>`<li>${f}</li>`).join('')+'</ul>':'<p>No major warning signal as of this note.</p>'}`;
   h+=`<div class="msec">6 · Conclusion</div><p>Based on on-chain data and the Ledgerscope valuation model, the position is assessed as <b class="${rc}">${reco}</b>. ${gu&&gu.gap_bps<=-75?'Caution is warranted until the valuation gap narrows.':gu&&gu.gap_bps>=150?'The positive gap warrants a look at the underlying before any allocation.':'Profile in line; reassessed at the next refresh.'}</p>`;
