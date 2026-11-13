@@ -348,6 +348,8 @@ def build_dataset(raw, ymap, rf, fund):
             "name": p.get("name",""),
             "symbol": p.get("symbol","-") or "-",
             "slug": p.get("slug",""),
+            "address": p.get("address") or "",
+            "gecko_id": p.get("gecko_id") or "",
             "cls": classify(p),
             "chains": p.get("chains", []),
             "tvl": tvl,
@@ -542,6 +544,17 @@ def write_snapshot(ds):
     print(f"→ snapshot {date} : {len(rows)} lignes → snapshots/rwa_{date}.ndjson "
           f"({len(dates)} snapshot(s) accumulé(s))")
 
+def write_keyrisk_snapshot(ds):
+    """Frozen daily key-risk ratings: same contract, same day, never rewritten."""
+    snap_dir = os.path.join(HERE, "snapshots"); os.makedirs(snap_dir, exist_ok=True)
+    date = ds["generated"][:10]
+    fp = os.path.join(snap_dir, f"keyrisk_{date}.ndjson")
+    if os.path.exists(fp): return
+    with open(fp, "w", encoding="utf-8") as fh:
+        for r in ds.get("keyrisk", []):
+            fh.write(json.dumps({"snapshot_date": date, **r}, ensure_ascii=False) + "\n")
+    print(f"→ key-risk snapshot {date}: {len(ds.get('keyrisk', []))} lignes")
+
 def main():
     raw = fetch()
     pools = fetch_pools()
@@ -551,6 +564,9 @@ def main():
     fund = json.load(open(os.path.join(HERE,"fundamentals.json"),encoding="utf-8")).get("funds",{})
     print(f"  fondamentaux curés : {len(fund)} fonds")
     ds = build_dataset(raw, ymap, rf, fund)
+    import keyrisk
+    print("→ Launch & Key Risk (contract control X-ray) …")
+    ds["keyrisk"] = keyrisk.run(ds["assets"])
     ds["stbl_tvl"] = stbl_tvl
     ds["stbl_n"] = stbl_n
     json.dump(ds, open(os.path.join(HERE, "data.json"), "w", encoding="utf-8"),
@@ -569,6 +585,7 @@ def main():
           + (f" · top: {ds['alerts'][0]['name']} (sev {ds['alerts'][0]['sev']})" if ds['alerts'] else ""))
     render(ds)
     write_snapshot(ds)
+    write_keyrisk_snapshot(ds)
     print("✓ terminé —", ds["generated"])
 
 if __name__ == "__main__":
