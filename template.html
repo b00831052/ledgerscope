@@ -280,6 +280,7 @@
       <button data-v="analytics"><span class="ic">◈</span><span class="lbl">Credit Signals</span></button>
       <button data-v="valuation"><span class="ic">⊟</span><span class="lbl">Valuation</span></button>
       <button data-v="keyrisk"><span class="ic">🔑</span><span class="lbl">Key Risk (Launchscope)</span></button>
+      <button data-v="track"><span class="ic">✓</span><span class="lbl">Track Record</span></button>
     </div>
     <div class="navsec">Market Intelligence</div>
     <div class="nav">
@@ -447,6 +448,23 @@
           <tbody id="krbody"></tbody></table></div></div>
       </div>
 
+      <div class="view" id="v-track">
+        <div class="crumb">RWA Credit Intelligence · Proof</div><div class="h-title">Track Record</div>
+        <div class="h-sub" id="tr-sub"></div>
+        <div class="methodbox">A grade is only worth what happens after it. Every day each fund's LS band is frozen in a public, hash-chained ledger (snapshots/ratings_ledger.ndjson, committed to git) so no grade can be edited later. "Bad outcome" = the fund's on-chain value fell <b>20% or more</b> at some point in the next <b>30 days</b>.</div>
+        <div class="panelhd"><h3>Live ledger</h3></div>
+        <div class="cards" id="tr-live"></div>
+        <div class="panelhd"><h3>Backtest: same rules, replayed on 12 months of history</h3></div>
+        <div class="tablewrap"><div class="scroll"><table>
+          <thead><tr><th>Band at grading</th><th class="num">Grades</th><th class="num">Bad outcome rate</th><th class="num">Median worst drop (30d)</th><th class="num">Median value change (30d)</th></tr></thead>
+          <tbody id="trbody"></tbody></table></div></div>
+        <div class="panelhd"><h3>Outflow stress flag</h3></div>
+        <div class="tablewrap"><div class="scroll"><table>
+          <thead><tr><th>Income funds</th><th class="num">Grades</th><th class="num">Bad outcome rate</th><th class="num">Median value change (30d)</th></tr></thead>
+          <tbody id="trstress"></tbody></table></div></div>
+        <div class="methodbox" id="tr-caveat"></div>
+      </div>
+
       <!-- PRIVATE CREDIT -->
       <div class="view on" id="v-credit">
         <div class="crumb">RWA Credit Intelligence · Ledgerscope</div><div class="h-title">Independent Ratings: Tokenized Private Credit</div>
@@ -556,7 +574,7 @@ const clr=c=>CLR[c]||'#8b929b';
 /* welcome + footer */
 document.getElementById('welcome').innerHTML=`<b>Ledgerscope, by RWA Credit Intelligence.</b> The independent rating layer for tokenized private credit. We rate the funds. Issuers, exchanges and funds buy the score. Source: ${D.source}. Snapshot ${D.generated}.`;
 document.getElementById('sidefoot').innerHTML=`✦ = analytique propriétaire<br>Données ${D.generated}<br>APAC · Singapore-first`;
-document.getElementById('footdisc').innerHTML=`Ledgerscope Terminal · données réelles via DefiLlama public API (${D.generated}). TVL on-chain vérifiable ; classification &amp; modèles propriétaires. <b>Limites méthodologiques :</b> le graphique historique ne couvre que les protocoles vivants aujourd'hui (biais de survivance) ; le NAV gap absolu est calibré prudemment — la <i>valorisation relative aux pairs</i> (fiche détail) le neutralise. Ni conseil d'investissement, ni notation officielle. Méthodo complète : <span class="mono">METHODOLOGY.md</span>. Coverage: fund tokens priced on CoinGecko (value = units outstanding x NAV); registry-only records (e.g. Figure HELOC) excluded; some issuer platforms without a priced token are not yet covered. Rafraîchir : <span class="mono">python3 build.py</span>.`;
+document.getElementById('footdisc').innerHTML=`Ledgerscope by RWA Credit Intelligence · live data (${D.generated}). Sources: CoinGecko fund market caps (units outstanding x NAV), DefiLlama protocol value for platforms with no priced token (Maple, Huma, OpenTrade, KAIO, RealT), DefiLlama yields, on-chain contract reads. Registry-only records (e.g. Figure HELOC) excluded. Classification, LS Score, NAV gap and Key Risk are proprietary models. <b>Limits:</b> history covers funds alive today (survivorship bias); backtests are labelled as such. Independent research, not investment advice, not a credit rating under any regulation. Full method: <span class="mono">METHODOLOGY.md</span>.`;
 
 /* ticker : top actifs */
 document.getElementById('ticker').innerHTML=D.assets.slice(0,10).map(a=>`<div class="tk"><span class="s">${a.symbol!=='-'?a.symbol:a.name.split(' ')[0]}</span><span class="v">${fmt(a.tvl)}</span><span class="c ${(a.chg7d||0)>=0?'up':'down'}">${pct(a.chg7d)}</span></div>`).join('');
@@ -966,6 +984,16 @@ document.getElementById('kr-sub').textContent=`${KR.length} fund tokens X-rayed 
 const KG={A:'var(--up)',B:'#4f8a3c',C:'var(--gold)',D:'#c0661f',F:'var(--down)'};
 document.getElementById('krbody').innerHTML=KR.map(k=>`<tr data-slug="${k.slug}"><td><span class="chip" style="background:${KG[k.grade]};color:#fff;font-weight:800">${k.grade}</span></td><td class="asset">${k.name} <span class="sub">${k.symbol} · ${k.chain}</span></td><td class="sub">${k.cls}</td><td class="num">${fmt(k.tvl)}</td><td style="white-space:normal;max-width:220px;font-size:12px">${k.upgrade}</td><td style="white-space:normal;max-width:220px;font-size:12px">${k.owner}</td><td class="sub">${(k.powers||[]).join(', ')||'none'}</td><td style="white-space:normal;max-width:300px;font-size:12px;color:var(--ink-soft)">${[...k.hard,...k.flags].join(' · ')||'—'}</td></tr>`).join('');
 
+
+/* ===== TRACK RECORD ===== */
+const TR=D.track||{};
+if(TR.backtest){const bt=TR.backtest,lv=TR.live,st=bt.stress,BN={green:'Green (68+)',amber:'Amber (48-67)',red:'Red (under 48)'},BC={green:'var(--up)',amber:'var(--gold)',red:'var(--down)'};
+document.getElementById('tr-sub').textContent=`Live ledger since ${lv.since} · ${lv.grades} grades frozen · backtest ${bt.n} grades on ${bt.funds} funds`;
+document.getElementById('tr-live').innerHTML=[['Grades frozen',lv.grades.toLocaleString()],['Days recorded',lv.days],['Scored (30d old)',lv.scored],['First live readout',lv.first_readout],['Ledger head hash',(lv.head_hash||'').slice(0,12)]].map(c=>`<div class="card"><div class="k">${c[0]}</div><div class="v" style="font-size:18px">${c[1]}</div></div>`).join('');
+const pct=x=>x==null?'—':(x>0?'+':'')+x+'%';
+document.getElementById('trbody').innerHTML=bt.bands.map(b=>`<tr><td><span class="chip" style="background:${BC[b.band]};color:#fff;font-weight:700">${BN[b.band]}</span></td><td class="num">${b.n}</td><td class="num"><b>${b.n?b.hit_dd+'%':'—'}</b></td><td class="num">${pct(b.med_dd)}</td><td class="num">${pct(b.med_chg)}</td></tr>`).join('');
+document.getElementById('trstress').innerHTML=`<tr><td>Flagged (7d outflow 8%+)</td><td class="num">${st.n_flag}</td><td class="num"><b>${st.flag_hit}%</b></td><td class="num">${pct(st.flag_med_chg)}</td></tr><tr><td>Not flagged</td><td class="num">${st.n_clean}</td><td class="num"><b>${st.clean_hit}%</b></td><td class="num">${pct(st.clean_med_chg)}</td></tr>`;
+document.getElementById('tr-caveat').innerHTML=`<b>Read this honestly.</b> The backtest uses funds that exist today (survivorship: dead funds are missing, so real bad-outcome rates are higher). Chain count is today's. Red band has a small sample. Value change mixes flows and NAV moves. The live ledger fixes all of this going forward: first 30-day readout on ${lv.first_readout}.`;}
 /* asset classes dans la sidebar (cliquables → ouvrent la page de classe) */
 document.getElementById('clsnav').innerHTML=D.byclass.map(c=>`<button class="clsbtn" data-cls="${c[0]}"><span class="csw" style="background:${clr(c[0])}"></span>${c[0]}</button>`).join('');
 function showView(v){document.querySelectorAll('.view').forEach(x=>x.classList.remove('on'));document.getElementById('v-'+v).classList.add('on');window.scrollTo(0,0);}

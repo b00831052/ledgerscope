@@ -607,6 +607,9 @@ def main():
     import keyrisk
     print("→ Launch & Key Risk (contract control X-ray) …")
     ds["keyrisk"] = keyrisk.run(ds["assets"])
+    import trackrecord
+    print("→ Track record (ledger + backtest) …")
+    ds["track"] = trackrecord.run(ds, cg_hist)
     ds["stbl_tvl"] = stbl_tvl
     ds["stbl_n"] = stbl_n
     json.dump(ds, open(os.path.join(HERE, "data.json"), "w", encoding="utf-8"),

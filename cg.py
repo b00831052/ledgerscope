@@ -132,6 +132,30 @@ def chg_7d(series):
     now, then = series[-1][1], series[-8][1]
     return (now / then - 1) * 100 if then else None
 
+# platforms with no priced token on CoinGecko: protocol value from DefiLlama free /protocols
+# (only slugs DefiLlama still values; no overlap with CoinGecko fund tokens)
+PROTOCOLS = {"maple": "Private credit", "huma": "Private credit", "opentrade": "U.S. Treasuries",
+             "kaio": "U.S. Treasuries", "realt-tokens": "Real estate"}
+
+def protocol_records():
+    try:
+        req = urllib.request.Request("https://api.llama.fi/protocols", headers={"User-Agent": "ledgerscope/2.0"})
+        rows = json.load(urllib.request.urlopen(req, timeout=60))
+    except Exception as e:
+        print(f"  ! protocols: {e}"); return []
+    out = []
+    for x in rows:
+        cls = PROTOCOLS.get(x.get("slug"))
+        if not cls or (x.get("tvl") or 0) < MIN_MCAP: continue
+        out.append({"category": "RWA", "_cls": cls, "slug": "proto-" + x["slug"], "gecko_id": "",
+                    "name": x["name"], "symbol": (x.get("symbol") or "-").upper(), "tvl": x["tvl"],
+                    "chains": x.get("chains") or [], "chainTvls": {},
+                    "change_1d": x.get("change_1d"), "change_7d": x.get("change_7d"),
+                    "listedAt": None, "url": x.get("url") or "", "description": "protocol-level value (DefiLlama)",
+                    "address": "", "_platforms": {}, "_source": "DefiLlama protocol TVL"})
+    print(f"  protocol-level platforms: +{len(out)} · ${sum(r['tvl'] for r in out)/1e9:.2f}B")
+    return out
+
 def raw_records():
     print("→ CoinGecko universe (asset-class categories) …")
     uni = fetch_universe()
@@ -157,6 +181,7 @@ def raw_records():
             "address": f"{evm[0][0]}:{evm[0][1]}" if evm else "",
             "_platforms": plats,
         })
+    out += protocol_records()
     print(f"  {len(out)} fund tokens · ${sum(r['tvl'] for r in out)/1e9:.2f}B · "
           f"{sum(1 for r in out if r['address'])} with EVM contract")
     return out, hist
