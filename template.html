@@ -1,3 +1,5 @@
+<!doctype html>
+<html lang="en">
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Ledgerscope</title>
 <script>try{document.documentElement.setAttribute("data-theme",localStorage.getItem("ls-theme")==="dark"?"dark":"light");}catch(e){document.documentElement.setAttribute("data-theme","light");}</script>
@@ -376,7 +378,7 @@ tbody tr:hover{background:var(--hover)!important;}
           <canvas id="perfChart" width="1080" height="280"></canvas>
           <div class="legend" id="perfLegend"></div>
         </div>
-        <div class="panelhd"><h3>Growth by asset class</h3><button class="csv" data-csv="perf">⬇ CSV</button></div>
+        <div class="panelhd"><h3>Growth by asset class</h3><button class="csv" data-csv="perf"> CSV</button></div>
         <div class="tablewrap"><div class="scroll"><table id="perftable">
           <thead><tr><th data-s="cls">Class</th><th class="num" data-s="tvl">TVL</th><th class="num" data-s="m1">1M</th><th class="num" data-s="m3">3M</th><th class="num" data-s="ytd">YTD</th><th class="num" data-s="y1">1A</th></tr></thead>
           <tbody id="perfbody"></tbody></table></div></div>
@@ -409,7 +411,7 @@ tbody tr:hover{background:var(--hover)!important;}
 
       <!-- ALERTS -->
       <div class="view" id="v-alerts">
-        <div class="crumb">✦ Ledgerscope Signals</div><div class="h-title">Alerts</div>
+        <div class="crumb"> Ledgerscope Signals</div><div class="h-title">Alerts</div>
         <div class="h-sub" id="al-sub"></div>
         <div class="cards" id="al-cards"></div>
         <div id="al-list" style="margin-top:16px;"></div>
@@ -417,7 +419,7 @@ tbody tr:hover{background:var(--hover)!important;}
 
       <!-- CREDIT SIGNALS -->
       <div class="view" id="v-analytics">
-        <div class="crumb">✦ Ledgerscope Signals</div><div class="h-title">Risk &amp; Value Signals</div>
+        <div class="crumb"> Ledgerscope Signals</div><div class="h-title">Risk &amp; Value Signals</div>
         <div class="h-sub" id="an-sub"></div>
         <div class="cards" id="an-cards"></div>
         <div class="methodbox" style="margin-top:16px;">
@@ -432,25 +434,25 @@ tbody tr:hover{background:var(--hover)!important;}
         </div>
         <div class="tablewrap"><div class="scroll"><table id="antable">
           <thead><tr><th data-s="name">Protocol</th><th data-s="cls">Class</th><th class="num" data-s="tvl">TVL</th><th class="num" data-s="ls">LS Score</th>
-          <th class="num" data-s="apy">APY</th><th class="num" data-s="fair">Fair yield</th><th class="num" data-s="gap">NAV gap ✦</th><th>Verdict</th></tr></thead>
+          <th class="num" data-s="apy">APY</th><th class="num" data-s="fair">Fair yield</th><th class="num" data-s="gap">NAV gap </th><th>Verdict</th></tr></thead>
           <tbody id="anbody"></tbody></table></div></div>
       </div>
 
       <!-- VALUATION -->
       <div class="view" id="v-valuation">
-        <div class="crumb">✦ Ledgerscope Valuation</div><div class="h-title">Fundamental Valuation</div>
+        <div class="crumb"> Ledgerscope Valuation</div><div class="h-title">Fundamental Valuation</div>
         <div class="h-sub" id="fv-sub"></div>
         <div class="methodbox">
           <b>Fundamental model, independent of the on-chain signal.</b> Built from curated fundamentals (rating, seniority, collateral, lockup, manager): <span class="mono">required yield = risk-free + 2% + rating spread + seniority / lockup / manager adjustments</span>. <b>NAV gap = offered minus required.</b> Confidence reflects data quality. Curated base: <span id="fv-count"></span> funds.
         </div>
         <div class="tablewrap"><div class="scroll"><table id="fvtable">
-          <thead><tr><th>Fund</th><th>Profil fondamental</th><th class="num">Offered</th><th class="num">Fair (fond.)</th><th class="num">NAV gap ✦</th><th>Verdict</th><th>Conf</th></tr></thead>
+          <thead><tr><th>Fund</th><th>Profil fondamental</th><th class="num">Offered</th><th class="num">Fair (fond.)</th><th class="num">NAV gap </th><th>Verdict</th><th>Conf</th></tr></thead>
           <tbody id="fvbody"></tbody></table></div></div>
       </div>
 
       <!-- APAC -->
       <div class="view" id="v-apac">
-        <div class="crumb">🌏 Relocalisation</div><div class="h-title">APAC lens — Singapore-first</div>
+        <div class="crumb"> Relocation</div><div class="h-title">APAC lens · Singapore-first</div>
         <div class="h-sub" id="ap-sub"></div>
         <div class="cards" id="ap-cards"></div>
         <div class="methodbox" style="margin-top:16px;">
@@ -472,7 +474,7 @@ tbody tr:hover{background:var(--hover)!important;}
               <button data-lg="platform" class="on">By platform</button>
               <button data-lg="manager">By manager</button>
               <button data-lg="network">By network</button>
-              <button data-lg="jurisdiction">By jurisdiction 🔒</button>
+              <button data-lg="jurisdiction">By jurisdiction </button>
             </div>
             <div class="tablewrap" style="margin-top:12px"><div class="scroll"><table id="lgtable">
               <thead><tr><th>#</th><th id="lg-h">League</th><th class="num">Value</th><th class="num">Assets</th></tr></thead>
@@ -480,9 +482,9 @@ tbody tr:hover{background:var(--hover)!important;}
           </div>
           <div class="box"><h3>Network breakdown</h3><div class="hint">Class value by chain</div><div id="clnw"></div></div>
         </div>
-        <div class="panelhd"><h3>Assets in class</h3><button class="csv" data-csv="cl">⬇ CSV</button></div>
+        <div class="panelhd"><h3>Assets in class</h3><button class="csv" data-csv="cl"> CSV</button></div>
         <div class="tablewrap"><div class="scroll"><table id="cltable">
-          <thead><tr><th>Asset</th><th>Networks</th><th class="num">TVL</th><th class="num">7d %</th><th class="num prem">Rating 🔒</th><th class="num prem">Regulator 🔒</th></tr></thead>
+          <thead><tr><th>Asset</th><th>Networks</th><th class="num">TVL</th><th class="num">7d %</th><th class="num prem">Rating </th><th class="num prem">Regulator </th></tr></thead>
           <tbody id="clbody"></tbody></table></div></div>
       </div>
 
@@ -518,7 +520,7 @@ tbody tr:hover{background:var(--hover)!important;}
         <div class="crumb">RWA Credit Intelligence · Ledgerscope</div><div class="h-title">Independent Ratings: Tokenized Private Credit</div>
         <div class="h-sub" id="cr-sub"></div>
         <div class="cards" id="cr-cards"></div>
-        <div class="panelhd"><h3>Private credit funds</h3><button class="csv" data-csv="cr">⬇ CSV</button></div>
+        <div class="panelhd"><h3>Private credit funds</h3><button class="csv" data-csv="cr"> CSV</button></div>
         <div class="tablewrap"><div class="scroll"><table>
           <thead><tr><th>Fund</th><th>Networks</th><th class="num">TVL</th><th class="num">7d %</th><th class="num">LS Score</th><th class="num">NAV gap</th></tr></thead>
           <tbody id="crbody"></tbody></table></div></div>
@@ -533,7 +535,7 @@ tbody tr:hover{background:var(--hover)!important;}
           <div class="box"><h3>Value by network</h3><div class="hint">RWA value aggregated by chain</div><div id="nwbars"></div></div>
           <div class="box"><h3>Network share</h3><div class="hint">Share of total</div><canvas id="nwpie" width="360" height="300"></canvas></div>
         </div>
-        <div class="panelhd"><h3>Network ranking</h3><button class="csv" data-csv="nw">⬇ CSV</button></div>
+        <div class="panelhd"><h3>Network ranking</h3><button class="csv" data-csv="nw"> CSV</button></div>
         <div class="tablewrap"><div class="scroll"><table id="nwtable">
           <thead><tr><th>#</th><th>Network</th><th class="num">RWA value</th><th class="num">Assets</th><th class="num">Share</th></tr></thead>
           <tbody id="nwbody"></tbody></table></div></div>
@@ -544,7 +546,7 @@ tbody tr:hover{background:var(--hover)!important;}
         <div class="crumb">Market Intelligence</div><div class="h-title">Platforms</div>
         <div class="h-sub" id="pf-sub"></div>
         <div class="cards" id="pf-cards"></div>
-        <div class="panelhd"><h3>Platform ranking (distribution)</h3><button class="csv" data-csv="pf">⬇ CSV</button></div>
+        <div class="panelhd"><h3>Platform ranking (distribution)</h3><button class="csv" data-csv="pf"> CSV</button></div>
         <div class="tablewrap"><div class="scroll"><table id="pftable">
           <thead><tr><th>#</th><th>Platform / protocol</th><th>Primary class</th><th class="num">Value</th><th class="num">Networks</th><th class="num">7d %</th></tr></thead>
           <tbody id="pfbody"></tbody></table></div></div>
@@ -559,7 +561,7 @@ tbody tr:hover{background:var(--hover)!important;}
           <div class="box"><h3>Top managers by value</h3><div class="hint">Aggregate tokenized assets</div><div id="mgbars"></div></div>
           <div class="box"><h3>Manager concentration</h3><div class="hint">Top 5 share</div><canvas id="mgpie" width="360" height="300"></canvas></div>
         </div>
-        <div class="panelhd"><h3>Manager ranking</h3><button class="csv" data-csv="mg">⬇ CSV</button></div>
+        <div class="panelhd"><h3>Manager ranking</h3><button class="csv" data-csv="mg"> CSV</button></div>
         <div class="tablewrap"><div class="scroll"><table id="mgtable">
           <thead><tr><th>#</th><th>Asset manager</th><th class="num">Value</th><th class="num">Assets</th><th>Classes</th><th class="num">Networks</th></tr></thead>
           <tbody id="mgbody"></tbody></table></div></div>
@@ -598,7 +600,7 @@ tbody tr:hover{background:var(--hover)!important;}
   </div></div>
   <!-- LOGIN MODAL -->
   <div class="overlay" id="loginOverlay"><div class="loginbox">
-    <button class="x" id="loginX">✕</button>
+    <button class="x" id="loginX"></button>
     <div class="lg-brand"><span class="mk">L</span>Ledger<em>scope</em></div>
     <div class="lg-t" id="lg-title">Se connecter</div>
     <div class="lg-sub">Unlock premium columns: rating, regulator, jurisdiction and full league tables.</div>
@@ -614,7 +616,7 @@ tbody tr:hover{background:var(--hover)!important;}
 /*__DATA__*/
 const D=window.DATA;
 const fmt=n=>{n=n||0;const a=Math.abs(n);return a>=1e9?'$'+(n/1e9).toFixed(2)+'B':a>=1e6?'$'+(n/1e6).toFixed(1)+'M':a>=1e3?'$'+(n/1e3).toFixed(0)+'K':'$'+n.toFixed(0);};
-const pct=v=>v==null?'—':(v>=0?'+':'')+v.toFixed(1)+'%';
+const pct=v=>v==null?'–':(v>=0?'+':'')+v.toFixed(1)+'%';
 const CLR={'U.S. Treasuries':'#3b82f6','Private credit':'#22b8a6','Commodities':'#d0a84a','Tokenized stocks / equity':'#a855f7','Cash / yield stablecoin':'#38bdf8','Real estate':'#ef5a56','Other (carbon/insurance/art)':'#64748b','Other RWA':'#94a3b8'};
 const clr=c=>CLR[c]||'#8b929b';
 
@@ -728,7 +730,7 @@ const perf=HIST.series.map(s=>{const v=s.values,last=v[PN-1];return {
   cls:s.cls, tvl:last,
   m1:PN>=2?gr(last,v[PN-2]):null, m3:PN>=4?gr(last,v[PN-4]):null,
   ytd:gr(last,v[ytdIdx]), y1:PN>=13?gr(last,v[PN-13]):null };});
-const pcell=x=>x==null?'<span class="sub">—</span>':`<span class="${x>=0?'up':'down'}">${x>=0?'+':''}${x.toFixed(1)}%</span>`;
+const pcell=x=>x==null?'<span class="sub">–</span>':`<span class="${x>=0?'up':'down'}">${x>=0?'+':''}${x.toFixed(1)}%</span>`;
 let pk='tvl',pd=-1;
 function perfRender(){
   const r=perf.slice().sort((a,b)=>{const A=a[pk],B=b[pk];if(typeof A==='string')return (A||'').localeCompare(B||'')*pd;return ((A??-1e9)-(B??-1e9))*pd;});
@@ -772,24 +774,24 @@ document.querySelectorAll('#stable th').forEach(th=>th.addEventListener('click',
 scr();
 
 /* monitor */
-const dt=t=>t?new Date(t*1000).toISOString().slice(0,10):'—';
+const dt=t=>t?new Date(t*1000).toISOString().slice(0,10):'–';
 document.getElementById('mbody').innerHTML=D.recent.map(a=>`<tr data-slug="${a.slug}"><td class="asset">${a.name} <span class="sub">${a.symbol}</span></td><td><span class="chip ${a.cls==='Private credit'?'credit':''}">${a.cls}</span></td><td class="sub">${a.chains.slice(0,3).join(', ')}</td><td class="num">${fmt(a.tvl)}</td><td class="sub">${dt(a.listedAt)}</td></tr>`).join('');
 
 const pc=D.assets.filter(a=>a.cls==='Private credit');
 const scoreCell=s=>`<span class="score g-${s.band}"><span class="lsdot bg-${s.band}"></span>${s.ls}</span>${s.stress?'<span class="stressflag">STRESS</span>':''}`;
 
-/* risk & value signals — TOUTES CLASSES */
+/* risk & value signals · TOUTES CLASSES */
 const sigAssets=D.assets.filter(a=>a.tvl>=2e6);
-document.getElementById('rfval').textContent=(D.rf!=null?D.rf.toFixed(2):'—')+'%';
+document.getElementById('rfval').textContent=(D.rf!=null?D.rf.toFixed(2):'–')+'%';
 const allRich=sigAssets.filter(a=>a.gapu&&a.gapu.verdict==='rich').length;
 const allCheap=sigAssets.filter(a=>a.gapu&&a.gapu.verdict==='cheap').length;
 const allStress=sigAssets.filter(a=>a.sig.stress).length;
 document.getElementById('an-sub').textContent=`LS Score + NAV gap on ${sigAssets.length} assets · ${sigAssets.filter(a=>a.gapu).length} valued · risk-free rate ${D.rf}% · ${D.generated}`;
-document.getElementById('an-cards').innerHTML=[['On-chain risk-free',D.rf+'%'],['RICH',allRich],['🟢 CHEAP',allCheap],['Stress',allStress]].map(c=>`<div class="card"><div class="k">${c[0]}</div><div class="v">${c[1]}</div></div>`).join('');
+document.getElementById('an-cards').innerHTML=[['On-chain risk-free',D.rf+'%'],['RICH',allRich],[' CHEAP',allCheap],['Stress',allStress]].map(c=>`<div class="card"><div class="k">${c[0]}</div><div class="v">${c[1]}</div></div>`).join('');
 const anClass=document.getElementById('anClass');
 [...new Set(sigAssets.map(a=>a.cls))].sort().forEach(c=>anClass.add(new Option(c,c)));
 const gapCell=yg=>{if(!yg)return '<span class="sub">no yield</span>';const cl=yg.gap_bps<=-75?'g-red':yg.gap_bps>=150?'g-green':'';return `<span class="${cl}" style="font-weight:700">${yg.gap_bps>=0?'+':''}${yg.gap_bps} bps</span>`;};
-const verdCell=yg=>{if(!yg)return '<span class="sub">—</span>';const m={rich:['RICH','g-red'],cheap:['CHEAP','g-green'],fair:['Fair','']};const[t,c]=m[yg.verdict];return `<span class="${c}" style="font-weight:700">${t}</span>`;};
+const verdCell=yg=>{if(!yg)return '<span class="sub">–</span>';const m={rich:['RICH','g-red'],cheap:['CHEAP','g-green'],fair:['Fair','']};const[t,c]=m[yg.verdict];return `<span class="${c}" style="font-weight:700">${t}</span>`;};
 let ank='gap',and_=1;
 function anRender(){
   const q=document.getElementById('anq').value.toLowerCase(),fc=anClass.value,fb=document.getElementById('anBand').value,fv=document.getElementById('anVerd').value;
@@ -797,7 +799,7 @@ function anRender(){
   const gv=a=>a.gapu?a.gapu.gap_bps:9e9;
   r.sort((x,y)=>{let A,B;if(ank==='gap'){A=gv(x);B=gv(y);}else if(ank==='apy'){A=x.gapu?x.gapu.apy:-1;B=y.gapu?y.gapu.apy:-1;}else if(ank==='fair'){A=x.gapu?x.gapu.fair:-1;B=y.gapu?y.gapu.fair:-1;}else if(ank==='ls'){A=x.sig.ls;B=y.sig.ls;}else if(ank==='name'){A=x.name;B=y.name;}else if(ank==='cls'){A=x.cls;B=y.cls;}else{A=x.tvl;B=y.tvl;}
     if(typeof A==='string')return A.localeCompare(B)*and_;return (A-B)*and_;});
-  document.getElementById('anbody').innerHTML=r.map(a=>`<tr data-slug="${a.slug}"><td class="asset">${a.name} <span class="sub">${a.symbol}</span></td><td><span class="chip ${a.cls==='Private credit'?'credit':''}">${a.cls}</span></td><td class="num">${fmt(a.tvl)}</td><td class="num">${scoreCell(a.sig)}</td><td class="num">${a.gapu?a.gapu.apy.toFixed(2)+'%':'<span class=sub>—</span>'}</td><td class="num">${a.gapu?a.gapu.fair.toFixed(2)+'%'+(a.gapu.src==='fond.'?'':' <span class="sub" style="font-size:9px">sig</span>'):'<span class=sub>—</span>'}</td><td class="num">${gapCell(a.gapu)}</td><td>${verdCell(a.gapu)}</td></tr>`).join('');
+  document.getElementById('anbody').innerHTML=r.map(a=>`<tr data-slug="${a.slug}"><td class="asset">${a.name} <span class="sub">${a.symbol}</span></td><td><span class="chip ${a.cls==='Private credit'?'credit':''}">${a.cls}</span></td><td class="num">${fmt(a.tvl)}</td><td class="num">${scoreCell(a.sig)}</td><td class="num">${a.gapu?a.gapu.apy.toFixed(2)+'%':'<span class=sub>–</span>'}</td><td class="num">${a.gapu?a.gapu.fair.toFixed(2)+'%'+(a.gapu.src==='fond.'?'':' <span class="sub" style="font-size:9px">sig</span>'):'<span class=sub>–</span>'}</td><td class="num">${gapCell(a.gapu)}</td><td>${verdCell(a.gapu)}</td></tr>`).join('');
   document.getElementById('ancount').textContent=r.length+' assets';
 }
 ['anq','anClass','anBand','anVerd'].forEach(id=>document.getElementById(id).addEventListener('input',anRender));
@@ -808,11 +810,11 @@ anRender();
 const fvAssets=D.assets.filter(a=>a.fv);
 document.getElementById('fv-sub').textContent=`Fundamental required yield on ${fvAssets.length} curated assets · ${fvAssets.filter(a=>a.fv.gap_bps!=null).length} with observed yield · ${D.generated}`;
 document.getElementById('fv-count').textContent=fvAssets.length;
-const confDot={high:'🟢',med:'🟡',low:'🔴'};
+const confDot={high:'',med:'',low:''};
 const ratingChip=r=>{const g=r&&['AAA','AA','A'].includes(r)?'g-green':r==='NR'?'':'g-amber';return `<span class="chip ${g}" style="font-weight:700">${r||'NR'}</span>`;};
 const fvGap=fv=>{if(fv.gap_bps==null)return '<span class="sub">no yield</span>';const cl=fv.gap_bps<=-75?'g-red':fv.gap_bps>=150?'g-green':'';return `<span class="${cl}" style="font-weight:700">${fv.gap_bps>=0?'+':''}${fv.gap_bps} bps</span>`;};
-const fvVerd=fv=>{if(!fv.verdict)return '<span class="sub">—</span>';const m={rich:['RICH','g-red'],cheap:['CHEAP','g-green'],fair:['Fair','']};const[t,c]=m[fv.verdict];return `<span class="${c}" style="font-weight:700">${t}</span>`;};
-document.getElementById('fvbody').innerHTML=fvAssets.slice().sort((a,b)=>(a.fv.gap_bps==null?9e9:a.fv.gap_bps)-(b.fv.gap_bps==null?9e9:b.fv.gap_bps)).map(a=>{const f=a.fv;return `<tr data-slug="${a.slug}"><td class="asset">${a.name} <span class="sub">${a.symbol}</span><br><span class="sub" style="font-weight:400">${f.jurisdiction||''}</span></td><td style="font-size:12px;color:var(--ink-soft);white-space:normal;max-width:250px">${ratingChip(f.rating)} ${(f.seniority||'').replace('_',' ')} · ${f.liquidity} · T${f.manager_tier}<br>${f.note||''}</td><td class="num">${f.offered!=null?f.offered.toFixed(1)+'%':'<span class=sub>—</span>'}</td><td class="num">${f.req.toFixed(1)}%</td><td class="num">${fvGap(f)}</td><td>${fvVerd(f)}</td><td>${confDot[f.conf]||'🔴'}</td></tr>`;}).join('');
+const fvVerd=fv=>{if(!fv.verdict)return '<span class="sub">–</span>';const m={rich:['RICH','g-red'],cheap:['CHEAP','g-green'],fair:['Fair','']};const[t,c]=m[fv.verdict];return `<span class="${c}" style="font-weight:700">${t}</span>`;};
+document.getElementById('fvbody').innerHTML=fvAssets.slice().sort((a,b)=>(a.fv.gap_bps==null?9e9:a.fv.gap_bps)-(b.fv.gap_bps==null?9e9:b.fv.gap_bps)).map(a=>{const f=a.fv;return `<tr data-slug="${a.slug}"><td class="asset">${a.name} <span class="sub">${a.symbol}</span><br><span class="sub" style="font-weight:400">${f.jurisdiction||''}</span></td><td style="font-size:12px;color:var(--ink-soft);white-space:normal;max-width:250px">${ratingChip(f.rating)} ${(f.seniority||'').replace('_',' ')} · ${f.liquidity} · T${f.manager_tier}<br>${f.note||''}</td><td class="num">${f.offered!=null?f.offered.toFixed(1)+'%':'<span class=sub>–</span>'}</td><td class="num">${f.req.toFixed(1)}%</td><td class="num">${fvGap(f)}</td><td>${fvVerd(f)}</td><td>${confDot[f.conf]||''}</td></tr>`;}).join('');
 
 /* apac */
 const apac=D.assets.filter(a=>a.apac);
@@ -834,12 +836,12 @@ document.getElementById('al-list').addEventListener('click',e=>{const el=e.targe
 /* ===== PRIVATE CREDIT VIEW ===== */
 document.getElementById('cr-sub').textContent=`Independent ratings on ${pc.length} tokenized private-credit funds · ${fmt(D.pc_total)} on-chain · ${D.generated}`;
 document.getElementById('cr-cards').innerHTML=[['Private Credit TVL',fmt(D.pc_total)],['Funds',pc.length],['RICH',D.pc_rich.length],['Stress',D.pc_stress.length]].map(c=>`<div class="card"><div class="k">${c[0]}</div><div class="v">${c[1]}</div></div>`).join('');
-document.getElementById('crbody').innerHTML=pc.slice().sort((a,b)=>b.tvl-a.tvl).map(a=>`<tr data-slug="${a.slug}"><td class="asset">${a.name} <span class="sub">${a.symbol}</span></td><td class="sub">${a.chains.slice(0,3).join(', ')}</td><td class="num">${fmt(a.tvl)}</td><td class="num ${a.chg7d>=0?'up':'down'}">${pct(a.chg7d)}</td><td class="num">${scoreCell(a.sig)}</td><td class="num">${a.yg?gapCell(a.yg):'<span class=sub>—</span>'}</td></tr>`).join('');
+document.getElementById('crbody').innerHTML=pc.slice().sort((a,b)=>b.tvl-a.tvl).map(a=>`<tr data-slug="${a.slug}"><td class="asset">${a.name} <span class="sub">${a.symbol}</span></td><td class="sub">${a.chains.slice(0,3).join(', ')}</td><td class="num">${fmt(a.tvl)}</td><td class="num ${a.chg7d>=0?'up':'down'}">${pct(a.chg7d)}</td><td class="num">${scoreCell(a.sig)}</td><td class="num">${a.yg?gapCell(a.yg):'<span class=sub>–</span>'}</td></tr>`).join('');
 
 /* ===== NETWORKS VIEW ===== */
 const NW=D.networks||[];const nwTot=NW.reduce((s,n)=>s+n.value,0)||1;
 document.getElementById('nw-sub').textContent=`${NW.length} networks · ${fmt(nwTot)} RWA value on-chain · ${D.generated}`;
-document.getElementById('nw-cards').innerHTML=[['Networks',NW.length],['Top network',NW[0]?NW[0].chain:'—'],['Top value',NW[0]?fmt(NW[0].value):'—'],['Total RWA',fmt(D.total_tvl)]].map(c=>`<div class="card"><div class="k">${c[0]}</div><div class="v" style="font-size:${(''+c[1]).length>9?'19px':'25px'}">${c[1]}</div></div>`).join('');
+document.getElementById('nw-cards').innerHTML=[['Networks',NW.length],['Top network',NW[0]?NW[0].chain:'–'],['Top value',NW[0]?fmt(NW[0].value):'–'],['Total RWA',fmt(D.total_tvl)]].map(c=>`<div class="card"><div class="k">${c[0]}</div><div class="v" style="font-size:${(''+c[1]).length>9?'19px':'25px'}">${c[1]}</div></div>`).join('');
 const nwMax=NW[0]?NW[0].value:1;const NWC=['#4d94f5','#22b8a6','#d0a84a','#a855f7','#38bdf8','#ef5a56','#8b98b0','#3ec37e','#c084fc','#f59e0b'];
 document.getElementById('nwbars').innerHTML=NW.slice(0,10).map((n,i)=>`<div class="barrow"><div class="lbl">${n.chain}</div><div class="bartrack"><div class="barfill" style="width:${n.value/nwMax*100}%;background:${NWC[i%NWC.length]}"></div></div><div class="amt">${fmt(n.value)}</div></div>`).join('');
 document.getElementById('nwbody').innerHTML=NW.map((n,i)=>`<tr data-net="${n.chain}" style="cursor:pointer"><td class="num">${i+1}</td><td class="asset">${n.chain}</td><td class="num">${fmt(n.value)}</td><td class="num">${n.n}</td><td class="num">${(n.value/nwTot*100).toFixed(1)}%</td></tr>`).join('');
@@ -854,14 +856,14 @@ document.getElementById('pfbody').innerHTML=plats.map((a,i)=>`<tr data-slug="${a
 /* ===== ASSET MANAGERS VIEW ===== */
 const MG=D.managers||[];const mgTot=MG.reduce((s,m)=>s+m.value,0)||1;
 document.getElementById('mg-sub').textContent=`${MG.length} managers · ${fmt(mgTot)} tokenized · ${D.generated}`;
-document.getElementById('mg-cards').innerHTML=[['Managers',MG.length],['Top manager',MG[0]?MG[0].name:'—'],['Top encours',MG[0]?fmt(MG[0].value):'—'],['Top-5 share',(MG.slice(0,5).reduce((s,m)=>s+m.value,0)/mgTot*100).toFixed(0)+'%']].map(c=>`<div class="card"><div class="k">${c[0]}</div><div class="v" style="font-size:${(''+c[1]).length>10?'18px':'25px'}">${c[1]}</div></div>`).join('');
+document.getElementById('mg-cards').innerHTML=[['Managers',MG.length],['Top manager',MG[0]?MG[0].name:'–'],['Top AUM',MG[0]?fmt(MG[0].value):'–'],['Top-5 share',(MG.slice(0,5).reduce((s,m)=>s+m.value,0)/mgTot*100).toFixed(0)+'%']].map(c=>`<div class="card"><div class="k">${c[0]}</div><div class="v" style="font-size:${(''+c[1]).length>10?'18px':'25px'}">${c[1]}</div></div>`).join('');
 const mgMax=MG[0]?MG[0].value:1;
 document.getElementById('mgbars').innerHTML=MG.slice(0,10).map((m,i)=>`<div class="barrow"><div class="lbl">${m.name}</div><div class="bartrack"><div class="barfill" style="width:${m.value/mgMax*100}%;background:${NWC[i%NWC.length]}"></div></div><div class="amt">${fmt(m.value)}</div></div>`).join('');
 document.getElementById('mgbody').innerHTML=MG.map((m,i)=>`<tr data-mgr="${m.name.replace(/"/g,'&quot;')}" style="cursor:pointer"><td class="num">${i+1}</td><td class="asset">${m.name}</td><td class="num">${fmt(m.value)}</td><td class="num">${m.n}</td><td class="sub">${m.classes.join(', ')}</td><td class="num">${m.nchains}</td></tr>`).join('');
 function openManager(name){
   const list=D.assets.filter(a=>a.manager===name).sort((a,b)=>b.tvl-a.tvl);if(!list.length)return;
   const tot=list.reduce((s,a)=>s+a.tvl,0);const cls={};list.forEach(a=>cls[a.cls]=(cls[a.cls]||0)+1);
-  let h=`<div class="mhd"><button class="x" onclick="closeDetail()">✕</button><div><span class="nm">👥 ${name}</span></div><div class="chips"><span class="chip">Asset manager</span></div></div><div class="mbody">`;
+  let h=`<div class="mhd"><button class="x" onclick="closeDetail()"></button><div><span class="nm"> ${name}</span></div><div class="chips"><span class="chip">Asset manager</span></div></div><div class="mbody">`;
   h+=`<div class="mgrid"><div><div class="k">Tokenized value</div><div class="v">${fmt(tot)}</div></div><div><div class="k">Assets</div><div class="v">${list.length}</div></div><div><div class="k">Classes</div><div class="v">${Object.keys(cls).length}</div></div><div><div class="k">Networks</div><div class="v">${new Set(list.flatMap(a=>a.chains)).size}</div></div></div>`;
   h+=`<div class="msec">Managed assets</div>`+list.slice(0,15).map(a=>`<div class="mrow" style="cursor:pointer" onclick="closeDetail();openDetail('${a.slug}')"><span class="k">${a.name} <span style="color:var(--ink-faint)">${a.symbol}</span></span><span class="v">${fmt(a.tvl)}</span></div>`).join('');
   h+=`</div>`;md.innerHTML=h;ov.classList.add('on');
@@ -873,7 +875,7 @@ function openNetwork(chain){
   const net=NW.find(n=>n.chain===chain);if(!net)return;
   const list=D.assets.filter(a=>a.chains.includes(chain)).sort((a,b)=>b.tvl-a.tvl);
   const cls={};list.forEach(a=>cls[a.cls]=(cls[a.cls]||0)+1);
-  let h=`<div class="mhd"><button class="x" onclick="closeDetail()">✕</button><div><span class="nm">${chain}</span></div><div class="chips"><span class="chip">Blockchain network</span></div></div><div class="mbody">`;
+  let h=`<div class="mhd"><button class="x" onclick="closeDetail()"></button><div><span class="nm">${chain}</span></div><div class="chips"><span class="chip">Blockchain network</span></div></div><div class="mbody">`;
   h+=`<div class="mgrid"><div><div class="k">RWA value</div><div class="v">${fmt(net.value)}</div></div><div><div class="k">Assets hosted</div><div class="v">${list.length}</div></div><div><div class="k">Share of RWA</div><div class="v">${(net.value/nwTot*100).toFixed(1)}%</div></div><div><div class="k">Classes</div><div class="v">${Object.keys(cls).length}</div></div></div>`;
   h+=`<div class="msec">Assets on ${chain} (top 15)</div>`;
   h+=list.slice(0,15).map(a=>`<div class="mrow" style="cursor:pointer" onclick="closeDetail();openDetail('${a.slug}')"><span class="k">${a.name} <span style="color:var(--ink-faint)">${a.symbol}</span></span><span class="v">${fmt(a.tvl)}</span></div>`).join('');
@@ -894,13 +896,13 @@ const bySlug={};D.assets.forEach(a=>bySlug[a.slug]=a);
 const ov=document.getElementById('detailOverlay'),md=document.getElementById('detailModal');
 function openDetail(slug){
   const a=bySlug[slug];if(!a)return;const s=a.sig,yg=a.yg,fv=a.fv;
-  let h=`<div class="mhd"><button class="x" onclick="closeDetail()">✕</button><div><span class="nm">${a.name}</span><span class="sym">${a.symbol}</span></div><div class="chips"><span class="chip ${a.cls==='Private credit'?'credit':''}">${a.cls}</span>${a.apac?`<span class="chip" style="color:var(--accent)">🌏 ${a.apac}</span>`:''}<button class="memobtn" onclick="creditMemo('${slug}')">📄 Credit Memo</button></div></div><div class="mbody">`;
-  h+=`<div class="mgrid"><div><div class="k">TVL on-chain</div><div class="v">${fmt(a.tvl)}</div></div><div><div class="k">LS Score</div><div class="v g-${s.band}">${s.ls}/100${s.stress?' ⚠':''}</div></div><div><div class="k">7d</div><div class="v ${a.chg7d>=0?'up':'down'}">${pct(a.chg7d)}</div></div><div><div class="k">1d</div><div class="v ${a.chg1d>=0?'up':'down'}">${pct(a.chg1d)}</div></div></div>`;
+  let h=`<div class="mhd"><button class="x" onclick="closeDetail()"></button><div><span class="nm">${a.name}</span><span class="sym">${a.symbol}</span></div><div class="chips"><span class="chip ${a.cls==='Private credit'?'credit':''}">${a.cls}</span>${a.apac?`<span class="chip" style="color:var(--accent)"> ${a.apac}</span>`:''}<button class="memobtn" onclick="creditMemo('${slug}')"> Credit Memo</button></div></div><div class="mbody">`;
+  h+=`<div class="mgrid"><div><div class="k">TVL on-chain</div><div class="v">${fmt(a.tvl)}</div></div><div><div class="k">LS Score</div><div class="v g-${s.band}">${s.ls}/100${s.stress?' ':''}</div></div><div><div class="k">7d</div><div class="v ${a.chg7d>=0?'up':'down'}">${pct(a.chg7d)}</div></div><div><div class="k">1d</div><div class="v ${a.chg1d>=0?'up':'down'}">${pct(a.chg1d)}</div></div></div>`;
   h+=`<div class="msec">Analytics</div><div class="mrow"><span class="k">Quality (LS)</span><span class="v g-${s.band}">${s.ls} · ${s.note}</span></div>`;
   if(yg){h+=`<div class="mrow"><span class="k">Offered yield</span><span class="v">${yg.apy.toFixed(2)}%</span></div><div class="mrow"><span class="k">Fair yield (signal)</span><span class="v">${yg.fair.toFixed(2)}%</span></div><div class="mrow"><span class="k">NAV gap (signal)</span><span class="v ${yg.gap_bps<=-75?'g-red':yg.gap_bps>=150?'g-green':''}">${yg.gap_bps>=0?'+':''}${yg.gap_bps} bps · ${yg.verdict}</span></div>`;}
-  if(fv){h+=`<div class="msec">Fundamental valuation</div><div class="mrow"><span class="k">Rating / seniority</span><span class="v">${fv.rating} · ${(fv.seniority||'').replace('_',' ')}</span></div><div class="mrow"><span class="k">Liquidity / manager</span><span class="v">${fv.liquidity} · T${fv.manager_tier}</span></div><div class="mrow"><span class="k">Required yield</span><span class="v">${fv.req.toFixed(2)}%</span></div>${fv.gap_bps!=null?`<div class="mrow"><span class="k">NAV gap (fundamental)</span><span class="v ${fv.gap_bps<=-75?'g-red':fv.gap_bps>=150?'g-green':''}">${fv.gap_bps>=0?'+':''}${fv.gap_bps} bps</span></div>`:''}<div class="mrow"><span class="k">Data confidence</span><span class="v">${confDot[fv.conf]||'🔴'} ${fv.conf}</span></div><div class="mrow"><span class="k">Note</span><span class="v" style="font-weight:400">${fv.note||''}</span></div>`;}
+  if(fv){h+=`<div class="msec">Fundamental valuation</div><div class="mrow"><span class="k">Rating / seniority</span><span class="v">${fv.rating} · ${(fv.seniority||'').replace('_',' ')}</span></div><div class="mrow"><span class="k">Liquidity / manager</span><span class="v">${fv.liquidity} · T${fv.manager_tier}</span></div><div class="mrow"><span class="k">Required yield</span><span class="v">${fv.req.toFixed(2)}%</span></div>${fv.gap_bps!=null?`<div class="mrow"><span class="k">NAV gap (fundamental)</span><span class="v ${fv.gap_bps<=-75?'g-red':fv.gap_bps>=150?'g-green':''}">${fv.gap_bps>=0?'+':''}${fv.gap_bps} bps</span></div>`:''}<div class="mrow"><span class="k">Data confidence</span><span class="v">${confDot[fv.conf]||''} ${fv.conf}</span></div><div class="mrow"><span class="k">Note</span><span class="v" style="font-weight:400">${fv.note||''}</span></div>`;}
   if(a.gaprel){h+=`<div class="msec">Relative value (peers)</div><div class="mrow"><span class="k">Position vs ${a.gaprel.n} peers</span><span class="v ${a.gaprel.rv==='cheap'?'g-green':a.gaprel.rv==='rich'?'g-red':''}">${a.gaprel.rv.toUpperCase()} · ${a.gaprel.pctile}th pctile · z=${a.gaprel.z}</span></div><div class="mrow"><span class="k">Peer median</span><span class="v">${a.gaprel.peer_med>=0?'+':''}${a.gaprel.peer_med} bps</span></div>`;}
-  h+=`<div class="msec">On-chain</div><div class="mrow"><span class="k">Networks</span><span class="v">${a.chains.join(', ')}</span></div><div class="mrow"><span class="k">First seen</span><span class="v">${a.listedAt?new Date(a.listedAt*1000).toISOString().slice(0,10):'—'}</span></div>${a.url?`<div class="mrow"><span class="k">Website</span><span class="v" style="font-weight:400">${a.url.replace(/^https?:\/\//,'').slice(0,40)}</span></div>`:''}`;
+  h+=`<div class="msec">On-chain</div><div class="mrow"><span class="k">Networks</span><span class="v">${a.chains.join(', ')}</span></div><div class="mrow"><span class="k">First seen</span><span class="v">${a.listedAt?new Date(a.listedAt*1000).toISOString().slice(0,10):'–'}</span></div>${a.url?`<div class="mrow"><span class="k">Website</span><span class="v" style="font-weight:400">${a.url.replace(/^https?:\/\//,'').slice(0,40)}</span></div>`:''}`;
   h+=`</div>`;md.innerHTML=h;ov.classList.add('on');
 }
 function closeDetail(){ov.classList.remove('on');}
@@ -915,9 +917,9 @@ function creditMemo(slug){
   const today=new Date().toISOString().slice(0,10);
   const val=gu?`The fund offers <b>${gu.apy.toFixed(2)}%</b> against a required yield of <b>${gu.fair.toFixed(2)}%</b> (${gu.src==='fond.'?'fundamental model':'on-chain signal'}), a gap of <b class="${gu.gap_bps<=-75?'g-red':gu.gap_bps>=150?'g-green':''}">${gu.gap_bps>=0?'+':''}${gu.gap_bps} bps</b>. ${gu.gap_bps<=-75?'The token under-pays its risk: NAV is likely overstated.':gu.gap_bps>=150?'Yield cushion above risk: check for hidden risk.':'Yield is in line with risk.'}`:'No observable on-chain yield for this fund: assessed on signals only.';
   const struct=fv?`Rating <b>${fv.rating}</b>, seniority <b>${(fv.seniority||'').replace('_',' ')}</b>, liquidity <b>${fv.liquidity}</b>, manager tier <b>${fv.manager_tier}</b>. ${fv.note||''} <span class="sub">(jurisdiction: ${fv.jurisdiction||'n/a'} · data confidence: ${fv.conf})</span>`:'Fundamentals not yet curated for this fund.';
-  let h=`<div class="mhd"><button class="x" onclick="closeDetail()">✕</button><div class="memohd"><span class="memo-eyebrow">✦ LEDGERSCOPE · CREDIT MEMO</span><span class="nm">${a.name} <span class="sym">${a.symbol}</span></span></div><div class="chips"><button class="memobtn" onclick="openDetail('${slug}')">← Fiche</button><button class="memobtn" onclick="window.print()">🖨️ Imprimer / PDF</button></div></div><div class="mbody memo">`;
+  let h=`<div class="mhd"><button class="x" onclick="closeDetail()"></button><div class="memohd"><span class="memo-eyebrow"> LEDGERSCOPE · CREDIT MEMO</span><span class="nm">${a.name} <span class="sym">${a.symbol}</span></span></div><div class="chips"><button class="memobtn" onclick="openDetail('${slug}')">← Profile</button><button class="memobtn" onclick="window.print()">Print / PDF</button></div></div><div class="mbody memo">`;
   h+=`<div class="memo-reco"><div><span class="k">Recommandation</span><div class="reco ${rc}">${reco}</div></div><div style="text-align:right"><span class="k">LS Score</span><div class="reco g-${s.band}">${s.ls}/100</div></div></div>`;
-  h+=`<div class="mgrid"><div><div class="k">Class</div><div class="v" style="font-size:14px">${a.cls}</div></div><div><div class="k">TVL on-chain</div><div class="v">${fmt(a.tvl)}</div></div><div><div class="k">NAV gap</div><div class="v ${gu&&gu.gap_bps<=-75?'g-red':gu&&gu.gap_bps>=150?'g-green':''}">${gu?(gu.gap_bps>=0?'+':'')+gu.gap_bps+' bps':'—'}</div></div><div><div class="k">Tendance 7j</div><div class="v ${a.chg7d>=0?'up':'down'}">${pct(a.chg7d)}</div></div></div>`;
+  h+=`<div class="mgrid"><div><div class="k">Class</div><div class="v" style="font-size:14px">${a.cls}</div></div><div><div class="k">TVL on-chain</div><div class="v">${fmt(a.tvl)}</div></div><div><div class="k">NAV gap</div><div class="v ${gu&&gu.gap_bps<=-75?'g-red':gu&&gu.gap_bps>=150?'g-green':''}">${gu?(gu.gap_bps>=0?'+':'')+gu.gap_bps+' bps':'–'}</div></div><div><div class="k">Tendance 7j</div><div class="v ${a.chg7d>=0?'up':'down'}">${pct(a.chg7d)}</div></div></div>`;
   h+=`<div class="msec">1 · Summary</div><p>${a.name} is a tokenized <b>${a.cls.toLowerCase()}</b> asset on ${a.chains.join(', ')}, with <b>${fmt(a.tvl)}</b> on-chain. Our proprietary LS Score is <b class="g-${s.band}">${s.ls}/100</b> (${s.note}).</p>`;
   h+=`<div class="msec">2 · Quality &amp; risk (LS Score)</div><p>The score combines observable on-chain signals: size (log scale), value stability and multi-chain resilience. ${s.stress?'<b class="g-red">Redemption stress detected (net outflow of 8%+ over 7 days).</b>':'No redemption stress over the last 7 days.'}</p>`;
   h+=`<div class="msec">3 · Valorisation</div><p>${val}</p>`;
@@ -983,11 +985,11 @@ document.getElementById('loginX').addEventListener('click',closeLogin);
 loginOv.addEventListener('click',e=>{if(e.target===loginOv)closeLogin();});
 document.getElementById('lgGo').addEventListener('click',()=>{
   LOGGED=true;closeLogin();
-  document.getElementById('authRow').innerHTML='<button class="auth ghost" style="flex:1" id="logoutBtn"><span class="lbl">✓ Premium unlocked</span></button>';
+  document.getElementById('authRow').innerHTML='<button class="auth ghost" style="flex:1" id="logoutBtn"><span class="lbl"> Premium unlocked</span></button>';
   document.getElementById('logoutBtn').addEventListener('click',()=>location.reload());
   if(CUR_CLASS){openClass(CUR_CLASS);renderLeague(document.querySelector('#cl-tabs button.on').dataset.lg);}
 });
-function lockCell(real){return LOGGED?real:'<span class="lock" onclick="openLoginGlobal()">🔒 Unlock</span>';}
+function lockCell(real){return LOGGED?real:'<span class="lock" onclick="openLoginGlobal()"> Unlock</span>';}
 
 /* ===== ASSET CLASS DETAIL + LEAGUE TABLES ===== */
 function addAgg(agg,k,val){const g=agg[k]||[0,0];g[0]+=val;g[1]+=1;agg[k]=g;}
@@ -999,13 +1001,13 @@ function openClass(cls){
   document.getElementById('cl-title').textContent=cls;
   document.getElementById('cl-crumb').textContent='Asset Classes › '+cls;
   document.getElementById('cl-sub').textContent=`${list.length} assets · ${fmt(tot)} on-chain · ${(tot/D.total_tvl*100).toFixed(1)}% of total RWA · ${D.generated}`;
-  document.getElementById('cl-cards').innerHTML=[['Class TVL',fmt(tot)],['Assets',list.length],['Top asset',list[0]?list[0].name:'—'],['Avg 7d',pct(avg)]].map(c=>`<div class="card"><div class="k">${c[0]}</div><div class="v" style="font-size:${(''+c[1]).length>11?'18px':'25px'}">${c[1]}</div></div>`).join('');
+  document.getElementById('cl-cards').innerHTML=[['Class TVL',fmt(tot)],['Assets',list.length],['Top asset',list[0]?list[0].name:'–'],['Avg 7d',pct(avg)]].map(c=>`<div class="card"><div class="k">${c[0]}</div><div class="v" style="font-size:${(''+c[1]).length>11?'18px':'25px'}">${c[1]}</div></div>`).join('');
   // network breakdown
   const nb={};list.forEach(a=>a.chains.forEach(ch=>nb[ch]=(nb[ch]||0)+a.tvl/a.chains.length));
   const nbA=Object.entries(nb).sort((a,b)=>b[1]-a[1]).slice(0,8);const nbMax=nbA[0]?nbA[0][1]:1;
   document.getElementById('clnw').innerHTML=nbA.map((n,i)=>`<div class="barrow"><div class="lbl">${n[0]}</div><div class="bartrack"><div class="barfill" style="width:${n[1]/nbMax*100}%;background:${NWC[i%NWC.length]}"></div></div><div class="amt">${fmt(n[1])}</div></div>`).join('');
   // assets table (colonnes premium verrouillées)
-  document.getElementById('clbody').innerHTML=list.map(a=>`<tr data-slug="${a.slug}"><td class="asset">${a.name} <span class="sub">${a.symbol}</span></td><td class="sub">${a.chains.slice(0,3).join(', ')}</td><td class="num">${fmt(a.tvl)}</td><td class="num ${a.chg7d>=0?'up':'down'}">${pct(a.chg7d)}</td><td class="num">${lockCell(a.fv?a.fv.rating:'NR')}</td><td class="num">${lockCell(a.apac?'MAS':(a.fv&&a.fv.jurisdiction?a.fv.jurisdiction.split(' ')[0]:'—'))}</td></tr>`).join('');
+  document.getElementById('clbody').innerHTML=list.map(a=>`<tr data-slug="${a.slug}"><td class="asset">${a.name} <span class="sub">${a.symbol}</span></td><td class="sub">${a.chains.slice(0,3).join(', ')}</td><td class="num">${fmt(a.tvl)}</td><td class="num ${a.chg7d>=0?'up':'down'}">${pct(a.chg7d)}</td><td class="num">${lockCell(a.fv?a.fv.rating:'NR')}</td><td class="num">${lockCell(a.apac?'MAS':(a.fv&&a.fv.jurisdiction?a.fv.jurisdiction.split(' ')[0]:'–'))}</td></tr>`).join('');
   renderLeague('platform');
   document.querySelectorAll('#cl-tabs button').forEach(x=>x.classList.toggle('on',x.dataset.lg==='platform'));
 }
@@ -1029,7 +1031,7 @@ document.querySelectorAll('#cl-tabs button').forEach(b=>b.addEventListener('clic
 const KR=D.keyrisk||[];
 document.getElementById('kr-sub').textContent=`${KR.length} fund tokens X-rayed on-chain · ${KR.filter(k=>k.upgrade_type==='multisig'||k.upgrade_type==='timelock').length} with governed upgrade keys · ${KR.filter(k=>k.upgrade_type==='immutable').length} with locked code · ${D.generated}`;
 const KG={A:'var(--up)',B:'#4f8a3c',C:'var(--gold)',D:'#c0661f',F:'var(--down)'};
-document.getElementById('krbody').innerHTML=KR.map(k=>`<tr data-slug="${k.slug}"><td><span class="chip" style="background:${KG[k.grade]};color:#fff;font-weight:800">${k.grade}</span></td><td class="asset">${k.name} <span class="sub">${k.symbol} · ${k.chain}</span></td><td class="sub">${k.cls}</td><td class="num">${fmt(k.tvl)}</td><td style="white-space:normal;max-width:220px;font-size:12px">${k.upgrade}</td><td style="white-space:normal;max-width:220px;font-size:12px">${k.owner}</td><td class="sub">${(k.powers||[]).join(', ')||'none'}</td><td style="white-space:normal;max-width:300px;font-size:12px;color:var(--ink-soft)">${[...k.hard,...k.flags].join(' · ')||'—'}</td></tr>`).join('');
+document.getElementById('krbody').innerHTML=KR.map(k=>`<tr data-slug="${k.slug}"><td><span class="chip" style="background:${KG[k.grade]};color:#fff;font-weight:800">${k.grade}</span></td><td class="asset">${k.name} <span class="sub">${k.symbol} · ${k.chain}</span></td><td class="sub">${k.cls}</td><td class="num">${fmt(k.tvl)}</td><td style="white-space:normal;max-width:220px;font-size:12px">${k.upgrade}</td><td style="white-space:normal;max-width:220px;font-size:12px">${k.owner}</td><td class="sub">${(k.powers||[]).join(', ')||'none'}</td><td style="white-space:normal;max-width:300px;font-size:12px;color:var(--ink-soft)">${[...k.hard,...k.flags].join(' · ')||'–'}</td></tr>`).join('');
 
 
 /* ===== TRACK RECORD ===== */
@@ -1037,8 +1039,8 @@ const TR=D.track||{};
 if(TR.backtest){const bt=TR.backtest,lv=TR.live,st=bt.stress,BN={green:'Green (68+)',amber:'Amber (48-67)',red:'Red (under 48)'},BC={green:'var(--up)',amber:'var(--gold)',red:'var(--down)'};
 document.getElementById('tr-sub').textContent=`Live ledger since ${lv.since} · ${lv.grades} grades frozen · backtest ${bt.n} grades on ${bt.funds} funds`;
 document.getElementById('tr-live').innerHTML=[['Grades frozen',lv.grades.toLocaleString()],['Days recorded',lv.days],['Scored (30d old)',lv.scored],['First live readout',lv.first_readout],['Ledger head hash',(lv.head_hash||'').slice(0,12)]].map(c=>`<div class="card"><div class="k">${c[0]}</div><div class="v" style="font-size:18px">${c[1]}</div></div>`).join('');
-const pct=x=>x==null?'—':(x>0?'+':'')+x+'%';
-document.getElementById('trbody').innerHTML=bt.bands.map(b=>`<tr><td><span class="chip" style="background:${BC[b.band]};color:#fff;font-weight:700">${BN[b.band]}</span></td><td class="num">${b.n}</td><td class="num"><b>${b.n?b.hit_dd+'%':'—'}</b></td><td class="num">${pct(b.med_dd)}</td><td class="num">${pct(b.med_chg)}</td></tr>`).join('');
+const pct=x=>x==null?'–':(x>0?'+':'')+x+'%';
+document.getElementById('trbody').innerHTML=bt.bands.map(b=>`<tr><td><span class="chip" style="background:${BC[b.band]};color:#fff;font-weight:700">${BN[b.band]}</span></td><td class="num">${b.n}</td><td class="num"><b>${b.n?b.hit_dd+'%':'–'}</b></td><td class="num">${pct(b.med_dd)}</td><td class="num">${pct(b.med_chg)}</td></tr>`).join('');
 document.getElementById('trstress').innerHTML=`<tr><td>Flagged (7d outflow 8%+)</td><td class="num">${st.n_flag}</td><td class="num"><b>${st.flag_hit}%</b></td><td class="num">${pct(st.flag_med_chg)}</td></tr><tr><td>Not flagged</td><td class="num">${st.n_clean}</td><td class="num"><b>${st.clean_hit}%</b></td><td class="num">${pct(st.clean_med_chg)}</td></tr>`;
 document.getElementById('tr-caveat').innerHTML=`<b>Read this honestly.</b> The backtest uses funds that exist today (survivorship: dead funds are missing, so real bad-outcome rates are higher). Chain count is today's. Red band has a small sample. Value change mixes flows and NAV moves. The live ledger fixes all of this going forward: first 30-day readout on ${lv.first_readout}.`;}
 
