@@ -426,7 +426,7 @@ tbody tr:hover{background:var(--hover)!important;}
           <b>Proprietary rating, all asset classes.</b> <b>LS Score</b> (0-100): size 42% + value stability 40% + multi-chain resilience 18%. Bands: <span class="g-green">Green 68+</span> / <span class="g-amber">Amber 48-67</span> / <span class="g-red">Red under 48</span>. <b>NAV gap</b>: fair yield = risk-free rate (<span id="rfval"></span>) + premium [2% + (1 - LS/100) x 10% + volatility]. <span class="g-red">RICH</span> = overvalued, <span class="g-green">CHEAP</span> = undervalued. Click a row for the full profile.
         </div>
         <div class="toolbar">
-          <div class="search"><input id="anq" placeholder="Filtrer…"></div>
+          <div class="search"><input id="anq" placeholder="Filter…"></div>
           <select class="filter" id="anClass"><option value="">All classes</option></select>
           <select class="filter" id="anBand"><option value="">All bands</option><option value="green">Green</option><option value="amber">Amber</option><option value="red">Red</option></select>
           <select class="filter" id="anVerd"><option value="">All verdicts</option><option value="rich">RICH</option><option value="fair">Fair</option><option value="cheap">CHEAP</option><option value="_y">Yield matched</option></select>
@@ -602,7 +602,7 @@ tbody tr:hover{background:var(--hover)!important;}
   <div class="overlay" id="loginOverlay"><div class="loginbox">
     <button class="x" id="loginX"></button>
     <div class="lg-brand"><span class="mk">L</span>Ledger<em>scope</em></div>
-    <div class="lg-t" id="lg-title">Se connecter</div>
+    <div class="lg-t" id="lg-title">Sign in</div>
     <div class="lg-sub">Unlock premium columns: rating, regulator, jurisdiction and full league tables.</div>
     <input class="lg-in" id="lgEmail" placeholder="email@institution.com" autocomplete="off">
     <input class="lg-in" id="lgPwd" type="password" placeholder="Password">
@@ -692,7 +692,7 @@ function drawChart(mode,hoverIdx){
       ctx.lineWidth=1.5;ctx.strokeStyle=css.getPropertyValue('--panel').trim();ctx.stroke();});
   }
   GEO={W,H,padL,padR,padT,padB,N,series,labels};
-  document.getElementById('legend').innerHTML=fullSeries.map(sr=>`<div class="li" data-cls="${sr.cls}" title="Masquer/afficher" style="cursor:pointer;opacity:${HIDDEN.has(sr.cls)?.35:1}"><span class="dot" style="background:${clr(sr.cls)}"></span>${sr.cls} · ${fmt(sr.values[N-1]||0)}</div>`).join('');
+  document.getElementById('legend').innerHTML=fullSeries.map(sr=>`<div class="li" data-cls="${sr.cls}" title="Show/hide" style="cursor:pointer;opacity:${HIDDEN.has(sr.cls)?.35:1}"><span class="dot" style="background:${clr(sr.cls)}"></span>${sr.cls} · ${fmt(sr.values[N-1]||0)}</div>`).join('');
 }
 document.getElementById('legend').addEventListener('click',e=>{const li=e.target.closest('.li[data-cls]');if(!li)return;const c=li.dataset.cls;HIDDEN.has(c)?HIDDEN.delete(c):HIDDEN.add(c);drawChart(MODE,null);});
 function showTip(idx,clientX){
@@ -913,7 +913,7 @@ function creditMemo(slug){
   if(s.stress||s.band==='red'){reco='WATCH / AVOID';rc='g-red';}
   else if(gu&&gu.verdict==='rich'){reco='OVERVALUED: underweight';rc='g-red';}
   else if(gu&&gu.verdict==='cheap'){reco='OPPORTUNITY: investigate';rc='g-green';}
-  else {reco='NEUTRE / conforme';rc='';}
+  else {reco='NEUTRAL / in line';rc='';}
   const today=new Date().toISOString().slice(0,10);
   const val=gu?`The fund offers <b>${gu.apy.toFixed(2)}%</b> against a required yield of <b>${gu.fair.toFixed(2)}%</b> (${gu.src==='fond.'?'fundamental model':'on-chain signal'}), a gap of <b class="${gu.gap_bps<=-75?'g-red':gu.gap_bps>=150?'g-green':''}">${gu.gap_bps>=0?'+':''}${gu.gap_bps} bps</b>. ${gu.gap_bps<=-75?'The token under-pays its risk: NAV is likely overstated.':gu.gap_bps>=150?'Yield cushion above risk: check for hidden risk.':'Yield is in line with risk.'}`:'No observable on-chain yield for this fund: assessed on signals only.';
   const struct=fv?`Rating <b>${fv.rating}</b>, seniority <b>${(fv.seniority||'').replace('_',' ')}</b>, liquidity <b>${fv.liquidity}</b>, manager tier <b>${fv.manager_tier}</b>. ${fv.note||''} <span class="sub">(jurisdiction: ${fv.jurisdiction||'n/a'} · data confidence: ${fv.conf})</span>`:'Fundamentals not yet curated for this fund.';
