@@ -279,23 +279,33 @@ YADDR, YSYM = {}, {}
 # A NAV gap needs a coupon: only income funds. Outflow alerts need a stable NAV:
 # for gold / stocks, market-cap moves are mostly price, not redemptions.
 INCOME_CLASSES = {"U.S. Treasuries", "Private credit", "Cash / yield stablecoin", "Non-US government debt"}
+CASH_LIKE = {"U.S. Treasuries", "Cash / yield stablecoin", "Non-US government debt"}
+MIN_OBS_APY = 0.5     # below this the token does not distribute yield on-chain (accrues in NAV / price): unobserved, not "0%"
+
 def nav_gap(asset, ymap, rf):
+    """Signal model. Treasury/cash wrappers: the asset is T-bills, so the premium covers only
+    wrapper + operational risk (max ~2%). Credit classes: illiquidity + credit premium from LS."""
     if asset.get("cls") not in INCOME_CLASSES:
         return None
     slug = asset.get("slug")
     addr = (asset.get("address") or "").split(":")[-1].lower()
     y = ymap.get(slug) or (YADDR.get(addr) if addr else None) or YSYM.get((asset.get("symbol") or "").upper())
-    if not y:
+    if not y or (y.get("apy") or 0) < MIN_OBS_APY:
         return None
     offered = y["apy"]
     ls = asset["sig"]["ls"]
     sigma = y["sigma"] or 0
-    # prime exigée = base illiquidité + prime de risque (LS) + prime de volatilité de rendement
-    vol_pen = min(3.0, sigma * 20)               # sigma 0.15 → +3 pts
-    req_premium = 2.0 + (1 - ls/100) * 10.0 + vol_pen
+    if asset["cls"] in CASH_LIKE:
+        vol_pen = min(1.0, sigma * 10)
+        req_premium = 0.25 + (1 - ls/100) * 1.0 + vol_pen
+    else:
+        vol_pen = min(3.0, sigma * 20)
+        req_premium = 2.0 + (1 - ls/100) * 10.0 + vol_pen
     fair = rf + req_premium
     gap_bps = round((offered - fair) * 100)
     verdict = ("rich" if gap_bps <= -75 else "cheap" if gap_bps >= 150 else "fair")
+    if asset["cls"] not in CASH_LIKE and offered < rf + 2.0:
+        verdict = "unverified"   # unrated credit paying under T-bills+2%: on-chain yield likely misses NAV accrual
     return {"apy": round(offered,2), "sigma": round(sigma,3), "volpen": round(vol_pen,2),
             "rf": round(rf,2), "fair": round(fair,2), "spread": round(offered-rf,2),
             "gap_bps": gap_bps, "verdict": verdict}
@@ -314,21 +324,34 @@ SENIORITY_ADJ = {"senior_secured":-0.5,"senior":0.0,"asset_backed":0.0,
 LIQUIDITY_ADJ = {"daily":0.0,"monthly":0.8,"quarterly":1.6,"locked":2.8}
 MANAGER_ADJ   = {1:-0.6, 2:0.0, 3:1.2}
 
+# Treasury / cash wrappers hold T-bills: rating reflects wrapper + issuer risk, not credit risk of the assets.
+WRAPPER_SPREAD = {"AAA":0.0,"AA":0.1,"A":0.25,"BBB":0.5,"BB":0.75,"B":1.0,"NR":0.75}
+WRAPPER_LIQ    = {"daily":0.0,"monthly":0.1,"quarterly":0.25,"locked":0.5}
+WRAPPER_MGR    = {1:-0.05, 2:0.0, 3:0.15}
+
 def fundamental_val(asset, fund, rf):
     f = fund.get(asset.get("slug",""))
     if not f:
         return None
-    req = (rf
-           + RATING_SPREAD.get(f.get("rating","NR"),5.5)
-           + SENIORITY_ADJ.get(f.get("seniority","unsecured"),1.2)
-           + LIQUIDITY_ADJ.get(f.get("liquidity","monthly"),0.8)
-           + MANAGER_ADJ.get(f.get("manager_tier",3),1.2))
+    r = f.get("rating","NR")
+    if asset.get("cls") in CASH_LIKE:
+        req = max(rf - 0.25, rf + WRAPPER_SPREAD.get(r,0.75) + WRAPPER_LIQ.get(f.get("liquidity","daily"),0.1)
+                  + WRAPPER_MGR.get(f.get("manager_tier",3),0.15))
+    else:
+        req = (rf + RATING_SPREAD.get(r,5.5)
+               + SENIORITY_ADJ.get(f.get("seniority","unsecured"),1.2)
+               + LIQUIDITY_ADJ.get(f.get("liquidity","monthly"),0.8)
+               + MANAGER_ADJ.get(f.get("manager_tier",3),1.2))
+        req = max(req, rf + 0.5)
     yg = asset.get("yg")
     offered = yg["apy"] if yg else None
     gap_bps = round((offered - req)*100) if offered is not None else None
     verdict = None
     if gap_bps is not None:
         verdict = "rich" if gap_bps <= -75 else "cheap" if gap_bps >= 150 else "fair"
+        if asset.get("cls") not in CASH_LIKE:
+            floor = rf + (0.5 if r in ("AAA", "AA") else 2.0)   # high-grade credit can legitimately pay near T-bills
+            verdict = "unverified" if offered < floor else verdict
     return {"rating":f.get("rating"),"seniority":f.get("seniority"),"liquidity":f.get("liquidity"),
             "manager_tier":f.get("manager_tier"),"jurisdiction":f.get("jurisdiction"),
             "note":f.get("note"),"conf":f.get("conf","low"),
@@ -420,12 +443,12 @@ def build_dataset(raw, ymap, rf, fund, hist_ds=None):
     import statistics as _st
     by_cls = {}
     for a in assets:
-        if a.get("gapu"):
+        if a.get("gapu") and a["gapu"]["verdict"] != "unverified":
             by_cls.setdefault(a["cls"], []).append(a["gapu"]["gap_bps"])
     for a in assets:
         a["gaprel"] = None
         gu = a.get("gapu")
-        if not gu:
+        if not gu or gu["verdict"] == "unverified":
             continue
         peers = by_cls.get(a["cls"], [])
         if len(peers) < 4:
@@ -465,8 +488,8 @@ def build_dataset(raw, ymap, rf, fund, hist_ds=None):
     pc_avg_ls = round(sum(a["sig"]["ls"] for a in pc)/len(pc)) if pc else 0
     # couverture rendement + verdicts NAV gap
     pc_yield = [a for a in pc if a.get("yg")]
-    pc_rich = [a["name"] for a in pc_yield if a["yg"]["verdict"]=="rich"]
-    pc_cheap = [a["name"] for a in pc_yield if a["yg"]["verdict"]=="cheap"]
+    pc_rich = [a["name"] for a in pc if (a.get("gapu") or {}).get("verdict")=="rich"]
+    pc_cheap = [a["name"] for a in pc if (a.get("gapu") or {}).get("verdict")=="cheap"]
     # ---- moteur d'alertes : synthèse actionnable, TOUTES CLASSES (tvl >= 20M) ----
     alerts = []
     for a in [x for x in assets if x["tvl"] >= 20e6]:
@@ -474,8 +497,8 @@ def build_dataset(raw, ymap, rf, fund, hist_ds=None):
         if sig["stress"]:
             reasons.append(f"7-day net outflows ({a['chg7d']:+.1f}%): redemption pressure")
             sev += 3
-        if gu and gu["gap_bps"] <= -75:
-            reasons.append(f"Overvalued ({gu['src']}): offers {gu['apy']:.1f}% vs fair {gu['fair']:.1f}% ({gu['gap_bps']:+d} bps)")
+        if gu and gu["verdict"] == "rich":
+            reasons.append(f"Yield below risk ({'fundamental model' if gu['src']=='fond.' else 'signal model'}): offers {gu['apy']:.1f}% vs fair {gu['fair']:.1f}% ({gu['gap_bps']:+d} bps)")
             sev += min(4.0, abs(gu["gap_bps"])/120)
         if sig["band"] == "red":
             reasons.append(f"Low quality score ({sig['ls']}/100)")

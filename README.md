@@ -1,42 +1,35 @@
 # Ledgerscope
 
-**La couche de données et d'analytique indépendante sur le crédit privé tokenisé.**
-Réplique fonctionnelle de rwa.xyz + une couche analytique propriétaire (LS Score, NAV gap, Alerts) que rwa.xyz n'offre pas. Focus APAC / Singapour.
+**Independent ratings for tokenized private credit and real-world-asset funds.** By RWA Credit Intelligence, Singapore.
 
-## Ce que ça fait
+Live site: https://b00831052.github.io/ledgerscope/
 
-Un pipeline Python interroge les API publiques gratuites de DefiLlama (protocoles + rendements), classe les protocoles RWA par classe d'actifs (liste blanche curée), calcule deux modèles propriétaires, et génère un terminal HTML autonome.
+## What it does
 
-- **LS Score** (0–100) — qualité/risque depuis les signaux on-chain : taille (42%) + stabilité de TVL (40%) + résilience multi-chaîne (18%).
-- **NAV gap** — rendement juste = taux sans risque on-chain (médiane des T-bills tokenisés) + prime exigée par le risque `[2% + (1−LS/100)×10% + pénalité de volatilité σ]`. Gap = rendement offert − rendement juste. `RICH` = NAV probablement survalorisée ; `CHEAP` = coussin / risque caché.
-- **Alerts** — synthèse actionnable priorisée par sévérité.
+A daily pipeline reads public data (CoinGecko fund values, DefiLlama platform values and yields, on-chain contract state), classifies every tokenized fund by asset class, and publishes four proprietary layers:
 
-## Lancer en local
+- **LS Score (0-100):** quality and risk from observable on-chain signals (size, value stability, network resilience), with a redemption-stress flag.
+- **NAV gap:** offered yield vs the yield the fund's risk requires, with guards for unobserved and unverified yields.
+- **Key Risk:** who can upgrade, mint, pause or freeze each fund token, read from the chain.
+- **Track record:** every grade frozen daily in a hash-chained public ledger, scored against what happened next.
 
-```bash
-python3 build.py        # aucune dépendance externe (stdlib seule)
-open terminal.html
-```
+Full method and limits: [METHODOLOGY.md](METHODOLOGY.md).
 
-`build.py` régénère `data.json`, `terminal.html` et `index.html`.
+## Data
 
-## Déploiement (hébergement gratuit + auto-refresh)
+- `data.json`: the full daily dataset behind the site.
+- `snapshots/rwa_YYYY-MM-DD.ndjson`: one row per asset per day (no survivorship: dead funds stay in old snapshots).
+- `snapshots/ratings_ledger.ndjson`: the hash-chained ratings ledger.
+- `snapshots/keyrisk_YYYY-MM-DD.ndjson`: daily contract-control grades.
 
-### Option A — GitHub Pages (recommandé, tout gratuit)
-1. Créer un repo GitHub et y pousser ce dossier.
-2. Dans **Settings → Pages**, source = **GitHub Actions**.
-3. Le workflow [`.github/workflows/refresh.yml`](.github/workflows/refresh.yml) rebuild la donnée **chaque jour à 06:00 UTC** et redéploie. Bouton « Run workflow » pour forcer.
+## Run locally
 
 ```bash
-cd ~/Downloads/ledgerscope
-git init && git add -A && git commit -m "Ledgerscope MVP"
-git branch -M main
-git remote add origin https://github.com/<TON_USER>/ledgerscope.git
-git push -u origin main
+python3 build.py
 ```
 
-### Option B — Vercel / Netlify
-Importer le repo ; build command `python3 build.py`, output directory `.` (index.html à la racine). Pour l'auto-refresh, garder le cron GitHub Actions ou un cron Vercel.
+Writes `data.json`, `index.html` and the daily snapshots. No API keys needed.
 
-## Données
-DefiLlama public API (`api.llama.fi/protocols`, `yields.llama.fi/pools`) — gratuit, sans clé. Snapshot, non temps réel. Ni conseil en investissement, ni valorisation officielle.
+## Status
+
+Independent research based on public data and proprietary models. Not investment advice, not a credit rating under any regulation.

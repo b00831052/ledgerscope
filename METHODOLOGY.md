@@ -1,111 +1,82 @@
-# Ledgerscope — Méthodologie & Limites
+# Ledgerscope Methodology
 
-*Version validée le 2026-09-07. Ce document décrit exactement comment chaque chiffre du Terminal et des Credit Reviews est produit, ses hypothèses et ses limites. Il suit un standard de reproductibilité : un tiers doit pouvoir recréer nos résultats.*
+Ledgerscope by RWA Credit Intelligence. Version 3, 13 November 2026.
 
----
+This document describes how every number on the Ledgerscope site is produced, the assumptions behind it, and its limits. The goal is reproducibility: a third party should be able to rebuild every figure from public data and this document.
 
-## 1. Sources de données
+## 1. Data sources
 
-| Source | Endpoint | Usage | Fréquence |
-|---|---|---|---|
-| DefiLlama Protocols | `api.llama.fi/protocols` | Univers RWA, TVL, chaînes, variations | quotidien |
-| DefiLlama Yields | `yields.llama.fi/pools` | APY, volatilité de rendement (σ) | quotidien |
-| DefiLlama Protocol history | `api.llama.fi/protocol/{slug}` | Séries temporelles de TVL (28 mois) | quotidien |
-| DefiLlama Stablecoins | `stablecoins.llama.fi/stablecoins` | Total stablecoins | quotidien |
-| `fundamentals.json` | fichier curé à la main | Rating, séniorité, liquidité, gérant, juridiction | manuel |
+| Source | Use | Frequency |
+|---|---|---|
+| CoinGecko `/coins/markets` (asset-class categories) | Fund universe and value: market cap = units outstanding x NAV | Daily |
+| CoinGecko `/coins/{id}` | Contract addresses per chain, homepage | Cached, new tokens resolved each run |
+| CoinGecko `/coins/{id}/market_chart` | 12-month daily value history, top 40 funds | Daily |
+| DefiLlama `/protocols` | Platforms with no priced token: Maple, Huma, OpenTrade, KAIO, RealT | Daily |
+| DefiLlama yields `/pools` | Offered yield (APY) and yield volatility | Daily |
+| Public RPC nodes | Contract control: EIP-1967 slots, Safe thresholds, timelock delays, roles | Daily |
+| `fundamentals.json` | Curated rating, seniority, liquidity, manager tier, jurisdiction | Manual review |
 
-Toutes les sources API sont **publiques et gratuites**. Aucune donnée propriétaire tierce n'est redistribuée. Snapshot horodaté (`generated`) sur chaque vue. Données non temps réel.
+Exclusions: registry-only records that are not freely transferable tokens (for example Figure HELOC) and tokens under $1M. A FDV fallback is used only for a curated list of flagship funds that CoinGecko reports with zero market cap (for example BENJI).
 
-## 2. Classification par classe d'actif
+## 2. Asset classes
 
-Attribution par **liste blanche de slugs** curée (`WHITELIST` dans `build.py`), et non par heuristique de mots-clés, pour éliminer les faux positifs. Le crédit privé n'est attribué **que** par la liste blanche. Repli mots-clés pour les protocoles hors liste (jamais vers « crédit privé »).
+Each token takes the class of the first matching CoinGecko category, in this order: private credit, US Treasuries and money market funds, yield-bearing cash, non-US government debt, commodities, real estate, tokenized equity. Curated flagship funds are pinned to their class.
 
-**Limite :** la liste blanche doit être maintenue à chaque nouveau protocole ; un protocole non curé retombe sur l'heuristique ou « Other RWA ».
-
-## 3. LS Score (0–100) — qualité / risque
-
-Signal on-chain observable, sans données off-chain :
+## 3. LS Score (0-100)
 
 ```
-LS = 100 × (0,42·taille + 0,40·stabilité + 0,18·résilience)
-  taille     = log10(TVL) / log10(2 Md$)          (plafonné 0–1)
-  stabilité  = max(0, 1 − |Δ7j TVL| / 25)         (>25%/sem ⇒ 0)
-  résilience = min(1, nb_chaînes / 3)
+LS = 100 x (0.42 x size + 0.40 x stability + 0.18 x resilience)
+size       = log10(value) / log10($2B), capped at 1
+stability  = 1 - |7-day value change| / 25%, floored at 0 (0.5 if unknown)
+resilience = number of networks / 3, capped at 1
 ```
 
-Bandes : 🟢 ≥68 · 🟡 48–67 · 🔴 <48. Flag **STRESS** si Δ7j ≤ −8% (pression de rachat).
+Bands: Green 68+, Amber 48-67, Red under 48.
+Stress flag: an income fund (Treasuries, credit, yield cash, government debt) loses 8% or more of its value in 7 days.
 
-**Distribution observée** (validation) : min 32 / médiane 78 / max 99, σ=14 → le score discrimine, mais **skew haussier** (majorité 🟢). À lire comme un proxy taille/stabilité, pas un gate de qualité strict.
+## 4. NAV gap (yield vs risk)
 
-## 4. NAV gap — écart de valorisation
+NAV gap (bps) = offered yield - required yield. RICH at -75 bps or lower, CHEAP at +150 bps or higher, otherwise fair.
 
-Deux modèles, puis unification.
+Required yield, fundamental model (used when a fund is curated):
 
-**4a. Modèle fondamental** (cross-classe, préféré quand fondamentaux curés) :
-```
-requis = rf + spread(rating) + ajust(séniorité) + ajust(liquidité) + ajust(gérant)
-gap_fond = rendement_offert − requis   (bps)
-```
-La prime d'illiquidité est **portée par la liquidité** (daily 0 → locked +2,8 pts), pas par une base fixe — ce qui rend le modèle juste sur les classes liquides (T-bills) comme illiquides (crédit privé).
+- Treasury and cash wrappers: risk-free + wrapper spread (AAA 0, AA 0.10, A 0.25, BBB 0.50, unrated 0.75) + liquidity (daily 0, monthly 0.10, quarterly 0.25) + manager tier (-0.05 / 0 / +0.15). The assets are T-bills, so the spread covers only issuer, operational and liquidity risk.
+- Credit funds: risk-free + rating spread (AAA 0.8 to B 6.5, unrated 5.5) + seniority, liquidity and manager adjustments, floored at risk-free + 0.5.
 
-**4b. Modèle signal** (repli si pas de fondamentaux) :
-```
-requis = rf + 2% + (1 − LS/100)×10% + pénalité_volatilité(σ)
-```
+Required yield, signal model (used when a fund is not curated):
 
-**4c. NAV gap unifié** = fondamental si disponible, sinon signal. RICH ≤ −75 bps · CHEAP ≥ +150 bps.
+- Treasury and cash wrappers: risk-free + 0.25 + (1 - LS/100) x 1.0 + yield volatility penalty (max 1.0).
+- Credit funds: risk-free + 2.0 + (1 - LS/100) x 10.0 + yield volatility penalty (max 3.0).
 
-**rf (taux sans risque on-chain)** = médiane des APY des fonds monétaires / T-bills tokenisés (BUIDL, USYC, Ondo, Spiko…). Observé ~3,4–3,5%, cohérent avec les T-bills réels.
+Risk-free rate: median on-chain T-bill yield.
 
-### ⚠️ Limite critique — biais de calibration
-En absolu, ~74% des fonds notés ressortent « rich » (gap négatif). **C'est en partie un vrai signal** (le crédit tokenisé sous-rémunère son risque) **et en partie une calibration conservatrice** du rendement requis. Un résultat qui confirme aussi nettement l'hypothèse doit être traité avec prudence.
+Guards:
 
-## 5. Valorisation relative aux pairs (dé-biaisage)
+- Yield under 0.5% on-chain is treated as unobserved (income accrues inside the NAV). No valuation call.
+- A credit fund paying less than risk-free + 2% on-chain (risk-free + 0.5% for AAA/AA-rated credit) is marked unverified, not RICH. The gap is shown greyed out and raises no alert.
 
-Pour neutraliser le biais de niveau absolu, chaque fonds noté est situé **dans la distribution de ses pairs de classe** (classes à ≥4 fonds notés) :
-```
-percentile = rang du gap parmi les pairs
-z          = (gap − médiane_pairs) / σ_pairs
-rv = CHEAP si pctile ≥ 75 · RICH si pctile ≤ 25 · IN-LINE sinon
-```
-Exemple : Apollo est « rich » en absolu mais **IN-LINE** vs pairs ; Centrifuge est le vrai retardataire relatif (17ᵉ pctile). **C'est le signal le plus défendable** car indépendant de la calibration absolue.
+Peer-relative value: within each class with 4 or more valued funds, each fund's gap is ranked against its peers (percentile and z-score).
 
-## 6. Valorisation fondamentale — barème
+## 5. Key Risk (contract control)
 
-| Rating | spread (pts) | | Séniorité | ajust | | Liquidité | ajust | | Gérant | ajust |
-|---|---|---|---|---|---|---|---|---|---|---|
-| AAA | 0,8 | | senior secured | −0,5 | | daily | 0 | | Tier 1 | −0,6 |
-| AA | 1,2 | | senior / ABS | 0 | | monthly | +0,8 | | Tier 2 | 0 |
-| A | 1,8 | | unsecured | +1,2 | | quarterly | +1,6 | | Tier 3 | +1,2 |
-| BBB | 2,8 | | subordinated | +1,5 | | locked | +2,8 | | | |
-| BB / B / NR | 4,5 / 6,5 / 5,5 | | first-loss / equity | +3,0 / +2,5 | | | | | | |
+For each fund token with an EVM contract: who can upgrade the code, and who holds mint, pause, freeze or blacklist powers. A Safe multisig with a meaningful threshold, or a timelock, counts as verifiable governance. A key held by a single address is not called unsafe, because institutions often use MPC custody that looks like one address on-chain. Its governance cannot be verified on-chain, so the grade is capped at C. This is a contract-level view only, not an assessment of the fund's assets.
 
-Barème paramétrable, révisable à mesure que des données de spreads réels (ex. via Capital IQ, en calibration privée) deviennent disponibles.
+## 6. Track record
 
-## 7. Historique & agrégats
+- Ledger: every run writes each fund's LS score, band, stress flag, fundamental rating and key-risk grade to `snapshots/ratings_ledger.ndjson`. Each day's entries carry a SHA-256 hash of the previous day's hash plus that day's rows, and are committed to the public git repository. A past grade cannot be changed without breaking the chain.
+- Outcome test: a "bad outcome" is a loss of 20% or more of the fund's value at any point in the next 30 days.
+- Live scorecard: grades become scorable 30 days after they are issued. First live readout: 13 December 2026.
+- Backtest: the same LS rules replayed every 14 days on 12 months of CoinGecko history. Labelled as a backtest, never as live.
 
-- **Historique** : séries `/protocol/{slug}` des ~54 plus gros protocoles (>95% de la TVL), agrégées par classe et par mois sur 28 mois.
-  - ⚠️ **Biais de survivance** : seuls les protocoles **vivants aujourd'hui** sont inclus ; les protocoles disparus sont absents, ce qui lisse la trajectoire passée. La courbe reflète « l'histoire des survivants », pas l'histoire complète du marché.
-- **Réseaux** : valeur par chaîne via `chainTvls` (pas de double-comptage — validé : Σ réseaux = total exact).
-- **Managers** : agrégation par gérant curé (`ASSET_MANAGERS`), repli sur le nom du protocole.
-- **Croissance par classe** (1M/3M/YTD/1A) : dérivée des séries historiques (variation de TVL, **pas un rendement** — inclut les flux nets).
+## 7. Limits
 
-## 8. Alertes
+- History covers funds that exist today (survivorship bias); backtest failure rates understate reality.
+- Backtest uses today's network count for resilience.
+- Value change mixes investor flows and NAV moves.
+- On-chain yields can miss income that accrues off-chain or inside the NAV.
+- Curated fundamentals are reviewed by hand and carry a confidence level (high / medium / low).
+- Platforms without any public on-chain value (for example DigiFT today) are not covered.
 
-Générées sur tous les actifs ≥ 20 M$ ; sévérité = somme pondérée de : stress de rachat (+3), survalorisation (jusqu'à +4), score faible (+2), volatilité de rendement (+1), rendement excédentaire (+0,8). Triées décroissant.
+## 8. Status
 
-## 9. Résumé de la validation (pré-diffusion)
-
-| Contrôle | Résultat |
-|---|---|
-| Σ classes / réseaux / managers = total | ✅ exact (aucun double-comptage) |
-| rf plausible | ✅ 3,4–3,5% |
-| LS Score discrimine | ✅ σ=14, min 32 max 99 |
-| Skew « rich » absolu | 🟡 74% — traité par la valo relative (§5) |
-| Biais de survivance historique | 🟡 documenté (§7) |
-
-**Statut : diffusable avec caveats** — les résultats absolus doivent toujours être lus avec le signal relatif (§5), et l'historique avec le caveat de survivance (§7).
-
-## 10. Portée & avertissement
-
-Recherche indépendante à visée informative, fondée sur des données publiques et des modèles propriétaires. **Ne constitue ni un conseil en investissement, ni une notation de crédit officielle réglementée, ni une sollicitation.** Les avis reflètent l'état du marché à la date du snapshot et évoluent avec les données.
+Independent research based on public data and proprietary models. Not investment advice, not an official valuation, not a credit rating under any regulation, not a solicitation.

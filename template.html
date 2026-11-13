@@ -178,7 +178,7 @@
   .regblock{display:flex;align-items:center;justify-content:space-between;gap:16px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 22px;margin-bottom:18px;flex-wrap:wrap;}
   .regblock .sub{color:var(--ink-soft);font-size:13px;margin-top:3px;}
   .footlinks{display:flex;flex-wrap:wrap;gap:8px 20px;font-size:12px;color:var(--ink-faint);}
-  .footlinks span{cursor:default;}.footlinks span:first-child{color:var(--ink-soft);font-weight:600;}
+  .footlinks span{cursor:default;}.footlinks a{color:var(--ink-soft);text-decoration:none;}.footlinks a:hover{color:var(--accent);text-decoration:underline;}.footlinks span:first-child{color:var(--ink-soft);font-weight:600;}
   .chatw{position:fixed;bottom:22px;right:22px;width:48px;height:48px;border-radius:50%;background:var(--accent);border:none;font-size:22px;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.35);z-index:50;}
   tbody tr[data-slug]{cursor:pointer;}
   /* ===== Identité institutionnelle : sidebar marine + typographie research ===== */
@@ -304,15 +304,26 @@ tbody tr:hover{background:var(--hover)!important;}
 ::-webkit-scrollbar-thumb{background:var(--line);border-radius:6px;}::-webkit-scrollbar-thumb:hover{background:var(--ink-faint);}
 .sidebar{scrollbar-color:transparent transparent;}.sidebar:hover{scrollbar-color:var(--line) transparent;}
 .sidebar::-webkit-scrollbar-thumb{background:transparent;}.sidebar:hover::-webkit-scrollbar-thumb{background:var(--line);}
+.mdoc{max-width:860px;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px 28px 22px;line-height:1.6;color:var(--ink-soft);}.mdoc h3{color:var(--ink);font-size:16px;margin:22px 0 6px;}.mdoc b{color:var(--ink);}.mdoc ul{padding-left:20px;margin:6px 0;}.mdoc li{margin:4px 0;}
+
+.mnav{display:none;}
+@media(max-width:860px){
+ .mnav{display:flex;align-items:center;gap:8px;position:sticky;top:0;z-index:60;background:var(--panel);border-bottom:1px solid var(--line);padding:10px 16px;font-weight:700;color:var(--ink);}
+ .mnav button{margin-left:auto;background:var(--accent);color:var(--on-accent);border:none;border-radius:6px;padding:7px 14px;font-weight:600;font-size:13px;cursor:pointer;}
+ .sidebar.open{display:block!important;position:fixed!important;inset:0 25% 0 0;height:100vh!important;z-index:70;box-shadow:0 0 0 100vmax rgba(15,27,45,.35);}
+ .main,.content{padding-left:16px!important;padding-right:16px!important;}
+ .tablewrap .scroll{overflow-x:auto;}
+}
 </style>
 
+<div class="mnav"><span class="mk" style="background:var(--accent);color:var(--on-accent);border-radius:4px;width:22px;height:22px;display:grid;place-items:center;font-size:13px">L</span>Ledgerscope<button type="button" id="mnavBtn">Menu</button></div>
 <div class="app">
   <aside class="sidebar" id="sidebar">
     <div class="brand"><span class="mk">L</span><span class="bname">Ledger<em>scope</em></span>
       <button class="collapse" id="collapseBtn" title="Collapse">«</button></div>
     <div class="tagline bname">RWA Credit Intelligence</div>
     <button class="sidesearch" id="sideSearch"><span class="ss-t">Search…</span><span class="kbd">⌘K</span></button>
-    <div class="authrow" id="authRow">
+    <div class="authrow" id="authRow" style="display:none">
       <button class="auth ghost" id="loginBtn"><span class="lbl">Sign in</span></button>
       <button class="auth" id="signupBtn"><span class="lbl">Request access</span></button>
     </div>
@@ -341,7 +352,7 @@ tbody tr:hover{background:var(--hover)!important;}
     <div class="navsec">Data &amp; API</div>
     <div class="nav">
       <button data-v="datacatalog"><span class="lbl">Data Catalog</span></button>
-      <button class="apibtn"><span class="lbl">Enterprise API</span></button>
+      <button data-v="method"><span class="lbl">Methodology</span></button>
     </div>
     <div class="navsec">Asset Classes</div>
     <div class="nav" id="clsnav"></div>
@@ -515,6 +526,34 @@ tbody tr:hover{background:var(--hover)!important;}
         <div class="methodbox" id="tr-caveat"></div>
       </div>
 
+      <div class="view" id="v-method">
+        <div class="crumb">RWA Credit Intelligence · Methodology</div><div class="h-title">Methodology</div>
+        <div class="h-sub">How every number on this site is produced, and where it can be wrong.</div>
+        <div class="mdoc">
+          <h3>1. Data sources</h3>
+          <ul><li><b>Fund value:</b> CoinGecko market cap (units outstanding x NAV) for every token in the tokenized credit, treasury, money market, commodity, equity and real estate categories, plus a curated list of flagship funds filed elsewhere.</li>
+          <li><b>Platforms without a priced token</b> (Maple, Huma, OpenTrade, KAIO, RealT): protocol value from DefiLlama.</li>
+          <li><b>Yields:</b> DefiLlama yield pools, matched by contract address, then by symbol.</li>
+          <li><b>Contract control:</b> read directly from the chain (upgrade slots, multisig thresholds, timelock delays, privileged roles).</li>
+          <li><b>Excluded:</b> registry-only records that are not freely transferable tokens (e.g. Figure HELOC), and tokens under $1M.</li></ul>
+          <h3>2. LS Score (0-100)</h3>
+          <p>LS = 100 x (0.42 x size + 0.40 x stability + 0.18 x resilience). Size is log-scaled and capped at $2B. Stability falls linearly to 0 at a 25% weekly value move. Resilience counts networks, capped at 3. Bands: Green 68+, Amber 48-67, Red under 48. A <b>stress flag</b> fires when an income fund loses 8% or more of its value in 7 days.</p>
+          <h3>3. NAV gap (yield vs risk)</h3>
+          <p>NAV gap = offered yield minus required yield, in basis points. RICH at -75 bps or lower, CHEAP at +150 bps or higher.</p>
+          <ul><li><b>Treasury and cash wrappers:</b> the assets are T-bills, so the required yield is the risk-free rate plus a small wrapper premium (0 to 1%) for issuer, operational and liquidity risk.</li>
+          <li><b>Credit funds:</b> risk-free rate plus a credit spread by rating, adjusted for seniority, liquidity and manager tier.</li>
+          <li><b>Unobserved yield:</b> tokens that pay under 0.5% on-chain usually accrue income inside the NAV. They get no valuation call.</li>
+          <li><b>Unverified yield:</b> a credit fund paying less than T-bills + 2% on-chain (T-bills + 0.5% for AAA/AA credit) is flagged unverified, not RICH. Its income most likely accrues off-chain. The gap is shown greyed out.</li></ul>
+          <h3>4. Key Risk</h3>
+          <p>Who can upgrade, mint, pause or freeze each token, read from the chain. A key held by a single address is not called unsafe (institutions use MPC custody), but its governance cannot be verified on-chain, so the grade is capped at C.</p>
+          <h3>5. Track record</h3>
+          <p>Every day each fund's band is written to a public ledger. Each day's entries are hash-chained to the previous day and committed to git, so a past grade cannot be edited without breaking the chain. Outcome test: did the fund lose 20% or more of its value within 30 days? The backtest replays the same rules on 12 months of history and is labelled as such.</p>
+          <h3>6. Limits</h3>
+          <ul><li>History covers funds that exist today (survivorship bias).</li><li>Value change mixes flows and NAV moves.</li><li>On-chain yield can miss income that accrues off-chain.</li><li>Curated fundamentals are reviewed by hand and carry a confidence level.</li></ul>
+          <p class="sub">Independent research based on public data and proprietary models. Not investment advice, not a credit rating under any regulation, not a solicitation.</p>
+        </div>
+      </div>
+
       <!-- PRIVATE CREDIT -->
       <div class="view on" id="v-credit">
         <div class="crumb">RWA Credit Intelligence · Ledgerscope</div><div class="h-title">Independent Ratings: Tokenized Private Credit</div>
@@ -580,11 +619,11 @@ tbody tr:hover{background:var(--hover)!important;}
       <!-- footer -->
       <div class="sitefoot">
         <div class="regblock">
-          <div><b>For issuers and platforms</b><div class="sub">Get your tokenized funds independently rated by Ledgerscope.</div></div>
-          <button class="btn-reg">Get rated →</button>
+          <div><b>Public methodology, public track record</b><div class="sub">Every rule behind every grade is published, and every grade is frozen daily in a hash-chained ledger.</div></div>
+          <button class="btn-reg" onclick="document.querySelector('.nav button[data-v=method]').click()">Read the methodology →</button>
         </div>
         <div class="footlinks">
-          <span>Ledgerscope · Singapore</span><span>Documentation</span><span>Research</span><span>API</span><span>Press &amp; Citations</span><span>Privacy</span>
+          <span>Ledgerscope · RWA Credit Intelligence · Singapore</span><a href="#" onclick="document.querySelector('.nav button[data-v=method]').click();return false">Methodology</a><a href="#" onclick="document.querySelector('.nav button[data-v=track]').click();return false">Track record</a><a href="https://github.com/b00831052/ledgerscope/tree/main/snapshots" target="_blank" rel="noopener">Ratings ledger &amp; daily data</a><a href="https://github.com/b00831052/ledgerscope/blob/main/METHODOLOGY.md" target="_blank" rel="noopener">Methodology (source)</a>
         </div>
       </div>
     </div>
@@ -790,8 +829,8 @@ document.getElementById('an-sub').textContent=`LS Score + NAV gap on ${sigAssets
 document.getElementById('an-cards').innerHTML=[['On-chain risk-free',D.rf+'%'],['RICH',allRich],[' CHEAP',allCheap],['Stress',allStress]].map(c=>`<div class="card"><div class="k">${c[0]}</div><div class="v">${c[1]}</div></div>`).join('');
 const anClass=document.getElementById('anClass');
 [...new Set(sigAssets.map(a=>a.cls))].sort().forEach(c=>anClass.add(new Option(c,c)));
-const gapCell=yg=>{if(!yg)return '<span class="sub">no yield</span>';const cl=yg.gap_bps<=-75?'g-red':yg.gap_bps>=150?'g-green':'';return `<span class="${cl}" style="font-weight:700">${yg.gap_bps>=0?'+':''}${yg.gap_bps} bps</span>`;};
-const verdCell=yg=>{if(!yg)return '<span class="sub">–</span>';const m={rich:['RICH','g-red'],cheap:['CHEAP','g-green'],fair:['Fair','']};const[t,c]=m[yg.verdict];return `<span class="${c}" style="font-weight:700">${t}</span>`;};
+const gapCell=yg=>{if(!yg)return '<span class="sub">no yield</span>';const cl=yg.verdict==='unverified'?'sub':yg.gap_bps<=-75?'g-red':yg.gap_bps>=150?'g-green':'';return `<span class="${cl}" style="font-weight:700">${yg.gap_bps>=0?'+':''}${yg.gap_bps} bps</span>`;};
+const verdCell=yg=>{if(!yg)return '<span class="sub">–</span>';const m={rich:['RICH','g-red'],cheap:['CHEAP','g-green'],fair:['Fair',''],unverified:['Unverified','sub']};const[t,c]=m[yg.verdict]||['–','sub'];return `<span class="${c}" style="font-weight:700">${t}</span>`;};
 let ank='gap',and_=1;
 function anRender(){
   const q=document.getElementById('anq').value.toLowerCase(),fc=anClass.value,fb=document.getElementById('anBand').value,fv=document.getElementById('anVerd').value;
@@ -812,8 +851,8 @@ document.getElementById('fv-sub').textContent=`Fundamental required yield on ${f
 document.getElementById('fv-count').textContent=fvAssets.length;
 const confDot={high:'',med:'',low:''};
 const ratingChip=r=>{const g=r&&['AAA','AA','A'].includes(r)?'g-green':r==='NR'?'':'g-amber';return `<span class="chip ${g}" style="font-weight:700">${r||'NR'}</span>`;};
-const fvGap=fv=>{if(fv.gap_bps==null)return '<span class="sub">no yield</span>';const cl=fv.gap_bps<=-75?'g-red':fv.gap_bps>=150?'g-green':'';return `<span class="${cl}" style="font-weight:700">${fv.gap_bps>=0?'+':''}${fv.gap_bps} bps</span>`;};
-const fvVerd=fv=>{if(!fv.verdict)return '<span class="sub">–</span>';const m={rich:['RICH','g-red'],cheap:['CHEAP','g-green'],fair:['Fair','']};const[t,c]=m[fv.verdict];return `<span class="${c}" style="font-weight:700">${t}</span>`;};
+const fvGap=fv=>{if(fv.gap_bps==null)return '<span class="sub">no yield</span>';const cl=fv.verdict==='unverified'?'sub':fv.gap_bps<=-75?'g-red':fv.gap_bps>=150?'g-green':'';return `<span class="${cl}" style="font-weight:700">${fv.gap_bps>=0?'+':''}${fv.gap_bps} bps</span>`;};
+const fvVerd=fv=>{if(!fv.verdict)return '<span class="sub">–</span>';const m={rich:['RICH','g-red'],cheap:['CHEAP','g-green'],fair:['Fair',''],unverified:['Unverified','sub']};const[t,c]=m[fv.verdict]||['–','sub'];return `<span class="${c}" style="font-weight:700">${t}</span>`;};
 document.getElementById('fvbody').innerHTML=fvAssets.slice().sort((a,b)=>(a.fv.gap_bps==null?9e9:a.fv.gap_bps)-(b.fv.gap_bps==null?9e9:b.fv.gap_bps)).map(a=>{const f=a.fv;return `<tr data-slug="${a.slug}"><td class="asset">${a.name} <span class="sub">${a.symbol}</span><br><span class="sub" style="font-weight:400">${f.jurisdiction||''}</span></td><td style="font-size:12px;color:var(--ink-soft);white-space:normal;max-width:250px">${ratingChip(f.rating)} ${(f.seniority||'').replace('_',' ')} · ${f.liquidity} · T${f.manager_tier}<br>${f.note||''}</td><td class="num">${f.offered!=null?f.offered.toFixed(1)+'%':'<span class=sub>–</span>'}</td><td class="num">${f.req.toFixed(1)}%</td><td class="num">${fvGap(f)}</td><td>${fvVerd(f)}</td><td>${confDot[f.conf]||''}</td></tr>`;}).join('');
 
 /* apac */
@@ -910,23 +949,23 @@ function creditMemo(slug){
   const a=bySlug[slug];if(!a)return;const s=a.sig,fv=a.fv,gu=a.gapu;
   // recommandation dérivée
   let reco,rc;
-  if(s.stress||s.band==='red'){reco='WATCH / AVOID';rc='g-red';}
-  else if(gu&&gu.verdict==='rich'){reco='OVERVALUED: underweight';rc='g-red';}
-  else if(gu&&gu.verdict==='cheap'){reco='OPPORTUNITY: investigate';rc='g-green';}
-  else {reco='NEUTRAL / in line';rc='';}
+  if(s.stress||s.band==='red'){reco='ELEVATED RISK: watch';rc='g-red';}
+  else if(gu&&gu.verdict==='rich'){reco='RICH: yield below risk';rc='g-red';}
+  else if(gu&&gu.verdict==='cheap'){reco='CHEAP: yield above risk';rc='g-green';}
+  else {reco='IN LINE';rc='';}
   const today=new Date().toISOString().slice(0,10);
-  const val=gu?`The fund offers <b>${gu.apy.toFixed(2)}%</b> against a required yield of <b>${gu.fair.toFixed(2)}%</b> (${gu.src==='fond.'?'fundamental model':'on-chain signal'}), a gap of <b class="${gu.gap_bps<=-75?'g-red':gu.gap_bps>=150?'g-green':''}">${gu.gap_bps>=0?'+':''}${gu.gap_bps} bps</b>. ${gu.gap_bps<=-75?'The token under-pays its risk: NAV is likely overstated.':gu.gap_bps>=150?'Yield cushion above risk: check for hidden risk.':'Yield is in line with risk.'}`:'No observable on-chain yield for this fund: assessed on signals only.';
+  const val=gu?`The fund offers <b>${gu.apy.toFixed(2)}%</b> against a required yield of <b>${gu.fair.toFixed(2)}%</b> (${gu.src==='fond.'?'fundamental model':'on-chain signal'}), a gap of <b class="${gu.gap_bps<=-75?'g-red':gu.gap_bps>=150?'g-green':''}">${gu.gap_bps>=0?'+':''}${gu.gap_bps} bps</b>. ${gu.verdict==='unverified'?'The on-chain yield is below the floor for its rating, which usually means income accrues in the NAV and is not captured on-chain: treated as unverified, no valuation call.':gu.gap_bps<=-75?'The token under-pays its risk: NAV is likely overstated.':gu.gap_bps>=150?'Yield cushion above risk: check for hidden risk.':'Yield is in line with risk.'}`:'No observable on-chain yield for this fund: assessed on signals only.';
   const struct=fv?`Rating <b>${fv.rating}</b>, seniority <b>${(fv.seniority||'').replace('_',' ')}</b>, liquidity <b>${fv.liquidity}</b>, manager tier <b>${fv.manager_tier}</b>. ${fv.note||''} <span class="sub">(jurisdiction: ${fv.jurisdiction||'n/a'} · data confidence: ${fv.conf})</span>`:'Fundamentals not yet curated for this fund.';
   let h=`<div class="mhd"><button class="x" onclick="closeDetail()"></button><div class="memohd"><span class="memo-eyebrow"> LEDGERSCOPE · CREDIT MEMO</span><span class="nm">${a.name} <span class="sym">${a.symbol}</span></span></div><div class="chips"><button class="memobtn" onclick="openDetail('${slug}')">← Profile</button><button class="memobtn" onclick="window.print()">Print / PDF</button></div></div><div class="mbody memo">`;
   h+=`<div class="memo-reco"><div><span class="k">Recommendation</span><div class="reco ${rc}">${reco}</div></div><div style="text-align:right"><span class="k">LS Score</span><div class="reco g-${s.band}">${s.ls}/100</div></div></div>`;
-  h+=`<div class="mgrid"><div><div class="k">Class</div><div class="v" style="font-size:14px">${a.cls}</div></div><div><div class="k">TVL on-chain</div><div class="v">${fmt(a.tvl)}</div></div><div><div class="k">NAV gap</div><div class="v ${gu&&gu.gap_bps<=-75?'g-red':gu&&gu.gap_bps>=150?'g-green':''}">${gu?(gu.gap_bps>=0?'+':'')+gu.gap_bps+' bps':'–'}</div></div><div><div class="k">7d trend</div><div class="v ${a.chg7d>=0?'up':'down'}">${pct(a.chg7d)}</div></div></div>`;
+  h+=`<div class="mgrid"><div><div class="k">Class</div><div class="v" style="font-size:14px">${a.cls}</div></div><div><div class="k">TVL on-chain</div><div class="v">${fmt(a.tvl)}</div></div><div><div class="k">NAV gap</div><div class="v ${gu&&gu.verdict==='rich'?'g-red':gu&&gu.verdict==='cheap'?'g-green':''}">${gu?(gu.gap_bps>=0?'+':'')+gu.gap_bps+' bps':'–'}</div></div><div><div class="k">7d trend</div><div class="v ${a.chg7d>=0?'up':'down'}">${pct(a.chg7d)}</div></div></div>`;
   h+=`<div class="msec">1 · Summary</div><p>${a.name} is a tokenized <b>${a.cls.toLowerCase()}</b> asset on ${a.chains.join(', ')}, with <b>${fmt(a.tvl)}</b> on-chain. Our proprietary LS Score is <b class="g-${s.band}">${s.ls}/100</b> (${s.note}).</p>`;
   h+=`<div class="msec">2 · Quality &amp; risk (LS Score)</div><p>The score combines observable on-chain signals: size (log scale), value stability and multi-chain resilience. ${s.stress?'<b class="g-red">Redemption stress detected (net outflow of 8%+ over 7 days).</b>':'No redemption stress over the last 7 days.'}</p>`;
   h+=`<div class="msec">3 · Valuation</div><p>${val}</p>`;
   h+=`<div class="msec">4 · Structure &amp; fundamentals</div><p>${struct}</p>`;
-  const flags=[];if(s.stress)flags.push('Active redemption pressure (7-day net outflows)');if(gu&&gu.gap_bps<=-75)flags.push('Yield below risk (NAV likely overstated)');if(s.band==='red')flags.push('Low quality score');if(fv&&fv.conf==='low')flags.push('Low confidence on fundamentals: further due diligence needed');
+  const flags=[];if(s.stress)flags.push('Active redemption pressure (7-day net outflows)');if(gu&&gu.verdict==='rich')flags.push('Yield below risk (NAV likely overstated)');if(s.band==='red')flags.push('Low quality score');if(fv&&fv.conf==='low')flags.push('Low confidence on fundamentals: further due diligence needed');
   h+=`<div class="msec">5 · Watch points</div>${flags.length?'<ul class="memo-flags">'+flags.map(f=>`<li>${f}</li>`).join('')+'</ul>':'<p>No major warning signal as of this note.</p>'}`;
-  h+=`<div class="msec">6 · Conclusion</div><p>Based on on-chain data and the Ledgerscope valuation model, the position is assessed as <b class="${rc}">${reco}</b>. ${gu&&gu.gap_bps<=-75?'Caution is warranted until the valuation gap narrows.':gu&&gu.gap_bps>=150?'The positive gap warrants a look at the underlying before any allocation.':'Profile in line; reassessed at the next refresh.'}</p>`;
+  h+=`<div class="msec">6 · Conclusion</div><p>Based on on-chain data and the Ledgerscope valuation model, the position is assessed as <b class="${rc}">${reco}</b>. ${gu&&gu.verdict==='rich'?'Caution is warranted until the valuation gap narrows.':gu&&gu.verdict==='cheap'?'The positive gap warrants a look at the underlying before any allocation.':'Profile in line; reassessed at the next refresh.'}</p>`;
   h+=`<div class="memo-foot">Ledgerscope Research · Credit memo generated ${today} · On-chain data as of ${D.generated}. Independent research based on public data and proprietary models. Not investment advice, not an official valuation, not a solicitation.</div>`;
   h+=`</div>`;md.innerHTML=h;ov.classList.add('on');md.scrollTop=0;
 }
@@ -974,7 +1013,7 @@ document.querySelectorAll('.csv').forEach(btn=>btn.addEventListener('click',()=>
 }));
 
 /* ===== LOGIN / FREEMIUM ===== */
-let LOGGED=false,CUR_CLASS=null;
+let LOGGED=true,CUR_CLASS=null;
 const loginOv=document.getElementById('loginOverlay');
 function openLogin(mode){document.getElementById('lg-title').textContent=mode==='signup'?'Request access':'Sign in';loginOv.classList.add('on');setTimeout(()=>document.getElementById('lgEmail').focus(),50);}
 window.openLoginGlobal=()=>openLogin('login');
@@ -1049,6 +1088,11 @@ document.getElementById('tr-caveat').innerHTML=`<b>Read this honestly.</b> The b
 b.textContent=dark?'Light mode':'Dark mode';
 b.addEventListener('click',()=>{try{localStorage.setItem('ls-theme',dark?'light':'dark');}catch(e){}
 document.documentElement.setAttribute('data-theme',dark?'light':'dark');location.reload();});})();
+
+/* mobile menu */
+(function(){const sb=document.getElementById('sidebar'),b=document.getElementById('mnavBtn');if(!b)return;
+b.addEventListener('click',()=>sb.classList.toggle('open'));
+sb.addEventListener('click',e=>{if(e.target.closest('button[data-v],.clsbtn'))sb.classList.remove('open');});})();
 /* asset classes dans la sidebar (cliquables → ouvrent la page de classe) */
 document.getElementById('clsnav').innerHTML=D.byclass.map(c=>`<button class="clsbtn" data-cls="${c[0]}"><span class="csw" style="background:${clr(c[0])}"></span>${c[0]}</button>`).join('');
 function showView(v){document.querySelectorAll('.view').forEach(x=>x.classList.remove('on'));document.getElementById('v-'+v).classList.add('on');window.scrollTo(0,0);}
@@ -1063,5 +1107,5 @@ document.querySelectorAll('.clsbtn').forEach(b=>b.addEventListener('click',()=>{
   setNavActive(b);openClass(b.dataset.cls);showView('class');
 }));
 /* Enterprise API (démo) */
-document.querySelector('.apibtn').addEventListener('click',()=>{setNavActive(null);showView('screener');});
+
 </script>
