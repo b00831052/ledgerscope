@@ -7,7 +7,7 @@
    "liquidity": "monthly",
    "manager_tier": 1,
    "jurisdiction": "US (Securitize)",
-   "note": "Tranches AAA de CLO, senior sécurisé, diversifié",
+   "note": "AAA CLO tranches, senior secured, diversified",
    "conf": "high"
   },
   "apollo-diversified-credit-securitize-fund": {
@@ -16,7 +16,7 @@
    "liquidity": "quarterly",
    "manager_tier": 1,
    "jurisdiction": "US (Apollo)",
-   "note": "Crédit privé diversifié Apollo, non noté au niveau token",
+   "note": "Diversified Apollo private credit, unrated at token level",
    "conf": "med"
   },
   "hamilton-lane-senior-credit-opportunities": {
@@ -25,7 +25,7 @@
    "liquidity": "quarterly",
    "manager_tier": 1,
    "jurisdiction": "US (Hamilton Lane)",
-   "note": "Senior secured loans, emprunteurs top-tier",
+   "note": "Senior secured loans, top-tier borrowers",
    "conf": "high"
   },
   "anemoy-capital": {
@@ -34,7 +34,7 @@
    "liquidity": "daily",
    "manager_tier": 1,
    "jurisdiction": "Web3 (Anemoy/Centrifuge)",
-   "note": "Adossé fonds CLO AAA (JAAA) / trésorerie liquide",
+   "note": "Backed by AAA CLO fund (JAAA) / liquid treasury",
    "conf": "med"
   },
   "centrifuge-protocol": {
@@ -43,7 +43,7 @@
    "liquidity": "monthly",
    "manager_tier": 2,
    "jurisdiction": "Web3 (Centrifuge)",
-   "note": "Pools structurés junior/senior, adossés actifs",
+   "note": "Structured junior/senior pools, asset-backed",
    "conf": "med"
   },
   "hastra": {
@@ -52,7 +52,7 @@
    "liquidity": "daily",
    "manager_tier": 3,
    "jurisdiction": "Solana DeFi",
-   "note": "Protocole DeFi, transparence limitée",
+   "note": "DeFi protocol, limited transparency",
    "conf": "low"
   },
   "nest-credit": {
@@ -61,7 +61,7 @@
    "liquidity": "daily",
    "manager_tier": 2,
    "jurisdiction": "Plume Network",
-   "note": "Agrège des RWA tokenisés diversifiés",
+   "note": "Aggregates diversified tokenized RWAs",
    "conf": "low"
   },
   "kaio": {
@@ -69,8 +69,8 @@
    "seniority": "senior",
    "liquidity": "quarterly",
    "manager_tier": 1,
-   "jurisdiction": "Singapour/ADGM (ex-Libre)",
-   "note": "Feeder vers fonds institutionnels régulés",
+   "jurisdiction": "Singapore/ADGM (ex-Libre)",
+   "note": "Feeder into regulated institutional funds",
    "conf": "med"
   },
   "gaib": {
@@ -79,7 +79,7 @@
    "liquidity": "daily",
    "manager_tier": 3,
    "jurisdiction": "Web3",
-   "note": "Financement adossé GPU/IA — novel, risque structurel",
+   "note": "GPU / AI-backed financing: novel, structural risk",
    "conf": "low"
   },
   "nawa-protocol": {
@@ -88,7 +88,7 @@
    "liquidity": "daily",
    "manager_tier": 3,
    "jurisdiction": "Web3 (Shariah)",
-   "note": "Yield shariah-compliant, petite taille",
+   "note": "Shariah-compliant yield, small size",
    "conf": "low"
   },
   "raac": {
@@ -97,7 +97,7 @@
    "liquidity": "daily",
    "manager_tier": 3,
    "jurisdiction": "Web3",
-   "note": "Lending adossé RWA",
+   "note": "RWA-backed lending",
    "conf": "low"
   },
   "clearpool-tpool": {
@@ -106,7 +106,7 @@
    "liquidity": "daily",
    "manager_tier": 2,
    "jurisdiction": "Web3 (Clearpool)",
-   "note": "Pool orienté treasuries/crédit",
+   "note": "Treasuries / credit pool",
    "conf": "low"
   },
   "defa-by-invoicemate": {
@@ -115,7 +115,7 @@
    "liquidity": "monthly",
    "manager_tier": 3,
    "jurisdiction": "Web3",
-   "note": "Affacturage / financement de factures",
+   "note": "Factoring / invoice financing",
    "conf": "low"
   },
   "zivoe": {
@@ -124,7 +124,7 @@
    "liquidity": "locked",
    "manager_tier": 3,
    "jurisdiction": "Web3",
-   "note": "Crédit conso, tranche junior/first-loss",
+   "note": "Consumer credit, junior / first-loss tranche",
    "conf": "low"
   },
   "naos-finance": {
@@ -133,7 +133,7 @@
    "liquidity": "locked",
    "manager_tier": 3,
    "jurisdiction": "Web3",
-   "note": "Prêts PME",
+   "note": "SME loans",
    "conf": "low"
   },
   "untangled-rwa": {
@@ -141,8 +141,8 @@
    "seniority": "asset_backed",
    "liquidity": "monthly",
    "manager_tier": 2,
-   "jurisdiction": "Web3/Singapour",
-   "note": "Crédit institutionnel pour fintechs — trade/invoice finance",
+   "jurisdiction": "Web3/Singapore",
+   "note": "Institutional credit to fintechs: trade / invoice finance",
    "conf": "med"
   },
   "untangled-old": {
@@ -150,8 +150,8 @@
    "seniority": "asset_backed",
    "liquidity": "monthly",
    "manager_tier": 2,
-   "jurisdiction": "Web3/Singapour",
-   "note": "Ancienne version Untangled",
+   "jurisdiction": "Web3/Singapore",
+   "note": "Legacy Untangled version",
    "conf": "low"
   },
   "kea-credit": {
@@ -160,7 +160,7 @@
    "liquidity": "daily",
    "manager_tier": 3,
    "jurisdiction": "Web3",
-   "note": "Protocole DeFi de crédit, petite taille",
+   "note": "DeFi credit protocol, small size",
    "conf": "low"
   },
   "hiyield": {
@@ -169,7 +169,7 @@
    "liquidity": "monthly",
    "manager_tier": 2,
    "jurisdiction": "Web3",
-   "note": "Accès aux marchés de capitaux traditionnels pour natifs web3",
+   "note": "Traditional capital-markets access for web3 users",
    "conf": "low"
   },
   "ztln-p": {
@@ -178,7 +178,7 @@
    "liquidity": "daily",
    "manager_tier": 3,
    "jurisdiction": "Web3 (Zoth)",
-   "note": "Ecosystème RWAFi / restaking",
+   "note": "RWAFi / restaking ecosystem",
    "conf": "low"
   },
   "byzanlink-rwa-markets": {
@@ -187,7 +187,7 @@
    "liquidity": "daily",
    "manager_tier": 3,
    "jurisdiction": "Web3",
-   "note": "Plateforme RWA non-custodiale, yield",
+   "note": "Non-custodial RWA yield platform",
    "conf": "low"
   },
   "bondlink-finance": {
@@ -196,7 +196,7 @@
    "liquidity": "monthly",
    "manager_tier": 3,
    "jurisdiction": "Web3",
-   "note": "Infra omnichain agrégeant du private lending",
+   "note": "Omnichain infrastructure aggregating private lending",
    "conf": "low"
   },
   "tprotocol-v1": {
@@ -205,7 +205,7 @@
    "liquidity": "daily",
    "manager_tier": 3,
    "jurisdiction": "Web3",
-   "note": "Lending RWA adossé T-bills/MMF (v1)",
+   "note": "RWA lending backed by T-bills / MMFs (v1)",
    "conf": "low"
   },
   "tprotocol-v2": {
@@ -214,7 +214,7 @@
    "liquidity": "daily",
    "manager_tier": 3,
    "jurisdiction": "Web3",
-   "note": "Lending RWA décentralisé (v2)",
+   "note": "Decentralized RWA lending (v2)",
    "conf": "low"
   },
   "elyfi": {
@@ -223,7 +223,7 @@
    "liquidity": "locked",
    "manager_tier": 3,
    "jurisdiction": "Web3",
-   "note": "Prêts crypto adossés à de l'immobilier",
+   "note": "Crypto loans backed by real estate",
    "conf": "low"
   },
   "blackrock-buidl": {
@@ -232,7 +232,7 @@
    "liquidity": "daily",
    "manager_tier": 1,
    "jurisdiction": "US (BlackRock)",
-   "note": "Fonds monétaire Trésor US institutionnel",
+   "note": "Institutional US Treasury money market fund",
    "conf": "high"
   },
   "circle-usyc": {
@@ -241,7 +241,7 @@
    "liquidity": "daily",
    "manager_tier": 1,
    "jurisdiction": "US (Circle/Hashnote)",
-   "note": "Yield coin adossé T-bills, régulé",
+   "note": "Regulated T-bill-backed yield coin",
    "conf": "high"
   },
   "ondo-yield-assets": {
@@ -250,7 +250,7 @@
    "liquidity": "daily",
    "manager_tier": 1,
    "jurisdiction": "US (Ondo)",
-   "note": "Exposition ETF T-bills court terme",
+   "note": "Short-term T-bill ETF exposure",
    "conf": "high"
   },
   "spiko": {
@@ -258,8 +258,8 @@
    "seniority": "senior_secured",
    "liquidity": "daily",
    "manager_tier": 1,
-   "jurisdiction": "EU (Spiko, MMF régulé)",
-   "note": "MMF tokenisé USTBL/EUTBL régulé",
+   "jurisdiction": "EU (Spiko, MMF regulated)",
+   "note": "Regulated tokenized MMF (USTBL / EUTBL)",
    "conf": "high"
   },
   "invesco-ustb": {
@@ -277,7 +277,7 @@
    "liquidity": "daily",
    "manager_tier": 2,
    "jurisdiction": "US (WisdomTree)",
-   "note": "Accès fonds WisdomTree on-chain",
+   "note": "WisdomTree funds on-chain",
    "conf": "med"
   },
   "openeden-tbill": {
@@ -285,8 +285,8 @@
    "seniority": "senior_secured",
    "liquidity": "daily",
    "manager_tier": 2,
-   "jurisdiction": "Singapour (OpenEden)",
-   "note": "Vault T-bills noté Moody's A",
+   "jurisdiction": "Singapore (OpenEden)",
+   "note": "T-bill vault rated A by Moody's",
    "conf": "high"
   },
   "openeden-usdo": {
@@ -294,8 +294,8 @@
    "seniority": "senior",
    "liquidity": "daily",
    "manager_tier": 2,
-   "jurisdiction": "Singapour (OpenEden)",
-   "note": "Stable adossé T-bills/MMF",
+   "jurisdiction": "Singapore (OpenEden)",
+   "note": "Stablecoin backed by T-bills / MMFs",
    "conf": "med"
   },
   "vaneck-treasury-fund": {
@@ -304,7 +304,7 @@
    "liquidity": "daily",
    "manager_tier": 1,
    "jurisdiction": "US (VanEck)",
-   "note": "VBILL Trésor US tokenisé",
+   "note": "VBILL tokenized US Treasury fund",
    "conf": "high"
   },
   "digift": {
@@ -312,8 +312,8 @@
    "seniority": "senior",
    "liquidity": "daily",
    "manager_tier": 2,
-   "jurisdiction": "Singapour (DigiFT, MAS)",
-   "note": "Exchange RWA régulé MAS",
+   "jurisdiction": "Singapore (DigiFT, MAS)",
+   "note": "MAS-regulated RWA exchange",
    "conf": "med"
   },
   "matrixdock-stbt": {
@@ -321,7 +321,7 @@
    "seniority": "senior",
    "liquidity": "daily",
    "manager_tier": 2,
-   "jurisdiction": "Singapour (Matrixdock)",
+   "jurisdiction": "Singapore (Matrixdock)",
    "note": "Short-term US T-bill token",
    "conf": "med"
   },
@@ -331,7 +331,7 @@
    "liquidity": "daily",
    "manager_tier": 3,
    "jurisdiction": "Web3",
-   "note": "Panier de T-bills tokenisés",
+   "note": "Basket of tokenized T-bills",
    "conf": "low"
   },
   "midas-rwa": {
@@ -340,7 +340,7 @@
    "liquidity": "monthly",
    "manager_tier": 2,
    "jurisdiction": "Web3 (Midas)",
-   "note": "Tokenisation compliant, mixte",
+   "note": "Compliant tokenization, mixed assets",
    "conf": "low"
   },
   "tether-gold": {
@@ -348,8 +348,8 @@
    "seniority": "physical",
    "liquidity": "daily",
    "manager_tier": 2,
-   "jurisdiction": "Suisse (Tether)",
-   "note": "Or physique alloué (XAUt)",
+   "jurisdiction": "Switzerland (Tether)",
+   "note": "Allocated physical gold (XAUt)",
    "conf": "med"
   },
   "paxos-gold": {
@@ -357,8 +357,8 @@
    "seniority": "physical",
    "liquidity": "daily",
    "manager_tier": 1,
-   "jurisdiction": "US (Paxos, régulé NYDFS)",
-   "note": "Or physique alloué régulé (PAXG)",
+   "jurisdiction": "US (Paxos, regulated NYDFS)",
+   "note": "Regulated allocated physical gold (PAXG)",
    "conf": "high"
   },
   "matrixdock-xaum": {
@@ -366,8 +366,8 @@
    "seniority": "physical",
    "liquidity": "daily",
    "manager_tier": 2,
-   "jurisdiction": "Singapour (Matrixdock)",
-   "note": "Or physique tokenisé (XAUm)",
+   "jurisdiction": "Singapore (Matrixdock)",
+   "note": "Tokenized physical gold (XAUm)",
    "conf": "med"
   },
   "ondo-global-markets": {
@@ -376,7 +376,7 @@
    "liquidity": "daily",
    "manager_tier": 1,
    "jurisdiction": "US (Ondo)",
-   "note": "Actions tokenisées",
+   "note": "Tokenized equities",
    "conf": "med"
   },
   "xstocks": {
@@ -385,7 +385,7 @@
    "liquidity": "daily",
    "manager_tier": 2,
    "jurisdiction": "EU (Backed)",
-   "note": "Actions tokenisées librement transférables",
+   "note": "Freely transferable tokenized equities",
    "conf": "med"
   },
   "blockchain-capital": {
@@ -394,7 +394,7 @@
    "liquidity": "locked",
    "manager_tier": 2,
    "jurisdiction": "US (Blockchain Capital)",
-   "note": "Fonds VC tokenisé (BCAP)",
+   "note": "Tokenized VC fund (BCAP)",
    "conf": "low"
   },
   "realt-tokens": {
@@ -403,7 +403,7 @@
    "liquidity": "locked",
    "manager_tier": 3,
    "jurisdiction": "US (RealT)",
-   "note": "Immobilier locatif fractionné",
+   "note": "Fractional rental real estate",
    "conf": "low"
   },
   "lofty": {
@@ -412,7 +412,7 @@
    "liquidity": "locked",
    "manager_tier": 3,
    "jurisdiction": "US (Lofty, Algorand)",
-   "note": "Immobilier fractionné",
+   "note": "Fractional real estate",
    "conf": "low"
   },
   "ethena-usdtb": {
@@ -421,7 +421,7 @@
    "liquidity": "daily",
    "manager_tier": 2,
    "jurisdiction": "Web3 (Ethena)",
-   "note": "Digital dollar adossé RWA",
+   "note": "RWA-backed digital dollar",
    "conf": "med"
   },
   "usual-usd0": {
@@ -430,7 +430,7 @@
    "liquidity": "daily",
    "manager_tier": 2,
    "jurisdiction": "Web3 (Usual)",
-   "note": "Stable adossé T-bills",
+   "note": "T-bill-backed stablecoin",
    "conf": "low"
   },
   "frax-usd": {
@@ -439,7 +439,7 @@
    "liquidity": "daily",
    "manager_tier": 2,
    "jurisdiction": "Web3 (Frax)",
-   "note": "Stable collatéralisé",
+   "note": "Collateralized stablecoin",
    "conf": "low"
   },
   "blackrock-usd-institutional-digital-liquidity-fund": {
@@ -448,7 +448,7 @@
    "liquidity": "daily",
    "manager_tier": 1,
    "jurisdiction": "US (BlackRock)",
-   "note": "Fonds monétaire Trésor US institutionnel",
+   "note": "Institutional US Treasury money market fund",
    "conf": "high"
   },
   "hashnote-usyc": {
@@ -457,7 +457,7 @@
    "liquidity": "daily",
    "manager_tier": 1,
    "jurisdiction": "US (Circle/Hashnote)",
-   "note": "Yield coin adossé T-bills, régulé",
+   "note": "Regulated T-bill-backed yield coin",
    "conf": "high"
   },
   "ondo-us-dollar-yield": {
@@ -466,7 +466,7 @@
    "liquidity": "daily",
    "manager_tier": 1,
    "jurisdiction": "US (Ondo)",
-   "note": "Exposition ETF T-bills court terme",
+   "note": "Short-term T-bill ETF exposure",
    "conf": "high"
   },
   "eutbl": {
@@ -474,8 +474,8 @@
    "seniority": "senior_secured",
    "liquidity": "daily",
    "manager_tier": 1,
-   "jurisdiction": "EU (Spiko, MMF régulé)",
-   "note": "MMF tokenisé USTBL/EUTBL régulé",
+   "jurisdiction": "EU (Spiko, MMF regulated)",
+   "note": "Regulated tokenized MMF (USTBL / EUTBL)",
    "conf": "high"
   },
   "spiko-us-t-bills-money-market-fund": {
@@ -483,8 +483,8 @@
    "seniority": "senior_secured",
    "liquidity": "daily",
    "manager_tier": 1,
-   "jurisdiction": "EU (Spiko, MMF régulé)",
-   "note": "MMF tokenisé USTBL/EUTBL régulé",
+   "jurisdiction": "EU (Spiko, MMF regulated)",
+   "note": "Regulated tokenized MMF (USTBL / EUTBL)",
    "conf": "high"
   },
   "superstate-short-duration-us-government-securities-fund-ustb": {
@@ -502,7 +502,7 @@
    "liquidity": "daily",
    "manager_tier": 1,
    "jurisdiction": "Web3 (Anemoy/Centrifuge)",
-   "note": "Adossé fonds CLO AAA (JAAA) / trésorerie liquide",
+   "note": "Backed by AAA CLO fund (JAAA) / liquid treasury",
    "conf": "med"
   },
   "matrixdock-gold": {
@@ -510,8 +510,8 @@
    "seniority": "physical",
    "liquidity": "daily",
    "manager_tier": 2,
-   "jurisdiction": "Singapour (Matrixdock)",
-   "note": "Or physique tokenisé (XAUm)",
+   "jurisdiction": "Singapore (Matrixdock)",
+   "note": "Tokenized physical gold (XAUm)",
    "conf": "med"
   },
   "pax-gold": {
@@ -519,8 +519,8 @@
    "seniority": "physical",
    "liquidity": "daily",
    "manager_tier": 1,
-   "jurisdiction": "US (Paxos, régulé NYDFS)",
-   "note": "Or physique alloué régulé (PAXG)",
+   "jurisdiction": "US (Paxos, regulated NYDFS)",
+   "note": "Regulated allocated physical gold (PAXG)",
    "conf": "high"
   },
   "theo-short-duration-us-treasury-fund": {
@@ -529,7 +529,7 @@
    "liquidity": "daily",
    "manager_tier": 3,
    "jurisdiction": "Web3",
-   "note": "Panier de T-bills tokenisés",
+   "note": "Basket of tokenized T-bills",
    "conf": "low"
   },
   "midas-mtbill": {
@@ -538,7 +538,7 @@
    "liquidity": "monthly",
    "manager_tier": 2,
    "jurisdiction": "Web3 (Midas)",
-   "note": "Tokenisation compliant, mixte",
+   "note": "Compliant tokenization, mixed assets",
    "conf": "low"
   },
   "openeden-open-dollar": {
@@ -546,8 +546,8 @@
    "seniority": "senior",
    "liquidity": "daily",
    "manager_tier": 2,
-   "jurisdiction": "Singapour (OpenEden)",
-   "note": "Stable adossé T-bills/MMF",
+   "jurisdiction": "Singapore (OpenEden)",
+   "note": "Stablecoin backed by T-bills / MMFs",
    "conf": "med"
   },
   "anemoy-tokenized-apollo-diversified-credit-fund": {
@@ -556,7 +556,7 @@
    "liquidity": "quarterly",
    "manager_tier": 1,
    "jurisdiction": "US (Apollo)",
-   "note": "Crédit privé diversifié Apollo, non noté au niveau token",
+   "note": "Diversified Apollo private credit, unrated at token level",
    "conf": "med"
   },
   "hamilton-lane-senior-credit-opportunities-securitize-fund": {
@@ -565,7 +565,7 @@
    "liquidity": "quarterly",
    "manager_tier": 1,
    "jurisdiction": "US (Hamilton Lane)",
-   "note": "Senior secured loans, emprunteurs top-tier",
+   "note": "Senior secured loans, top-tier borrowers",
    "conf": "high"
   },
   "usdtb": {
@@ -574,7 +574,7 @@
    "liquidity": "daily",
    "manager_tier": 2,
    "jurisdiction": "Web3 (Ethena)",
-   "note": "Digital dollar adossé RWA",
+   "note": "RWA-backed digital dollar",
    "conf": "med"
   },
   "usual-usd": {
@@ -583,7 +583,7 @@
    "liquidity": "daily",
    "manager_tier": 2,
    "jurisdiction": "Web3 (Usual)",
-   "note": "Stable adossé T-bills",
+   "note": "T-bill-backed stablecoin",
    "conf": "low"
   },
   "ousg": {
@@ -592,7 +592,7 @@
    "liquidity": "daily",
    "manager_tier": 1,
    "jurisdiction": "US (Ondo)",
-   "note": "Fonds de fonds monétaires/T-bills (BlackRock, Franklin...)",
+   "note": "Fund of money market / T-bill funds (BlackRock, Franklin...)",
    "conf": "med"
   },
   "janus-henderson-anemoy-treasury-fund": {
@@ -601,7 +601,7 @@
    "liquidity": "daily",
    "manager_tier": 1,
    "jurisdiction": "Web3 (Janus Henderson/Anemoy)",
-   "note": "T-bills US court terme",
+   "note": "Short-term US T-bills",
    "conf": "med"
   },
   "franklin-templeton-benji": {
@@ -610,7 +610,7 @@
    "liquidity": "daily",
    "manager_tier": 1,
    "jurisdiction": "US (Franklin Templeton)",
-   "note": "FOBXX, fonds monétaire gouvernemental US régulé",
+   "note": "FOBXX, regulated US government money market fund",
    "conf": "high"
   }
  }

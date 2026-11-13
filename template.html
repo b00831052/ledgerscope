@@ -1,5 +1,6 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Ledgerscope</title>
+<script>try{document.documentElement.setAttribute("data-theme",localStorage.getItem("ls-theme")==="dark"?"dark":"light");}catch(e){document.documentElement.setAttribute("data-theme","light");}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   /* Identité institutionnelle « agence de notation » : papier chaud, encre marine, accent oxblood, sidebar marine. */
@@ -259,7 +260,10 @@
   @media(max-width:860px){.app{grid-template-columns:1fr;}.sidebar{position:static;height:auto;display:none;}.cards{grid-template-columns:1fr 1fr;}.grid2{grid-template-columns:1fr;}.mgrid{grid-template-columns:1fr;}}
 
 /* ===== v3 clean institutional theme (light only) ===== */
-:root,:root[data-theme=dark],:root:not([data-theme=light]){--ground:#f6f7f9;--panel:#ffffff;--panel-2:#f9fafb;--side:#ffffff;--ink:#0f1b2d;--ink-soft:#4b5869;--ink-faint:#8792a2;--line:#e4e7ec;--line-soft:#eef0f3;--accent:#0b3d91;--accent-soft:#e8eef9;--up:#137a4b;--down:#b42318;--gold:#a15c07;--chip:#f1f3f6;--mono-bg:#f4f6f8;color-scheme:light;}
+:root,:root:not([data-theme=light]){--ground:#f6f7f9;--panel:#ffffff;--panel-2:#f9fafb;--side:#ffffff;--ink:#0f1b2d;--ink-soft:#4b5869;--ink-faint:#8792a2;--line:#e4e7ec;--line-soft:#eef0f3;--accent:#0b3d91;--accent-soft:#e8eef9;--up:#137a4b;--down:#b42318;--gold:#a15c07;--chip:#f1f3f6;--mono-bg:#f4f6f8;--hover:#f8fafc;--on-accent:#fff;color-scheme:light;}
+:root[data-theme=dark]{--ground:#0b1220;--panel:#111a2b;--panel-2:#0e1626;--side:#0d1524;--ink:#e6ebf2;--ink-soft:#a3aebd;--ink-faint:#6b7789;--line:#1f2a3d;--line-soft:#172133;--accent:#6ea8ff;--accent-soft:#16264a;--up:#3ccf8e;--down:#f0716a;--gold:#e0b14a;--chip:#172133;--mono-bg:#0f1828;--hover:#152035;--on-accent:#0b1220;color-scheme:dark;}
+.themebtn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin:10px 0 4px;padding:8px;border:1px solid var(--line);border-radius:6px;background:var(--panel-2);color:var(--ink-soft);font-size:12.5px;font-weight:600;cursor:pointer;}
+.themebtn:hover{color:var(--ink);background:var(--hover);}
 body,button,input,select{font-family:"Inter",-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif!important;}
 body{background:var(--ground);font-size:14px;}
 .h-title,.brand,.modal .nm,.memohd .nm,.chartbox h3,.box h3,.panelhd h3,.welcome b,.card .v,.mgrid .v,.sidebar .brand{font-family:"Inter",-apple-system,sans-serif!important;letter-spacing:-.015em;}
@@ -267,9 +271,9 @@ body{background:var(--ground);font-size:14px;}
 .h-title{font-size:26px;font-weight:650;color:var(--ink);}
 .h-sub{color:var(--ink-soft);}
 .crumb{font-size:11px;letter-spacing:.08em;color:var(--accent);}
-.sidebar{background:#fff!important;border-right:1px solid var(--line)!important;}
+.sidebar{background:var(--side)!important;border-right:1px solid var(--line)!important;}
 .sidebar .brand{color:var(--ink)!important;font-weight:700;}
-.brand .mk,.sidebar .brand .mk{background:var(--accent)!important;color:#fff!important;border-radius:4px!important;}
+.brand .mk,.sidebar .brand .mk{background:var(--accent)!important;color:var(--on-accent)!important;border-radius:4px!important;}
 .brand em{color:var(--accent)!important;}
 .sidebar .tagline,.sidebar .navsec{color:var(--ink-faint)!important;}
 .sidebar .nav button{color:var(--ink-soft)!important;border-radius:6px;font-size:13.5px;}
@@ -277,8 +281,8 @@ body{background:var(--ground);font-size:14px;}
 .sidebar .nav button.on{background:var(--accent-soft)!important;color:var(--accent)!important;font-weight:600;box-shadow:inset 2px 0 0 var(--accent);}
 .sidebar .sidesearch{background:var(--chip)!important;border:1px solid var(--line)!important;color:var(--ink-faint)!important;}
 .sidebar .sidefoot{color:var(--ink-faint)!important;}
-.auth{background:var(--accent)!important;color:#fff!important;border:1px solid var(--accent)!important;border-radius:6px!important;font-weight:600;}
-.auth.ghost{background:#fff!important;color:var(--accent)!important;}
+.auth{background:var(--accent)!important;color:var(--on-accent)!important;border:1px solid var(--accent)!important;border-radius:6px!important;font-weight:600;}
+.auth.ghost{background:var(--panel)!important;color:var(--accent)!important;}
 .badge{background:var(--down)!important;color:#fff!important;}
 .card,.box,.tablewrap,.chartbox,.methodbox{border:1px solid var(--line)!important;border-radius:8px!important;box-shadow:0 1px 2px rgba(16,24,40,.04)!important;background:var(--panel)!important;}
 .methodbox{background:var(--panel-2)!important;color:var(--ink-soft);line-height:1.55;}
@@ -286,11 +290,18 @@ body{background:var(--ground);font-size:14px;}
 .card .v{font-weight:650;color:var(--ink);}
 thead th{background:var(--panel-2)!important;color:var(--ink-faint)!important;font-size:11px!important;text-transform:uppercase;letter-spacing:.05em;font-weight:600!important;border-bottom:1px solid var(--line)!important;}
 tbody tr{border-bottom:1px solid var(--line-soft);}
-tbody tr:hover{background:#f8fafc!important;}
-.ticker{background:#fff!important;border-bottom:1px solid var(--line)!important;color:var(--ink-soft)!important;}
-.csv,.btn-reg{background:#fff!important;color:var(--accent)!important;border:1px solid var(--line)!important;border-radius:6px!important;font-weight:600;}
+tbody tr:hover{background:var(--hover)!important;}
+.ticker{background:var(--panel)!important;border-bottom:1px solid var(--line)!important;color:var(--ink-soft)!important;}
+.csv,.btn-reg{background:var(--panel)!important;color:var(--accent)!important;border:1px solid var(--line)!important;border-radius:6px!important;font-weight:600;}
 .chip{border-radius:4px!important;}
 .chatw,.tag-new{display:none!important;}
+
+/* thin, quiet scrollbars (sidebar hidden until hover) */
+*{scrollbar-width:thin;scrollbar-color:var(--line) transparent;}
+::-webkit-scrollbar{width:6px;height:6px;}::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--line);border-radius:6px;}::-webkit-scrollbar-thumb:hover{background:var(--ink-faint);}
+.sidebar{scrollbar-color:transparent transparent;}.sidebar:hover{scrollbar-color:var(--line) transparent;}
+.sidebar::-webkit-scrollbar-thumb{background:transparent;}.sidebar:hover::-webkit-scrollbar-thumb{background:var(--line);}
 </style>
 
 <div class="app">
@@ -332,6 +343,7 @@ tbody tr:hover{background:#f8fafc!important;}
     </div>
     <div class="navsec">Asset Classes</div>
     <div class="nav" id="clsnav"></div>
+    <button class="themebtn" id="themeBtn" type="button">Dark mode</button>
     <div class="sidefoot" id="sidefoot"></div>
   </aside>
 
@@ -1029,6 +1041,12 @@ const pct=x=>x==null?'—':(x>0?'+':'')+x+'%';
 document.getElementById('trbody').innerHTML=bt.bands.map(b=>`<tr><td><span class="chip" style="background:${BC[b.band]};color:#fff;font-weight:700">${BN[b.band]}</span></td><td class="num">${b.n}</td><td class="num"><b>${b.n?b.hit_dd+'%':'—'}</b></td><td class="num">${pct(b.med_dd)}</td><td class="num">${pct(b.med_chg)}</td></tr>`).join('');
 document.getElementById('trstress').innerHTML=`<tr><td>Flagged (7d outflow 8%+)</td><td class="num">${st.n_flag}</td><td class="num"><b>${st.flag_hit}%</b></td><td class="num">${pct(st.flag_med_chg)}</td></tr><tr><td>Not flagged</td><td class="num">${st.n_clean}</td><td class="num"><b>${st.clean_hit}%</b></td><td class="num">${pct(st.clean_med_chg)}</td></tr>`;
 document.getElementById('tr-caveat').innerHTML=`<b>Read this honestly.</b> The backtest uses funds that exist today (survivorship: dead funds are missing, so real bad-outcome rates are higher). Chain count is today's. Red band has a small sample. Value change mixes flows and NAV moves. The live ledger fixes all of this going forward: first 30-day readout on ${lv.first_readout}.`;}
+
+/* ===== theme toggle: saved per browser, charts redraw via reload ===== */
+(function(){const b=document.getElementById('themeBtn');const dark=document.documentElement.getAttribute('data-theme')==='dark';
+b.textContent=dark?'Light mode':'Dark mode';
+b.addEventListener('click',()=>{try{localStorage.setItem('ls-theme',dark?'light':'dark');}catch(e){}
+document.documentElement.setAttribute('data-theme',dark?'light':'dark');location.reload();});})();
 /* asset classes dans la sidebar (cliquables → ouvrent la page de classe) */
 document.getElementById('clsnav').innerHTML=D.byclass.map(c=>`<button class="clsbtn" data-cls="${c[0]}"><span class="csw" style="background:${clr(c[0])}"></span>${c[0]}</button>`).join('');
 function showView(v){document.querySelectorAll('.view').forEach(x=>x.classList.remove('on'));document.getElementById('v-'+v).classList.add('on');window.scrollTo(0,0);}

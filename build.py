@@ -208,15 +208,15 @@ ASSET_MANAGERS = {
 # relocalisation Singapour. Curé à la main ; le marché on-chain APAC est encore mince,
 # c'est précisément la thèse : bâtir la couche data locale avant qu'il grossisse.
 APAC_SLUGS = {
-    "digift":               "Singapour (MAS, exchange RWA régulé)",
-    "kaio":                 "Singapour / ADGM (ex-Libre Capital)",
-    "matrixdock-xaum":      "Singapour (Matrixport)",
-    "matrixdock-stbt":      "Singapour (Matrixport)",
-    "openeden-tbill":       "Singapour (OpenEden)",
-    "openeden-usdo":        "Singapour (OpenEden)",
+    "digift":               "Singapore (MAS, regulated RWA exchange)",
+    "kaio":                 "Singapore / ADGM (ex-Libre Capital)",
+    "matrixdock-xaum":      "Singapore (Matrixport)",
+    "matrixdock-stbt":      "Singapore (Matrixport)",
+    "openeden-tbill":       "Singapore (OpenEden)",
+    "openeden-usdo":        "Singapore (OpenEden)",
     "asseto-aoabt":         "APAC (Asseto, money market CMS)",
     "asseto-cash+":         "APAC (Asseto)",
-    "sygnum-fiusd-liquidity-fund": "Singapour/Suisse (Sygnum, hub SG)",
+    "sygnum-fiusd-liquidity-fund": "Singapore/Switzerland (Sygnum, hub SG)",
 }
 
 # Repli mots-clés pour les protocoles hors liste (jamais vers "Private credit").
@@ -339,9 +339,9 @@ ISSUERS = ["BlackRock","Franklin","Ondo","Circle","Hashnote","Superstate","Spiko
            "Apollo","Hamilton Lane","KKR","Matrixdock","DigiFT","Paxos","Tether","WisdomTree","VanEck","Fidelity","Sygnum",
            "Libeara","Backed","Centrifuge","Anemoy","Maple","Securitize","Invesco","State Street","UBS","Arca","Midas",
            "Theo","Usual","Ethena","Frax","Figure","Kinexys","Robinhood","Kraken","Dinari","Swarm","Mountain","Agora","Plume"]
-APAC_ISSUERS = {"OpenEden": "Singapour (OpenEden)", "DigiFT": "Singapour (DigiFT, MAS)", "Matrixdock": "Singapour (Matrixdock)",
-                "Libeara": "Singapour (Libeara, SC Ventures)", "Sygnum": "Singapour/Suisse (Sygnum)", "InvestaX": "Singapour (InvestaX)",
-                "Marketnode": "Singapour (Marketnode)", "ADDX": "Singapour (ADDX)", "Asseto": "APAC (Asseto)", "Fasset": "APAC (Fasset)"}
+APAC_ISSUERS = {"OpenEden": "Singapore (OpenEden)", "DigiFT": "Singapore (DigiFT, MAS)", "Matrixdock": "Singapore (Matrixdock)",
+                "Libeara": "Singapore (Libeara, SC Ventures)", "Sygnum": "Singapore/Switzerland (Sygnum)", "InvestaX": "Singapore (InvestaX)",
+                "Marketnode": "Singapore (Marketnode)", "ADDX": "Singapore (ADDX)", "Asseto": "APAC (Asseto)", "Fasset": "APAC (Fasset)"}
 def issuer_of(name):
     n = (name or "").lower()
     for i in ISSUERS:
