@@ -257,7 +257,6 @@
   @media(max-width:860px){.app{grid-template-columns:1fr;}.sidebar{position:static;height:auto;display:none;}.cards{grid-template-columns:1fr 1fr;}.grid2{grid-template-columns:1fr;}.mgrid{grid-template-columns:1fr;}}
 </style>
 
-<div id="migr" style="background:#8a1c2b;color:#fff;padding:9px 16px;font-size:13px;text-align:center">Data source upgrade in progress: our upstream provider changed how fund values are published. Figures below are temporarily incomplete. New dataset lands within 48h.</div>
 <div class="app">
   <aside class="sidebar" id="sidebar">
     <div class="brand"><span class="mk">L</span><span class="bname">Ledger<em>scope</em></span>
@@ -280,6 +279,7 @@
       <button data-v="alerts"><span class="ic">▲</span><span class="lbl">Alerts</span> <span class="badge" id="navalertn"></span></button>
       <button data-v="analytics"><span class="ic">◈</span><span class="lbl">Credit Signals</span></button>
       <button data-v="valuation"><span class="ic">⊟</span><span class="lbl">Valuation</span></button>
+      <button data-v="keyrisk"><span class="ic">🔑</span><span class="lbl">Key Risk (Launchscope)</span></button>
     </div>
     <div class="navsec">Market Intelligence</div>
     <div class="nav">
@@ -437,6 +437,16 @@
           <tbody id="clbody"></tbody></table></div></div>
       </div>
 
+      <!-- KEY RISK -->
+      <div class="view" id="v-keyrisk">
+        <div class="crumb">RWA Credit Intelligence · Launchscope module</div><div class="h-title">Launch &amp; Key Risk</div>
+        <div class="h-sub" id="kr-sub"></div>
+        <div class="methodbox">Who can change, mint, pause or freeze each fund token, read directly from the chain: upgrade slots (EIP-1967), the admin's own code (Safe multisig threshold, timelock delay) and the token's privileged powers. A key held by a plain address (EOA) is <b>not</b> called unsafe: institutions often use MPC custody, which looks like one address on-chain. It means governance cannot be verified on-chain and must come from the issuer's disclosures, so it caps the grade at C. Contract-level view only; not an assessment of the fund's assets.</div>
+        <div class="tablewrap"><div class="scroll"><table>
+          <thead><tr><th>Grade</th><th>Token</th><th>Class</th><th class="num">Value</th><th>Upgrade control</th><th>Powers held by</th><th>Powers</th><th>Notes</th></tr></thead>
+          <tbody id="krbody"></tbody></table></div></div>
+      </div>
+
       <!-- PRIVATE CREDIT -->
       <div class="view on" id="v-credit">
         <div class="crumb">RWA Credit Intelligence · Ledgerscope</div><div class="h-title">Independent Ratings: Tokenized Private Credit</div>
@@ -546,7 +556,7 @@ const clr=c=>CLR[c]||'#8b929b';
 /* welcome + footer */
 document.getElementById('welcome').innerHTML=`<b>Ledgerscope, by RWA Credit Intelligence.</b> The independent rating layer for tokenized private credit. We rate the funds. Issuers, exchanges and funds buy the score. Source: ${D.source}. Snapshot ${D.generated}.`;
 document.getElementById('sidefoot').innerHTML=`✦ = analytique propriétaire<br>Données ${D.generated}<br>APAC · Singapore-first`;
-document.getElementById('footdisc').innerHTML=`Ledgerscope Terminal · données réelles via DefiLlama public API (${D.generated}). TVL on-chain vérifiable ; classification &amp; modèles propriétaires. <b>Limites méthodologiques :</b> le graphique historique ne couvre que les protocoles vivants aujourd'hui (biais de survivance) ; le NAV gap absolu est calibré prudemment — la <i>valorisation relative aux pairs</i> (fiche détail) le neutralise. Ni conseil d'investissement, ni notation officielle. Méthodo complète : <span class="mono">METHODOLOGY.md</span>. Rafraîchir : <span class="mono">python3 build.py</span>.`;
+document.getElementById('footdisc').innerHTML=`Ledgerscope Terminal · données réelles via DefiLlama public API (${D.generated}). TVL on-chain vérifiable ; classification &amp; modèles propriétaires. <b>Limites méthodologiques :</b> le graphique historique ne couvre que les protocoles vivants aujourd'hui (biais de survivance) ; le NAV gap absolu est calibré prudemment — la <i>valorisation relative aux pairs</i> (fiche détail) le neutralise. Ni conseil d'investissement, ni notation officielle. Méthodo complète : <span class="mono">METHODOLOGY.md</span>. Coverage: fund tokens priced on CoinGecko (value = units outstanding x NAV); registry-only records (e.g. Figure HELOC) excluded; some issuer platforms without a priced token are not yet covered. Rafraîchir : <span class="mono">python3 build.py</span>.`;
 
 /* ticker : top actifs */
 document.getElementById('ticker').innerHTML=D.assets.slice(0,10).map(a=>`<div class="tk"><span class="s">${a.symbol!=='-'?a.symbol:a.name.split(' ')[0]}</span><span class="v">${fmt(a.tvl)}</span><span class="c ${(a.chg7d||0)>=0?'up':'down'}">${pct(a.chg7d)}</span></div>`).join('');
@@ -949,6 +959,12 @@ function renderLeague(kind){
   document.getElementById('lgbody').innerHTML=arr.map(([k,v],i)=>`<tr><td class="num">${i+1}</td><td class="asset">${k}</td><td class="num">${fmt(v[0])}</td><td class="num">${v[1]}</td></tr>`).join('');
 }
 document.querySelectorAll('#cl-tabs button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('#cl-tabs button').forEach(x=>x.classList.remove('on'));b.classList.add('on');renderLeague(b.dataset.lg);}));
+
+/* ===== KEY RISK (Launchscope module) ===== */
+const KR=D.keyrisk||[];
+document.getElementById('kr-sub').textContent=`${KR.length} fund tokens X-rayed on-chain · ${KR.filter(k=>k.upgrade_type==='multisig'||k.upgrade_type==='timelock').length} with governed upgrade keys · ${KR.filter(k=>k.upgrade_type==='immutable').length} with locked code · ${D.generated}`;
+const KG={A:'var(--up)',B:'#4f8a3c',C:'var(--gold)',D:'#c0661f',F:'var(--down)'};
+document.getElementById('krbody').innerHTML=KR.map(k=>`<tr data-slug="${k.slug}"><td><span class="chip" style="background:${KG[k.grade]};color:#fff;font-weight:800">${k.grade}</span></td><td class="asset">${k.name} <span class="sub">${k.symbol} · ${k.chain}</span></td><td class="sub">${k.cls}</td><td class="num">${fmt(k.tvl)}</td><td style="white-space:normal;max-width:220px;font-size:12px">${k.upgrade}</td><td style="white-space:normal;max-width:220px;font-size:12px">${k.owner}</td><td class="sub">${(k.powers||[]).join(', ')||'none'}</td><td style="white-space:normal;max-width:300px;font-size:12px;color:var(--ink-soft)">${[...k.hard,...k.flags].join(' · ')||'—'}</td></tr>`).join('');
 
 /* asset classes dans la sidebar (cliquables → ouvrent la page de classe) */
 document.getElementById('clsnav').innerHTML=D.byclass.map(c=>`<button class="clsbtn" data-cls="${c[0]}"><span class="csw" style="background:${clr(c[0])}"></span>${c[0]}</button>`).join('');

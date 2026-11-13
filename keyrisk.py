@@ -30,8 +30,9 @@ CHAINS = {
     "polygon-pos": ("polygon", 137, "https://polygon-bor-rpc.publicnode.com"),
     "xdai": ("gnosis", 100, "https://gnosis-rpc.publicnode.com"),
     "avalanche": ("avalanche", 43114, "https://avalanche-c-chain-rpc.publicnode.com"),
+    "zksync": ("zksync", 324, "https://mainnet.era.zksync.io"),
 }
-CHAIN_PREF = ["ethereum", "base", "arbitrum", "bsc", "polygon", "gnosis", "avalanche"]
+CHAIN_PREF = ["ethereum", "base", "arbitrum", "bsc", "polygon", "gnosis", "avalanche", "zksync"]
 SLOT_IMPL = "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc"
 SLOT_ADMIN = "0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103"
 ZERO = "0x" + "0" * 40
@@ -86,7 +87,7 @@ def key_holder(rpc, a, depth=0):
     if a in DEAD:
         return {"type": "none", "label": "Renounced (no holder)"}
     if not _is_contract(rpc, a):
-        return {"type": "eoa", "label": "Single wallet (one private key)"}
+        return {"type": "eoa", "label": "Off-chain key (EOA: custody not verifiable, may be MPC)"}
     thr = _call_uint(rpc, a, "0xe75235b8")                                    # Safe.getThreshold()
     if thr:
         r = _rpc(rpc, "eth_call", [{"to": a, "data": "0xa0e67e2b"}, "latest"])  # Safe.getOwners()
@@ -102,7 +103,7 @@ def key_holder(rpc, a, depth=0):
         if up and up != a:
             inner = key_holder(rpc, up, depth + 1)
             if inner["type"] != "unknown":
-                inner = dict(inner); inner["label"] = "Admin contract owned by " + inner["label"].lower()
+                inner = dict(inner); l = inner["label"]; inner["label"] = "Admin contract owned by " + l[0].lower() + l[1:]
                 return inner
     return {"type": "contract", "label": "Contract (governance not verified)"}
 
@@ -166,8 +167,9 @@ def rate_token(a, ent):
         holder = adm if adm != ZERO else owner            # transparent proxy admin, else UUPS owner/admin role
         up = key_holder(rpc, holder)
         std = impl != ZERO                                   # standard EIP-1967 proxy, upgrade path provable
-        if up["type"] == "eoa" and std: us = 0; hard.append("Upgrade admin is a single wallet: one private key can change the code")
-        elif up["type"] == "eoa": us = 8; flags.append("Flagged as proxy (non-standard), owner is a single wallet")
+        if up["type"] == "eoa":
+            us = 10 if std else 12
+            flags.append("Upgrade power sits with an off-chain key: governance must be verified from issuer disclosures (could be MPC custody)")
         elif up["type"] == "timelock": us = 30
         elif up["type"] == "multisig": us = 25 if (up.get("threshold") or 0) >= 3 else 18
         elif up["type"] == "none": us = 35
@@ -180,8 +182,7 @@ def rate_token(a, ent):
     elif ow["type"] in ("multisig", "timelock", "none"): ps = 25 if ow["type"] != "multisig" or (ow.get("threshold") or 0) >= 2 else 15
     elif ow["type"] == "unknown": ps = 12; flags.append(f"{', '.join(powers)} power exists, holder not identifiable")
     elif ow["type"] == "eoa":
-        ps = 5; flags.append(f"Single key controls {', '.join(powers)}")
-        if "mint" in powers: hard.append("A single wallet holds the mint power")
+        ps = 10; flags.append(f"{', '.join(powers)} power held by an off-chain key (custody not verifiable on-chain)")
     else: ps = 15; flags.append(f"{', '.join(powers)} held by unverified contract")
     # 3. code transparency (15)
     if gp is None:
@@ -196,7 +197,9 @@ def rate_token(a, ent):
     ms = round(10 * ((a.get("sig") or {}).get("stability") or 0))
     score = int(us + ps + cs + hs + ms)
     grd = "F" if hard else "A" if score >= 80 else "B" if score >= 65 else "C" if score >= 50 else "D" if score >= 35 else "F"
-    kind = "asset" if a.get("cls") in ("U.S. Treasuries", "Cash / yield stablecoin", "Commodities") else "platform"
+    if "eoa" in (up["type"], ow["type"]) and grd in ("A", "B"):
+        grd = "C"            # on-chain governance unverifiable: cannot earn A/B on key risk
+    kind = "platform" if a.get("cls") == "Real estate" else "asset"   # CoinGecko class = the fund token itself
     return {"kind": kind, "chain": canon, "address": addr, "score": score, "grade": grd, "hard": hard, "flags": flags,
             "upgrade": up["label"], "upgrade_type": up["type"], "owner": ow["label"], "owner_type": ow["type"],
             "powers": powers, "holders": hc, "parts": {"upgrade": us, "powers": ps, "code": cs, "holders": hs, "market": ms}}

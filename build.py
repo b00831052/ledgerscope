@@ -130,6 +130,18 @@ def build_yield_map(pools):
         if a["tvl"] > 0:
             ymap[proj] = {"apy": a["wapy"]/a["tvl"], "sigma": a["wsig"]/a["tvl"], "n": a["n"]}
     # taux sans risque on-chain = médiane des APY des T-bills tokenisés
+    global YADDR, YSYM
+    YADDR, YSYM = {}, {}
+    for p in pools:
+        apy = p.get("apy"); tvl = p.get("tvlUsd") or 0
+        if apy is None or tvl < 1e6: continue
+        rec = {"apy": apy, "sigma": p.get("sigma") or 0, "n": 1, "tvl": tvl}
+        for t in (p.get("underlyingTokens") or []):
+            if isinstance(t, str) and (t.lower() not in YADDR or tvl > YADDR[t.lower()]["tvl"]):
+                YADDR[t.lower()] = rec
+        sym = (p.get("symbol") or "").upper()
+        if sym and "-" not in sym and (sym not in YSYM or tvl > YSYM[sym]["tvl"]):
+            YSYM[sym] = rec
     rf_vals = sorted(ymap[s]["apy"] for s in TBILL_SLUGS if s in ymap)
     rf = rf_vals[len(rf_vals)//2] if rf_vals else 4.0
     return ymap, rf
@@ -216,6 +228,8 @@ FALLBACK = [
     ("Cash / yield stablecoin", ["stablecoin","digital dollar"]),
 ]
 def classify(p):
+    if p.get("_cls"):
+        return p["_cls"]
     slug = p.get("slug","")
     if slug in SLUG2CLASS:
         return SLUG2CLASS[slug]
@@ -236,15 +250,14 @@ def credit_signals(a):
     # 1. Taille : plus le fonds est gros, plus il est établi (échelle log, plafond 2 Md$)
     size = max(0.0, min(1.0, math.log10(max(tvl,1)) / math.log10(2e9)))
     # 2. Stabilité : faible volatilité hebdo = bon signe (>25%/sem = 0)
-    vol = abs(c7) if c7 is not None else 0
-    stability = max(0.0, 1 - vol/25)
+    stability = max(0.0, 1 - abs(c7)/25) if c7 is not None else 0.5   # unknown = neutral
     # 3. Résilience : diversification multi-chaîne (plafond 3)
     resil = min(1.0, nch/3)
     # 4. Composite
     ls = round(100 * (0.42*size + 0.40*stability + 0.18*resil))
     band = "green" if ls >= 68 else "amber" if ls >= 48 else "red"
     # 5. Stress flag : sortie nette marquée = pression de rachat / risque de survalorisation NAV
-    stress = (c7 is not None and c7 <= -8)
+    stress = (c7 is not None and c7 <= -8 and a.get("cls") in INCOME_CLASSES)
     # 6. Commentaire auto
     bits = []
     bits.append("taille solide" if size>0.7 else "petite taille" if size<0.4 else "taille moyenne")
@@ -262,9 +275,16 @@ def credit_signals(a):
 # NAV gap (bps) = (rendement_offert − rendement_juste) * 100
 #   < 0  → l'investisseur est SOUS-payé pour le risque → token « cher », NAV probablement survalorisée.
 #   > 0  → coussin de rendement au-dessus du risque → token « bon marché » ou risque caché à creuser.
+YADDR, YSYM = {}, {}
+# A NAV gap needs a coupon: only income funds. Outflow alerts need a stable NAV:
+# for gold / stocks, market-cap moves are mostly price, not redemptions.
+INCOME_CLASSES = {"U.S. Treasuries", "Private credit", "Cash / yield stablecoin", "Non-US government debt"}
 def nav_gap(asset, ymap, rf):
+    if asset.get("cls") not in INCOME_CLASSES:
+        return None
     slug = asset.get("slug")
-    y = ymap.get(slug)
+    addr = (asset.get("address") or "").split(":")[-1].lower()
+    y = ymap.get(slug) or (YADDR.get(addr) if addr else None) or YSYM.get((asset.get("symbol") or "").upper())
     if not y:
         return None
     offered = y["apy"]
@@ -315,6 +335,24 @@ def fundamental_val(asset, fund, rf):
             "req":round(req,2),"offered":offered,"gap_bps":gap_bps,"verdict":verdict}
 
 # ---------- 3. TRANSFORM ----------
+ISSUERS = ["BlackRock","Franklin","Ondo","Circle","Hashnote","Superstate","Spiko","Amundi","OpenEden","Janus Henderson",
+           "Apollo","Hamilton Lane","KKR","Matrixdock","DigiFT","Paxos","Tether","WisdomTree","VanEck","Fidelity","Sygnum",
+           "Libeara","Backed","Centrifuge","Anemoy","Maple","Securitize","Invesco","State Street","UBS","Arca","Midas",
+           "Theo","Usual","Ethena","Frax","Figure","Kinexys","Robinhood","Kraken","Dinari","Swarm","Mountain","Agora","Plume"]
+APAC_ISSUERS = {"OpenEden": "Singapour (OpenEden)", "DigiFT": "Singapour (DigiFT, MAS)", "Matrixdock": "Singapour (Matrixdock)",
+                "Libeara": "Singapour (Libeara, SC Ventures)", "Sygnum": "Singapour/Suisse (Sygnum)", "InvestaX": "Singapour (InvestaX)",
+                "Marketnode": "Singapour (Marketnode)", "ADDX": "Singapour (ADDX)", "Asseto": "APAC (Asseto)", "Fasset": "APAC (Fasset)"}
+def issuer_of(name):
+    n = (name or "").lower()
+    for i in ISSUERS:
+        if i.lower() in n: return i
+    return (name or "?").split(" ")[0]
+def apac_of(name):
+    n = (name or "").lower()
+    for k, v in APAC_ISSUERS.items():
+        if k.lower() in n: return v
+    return None
+
 def _managers(assets):
     agg = {}
     for a in assets:
@@ -327,7 +365,7 @@ def _managers(assets):
            for m,g in agg.items()]
     return sorted(out, key=lambda x:-x["value"])
 
-def build_dataset(raw, ymap, rf, fund):
+def build_dataset(raw, ymap, rf, fund, hist_ds=None):
     rwa = [p for p in raw if p.get("category") == "RWA"]
     assets = []
     netagg = {}   # réseau -> {value, n}
@@ -363,8 +401,8 @@ def build_dataset(raw, ymap, rf, fund):
         a["sig"] = credit_signals(a)
         a["yg"] = nav_gap(a, ymap, rf)
         a["fv"] = fundamental_val(a, fund, rf)       # valo fondamentale (None si non curé)
-        a["apac"] = APAC_SLUGS.get(a.get("slug"))   # None si hors APAC
-        a["manager"] = ASSET_MANAGERS.get(a.get("slug"), a["name"])
+        a["apac"] = APAC_SLUGS.get(a.get("slug")) or apac_of(a["name"])
+        a["manager"] = ASSET_MANAGERS.get(a.get("slug")) or issuer_of(a["name"])
         # NAV gap unifié : fondamental (cross-class, calibré) si dispo, sinon signal (LS)
         fv, yg = a.get("fv"), a.get("yg")
         if fv and fv.get("gap_bps") is not None:
@@ -481,7 +519,7 @@ def build_dataset(raw, ymap, rf, fund):
         "networks": sorted([{"chain":k,"value":v["value"],"n":v["n"]} for k,v in netagg.items()],
                            key=lambda x:-x["value"]),
         "managers": _managers(assets),
-        "history": fetch_history(assets),
+        "history": hist_ds if hist_ds is not None else fetch_history(assets),
     }
 
 # ---------- 4. RENDER ----------
@@ -556,14 +594,16 @@ def write_keyrisk_snapshot(ds):
     print(f"→ key-risk snapshot {date}: {len(ds.get('keyrisk', []))} lignes")
 
 def main():
-    raw = fetch()
+    import cg
+    raw, cg_hist = cg.raw_records()
     pools = fetch_pools()
     ymap, rf = build_yield_map(pools)
     print(f"  taux sans risque on-chain (T-bills médians) : {rf:.2f}%")
     stbl_tvl, stbl_n = fetch_stables()
     fund = json.load(open(os.path.join(HERE,"fundamentals.json"),encoding="utf-8")).get("funds",{})
     print(f"  fondamentaux curés : {len(fund)} fonds")
-    ds = build_dataset(raw, ymap, rf, fund)
+    ds = build_dataset(raw, ymap, rf, fund, cg.class_history(cg_hist, raw))
+    ds["source"] = "CoinGecko (fund market cap = units x NAV) + DefiLlama yields"
     import keyrisk
     print("→ Launch & Key Risk (contract control X-ray) …")
     ds["keyrisk"] = keyrisk.run(ds["assets"])
