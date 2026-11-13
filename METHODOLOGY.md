@@ -40,7 +40,7 @@ NAV gap (bps) = offered yield - required yield. RICH at -75 bps or lower, CHEAP 
 
 Required yield, fundamental model (used when a fund is curated):
 
-- Treasury and cash wrappers: risk-free + wrapper spread (AAA 0, AA 0.10, A 0.25, BBB 0.50, unrated 0.75) + liquidity (daily 0, monthly 0.10, quarterly 0.25) + manager tier (-0.05 / 0 / +0.15). The assets are T-bills, so the spread covers only issuer, operational and liquidity risk.
+- Treasury and cash wrappers: risk-free + wrapper spread (AAA 0, AA 0.10, A 0.25, BBB 0.50, unrated 0.75) + liquidity (daily 0, monthly 0.10, quarterly 0.25, locked 0.50) + manager tier (-0.05 / 0 / +0.15), floored at risk-free - 0.25 (fees). The assets are T-bills, so the spread covers only issuer, operational and liquidity risk.
 - Credit funds: risk-free + rating spread (AAA 0.8 to B 6.5, unrated 5.5) + seniority, liquidity and manager adjustments, floored at risk-free + 0.5.
 
 Required yield, signal model (used when a fund is not curated):

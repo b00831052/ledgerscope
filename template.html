@@ -540,7 +540,7 @@ tbody tr:hover{background:var(--hover)!important;}
           <p>LS = 100 x (0.42 x size + 0.40 x stability + 0.18 x resilience). Size is log-scaled and capped at $2B. Stability falls linearly to 0 at a 25% weekly value move. Resilience counts networks, capped at 3. Bands: Green 68+, Amber 48-67, Red under 48. A <b>stress flag</b> fires when an income fund loses 8% or more of its value in 7 days.</p>
           <h3>3. NAV gap (yield vs risk)</h3>
           <p>NAV gap = offered yield minus required yield, in basis points. RICH at -75 bps or lower, CHEAP at +150 bps or higher.</p>
-          <ul><li><b>Treasury and cash wrappers:</b> the assets are T-bills, so the required yield is the risk-free rate plus a small wrapper premium (0 to 1%) for issuer, operational and liquidity risk.</li>
+          <ul><li><b>Treasury and cash wrappers:</b> the assets are T-bills, so the required yield is the risk-free rate plus a small wrapper premium (0 to about 2%) for issuer, operational and liquidity risk, never less than risk-free minus 0.25% (fees).</li>
           <li><b>Credit funds:</b> risk-free rate plus a credit spread by rating, adjusted for seniority, liquidity and manager tier.</li>
           <li><b>Unobserved yield:</b> tokens that pay under 0.5% on-chain usually accrue income inside the NAV. They get no valuation call.</li>
           <li><b>Unverified yield:</b> a credit fund paying less than T-bills + 2% on-chain (T-bills + 0.5% for AAA/AA credit) is flagged unverified, not RICH. Its income most likely accrues off-chain. The gap is shown greyed out.</li></ul>
