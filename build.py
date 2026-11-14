@@ -560,6 +560,7 @@ def render(ds):
     for fn in ("terminal.html", "index.html"):   # index.html = servi par Pages/Vercel
         open(os.path.join(HERE, fn), "w", encoding="utf-8").write(out)
     print("→ terminal.html + index.html générés")
+    import fundpages; fundpages.build(ds)
 
 def write_snapshot(ds):
     """Écrit un snapshot quotidien NDJSON (une ligne = un actif, tous champs aplatis).

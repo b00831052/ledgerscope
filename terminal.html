@@ -322,6 +322,7 @@ tbody tr:hover{background:var(--hover)!important;}
 .app.mini .sidebar>*:not(.brand){display:none!important;}
 .app.mini .brand{flex-direction:column;align-items:center;gap:10px;padding:6px 0 0!important;}
 .app.mini .collapse{transform:rotate(180deg);}
+span.lsdot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;vertical-align:middle;}
 </style>
 
 <div class="mnav"><span class="mk" style="background:var(--accent);color:var(--on-accent);border-radius:4px;width:22px;height:22px;display:grid;place-items:center;font-size:13px">L</span>Ledgerscope<button type="button" id="mnavBtn">Menu</button></div>
@@ -363,6 +364,7 @@ tbody tr:hover{background:var(--hover)!important;}
     <div class="nav">
       <button data-v="datacatalog"><span class="lbl">Data Catalog</span></button>
       <button data-v="method"><span class="lbl">Methodology</span></button>
+      <button onclick="location.href='fund/'"><span class="lbl">All fund reports</span></button>
     </div>
     <div class="navsec">Asset Classes</div>
     <div class="nav" id="clsnav"></div>
@@ -680,7 +682,7 @@ tbody tr:hover{background:var(--hover)!important;}
   </div></div>
   <!-- LOGIN MODAL -->
   <div class="overlay" id="loginOverlay"><div class="loginbox">
-    <button class="x" id="loginX"></button>
+    <button class="x" id="loginX" aria-label="Close">&times;</button>
     <div class="lg-brand"><span class="mk">L</span>Ledger<em>scope</em></div>
     <div class="lg-t" id="lg-title">Sign in</div>
     <div class="lg-sub">Unlock premium columns: rating, regulator, jurisdiction and full league tables.</div>
@@ -901,7 +903,7 @@ anRender();
 const fvAssets=D.assets.filter(a=>a.fv);
 document.getElementById('fv-sub').textContent=`Fundamental required yield on ${fvAssets.length} curated assets · ${fvAssets.filter(a=>a.fv.gap_bps!=null).length} with observed yield · ${D.generated}`;
 document.getElementById('fv-count').textContent=fvAssets.length;
-const confDot={high:'',med:'',low:''};
+const confDot={high:'<span class="lsdot" style="background:var(--up)"></span>',med:'<span class="lsdot" style="background:var(--gold)"></span>',low:'<span class="lsdot" style="background:var(--down)"></span>'};
 const ratingChip=r=>{const g=r&&['AAA','AA','A'].includes(r)?'g-green':r==='NR'?'':'g-amber';return `<span class="chip ${g}" style="font-weight:700">${r||'NR'}</span>`;};
 const fvGap=fv=>{if(fv.gap_bps==null)return '<span class="sub">no yield</span>';const cl=fv.verdict==='unverified'?'sub':fv.gap_bps<=-75?'g-red':fv.gap_bps>=150?'g-green':'';return `<span class="${cl}" style="font-weight:700">${fv.gap_bps>=0?'+':''}${fv.gap_bps} bps</span>`;};
 const fvVerd=fv=>{if(!fv.verdict)return '<span class="sub">–</span>';const m={rich:['RICH','g-red'],cheap:['CHEAP','g-green'],fair:['Fair',''],unverified:['Unverified','sub']};const[t,c]=m[fv.verdict]||['–','sub'];return `<span class="${c}" style="font-weight:700">${t}</span>`;};
@@ -969,7 +971,7 @@ document.getElementById('mgbody').innerHTML=MG.map((m,i)=>`<tr data-mgr="${m.nam
 function openManager(name){
   const list=D.assets.filter(a=>a.manager===name).sort((a,b)=>b.tvl-a.tvl);if(!list.length)return;
   const tot=list.reduce((s,a)=>s+a.tvl,0);const cls={};list.forEach(a=>cls[a.cls]=(cls[a.cls]||0)+1);
-  let h=`<div class="mhd"><button class="x" onclick="closeDetail()"></button><div><span class="nm"> ${name}</span></div><div class="chips"><span class="chip">Asset manager</span></div></div><div class="mbody">`;
+  let h=`<div class="mhd"><button class="x" onclick="closeDetail()" aria-label="Close">&times;</button><div><span class="nm"> ${name}</span></div><div class="chips"><span class="chip">Asset manager</span></div></div><div class="mbody">`;
   h+=`<div class="mgrid"><div><div class="k">Tokenized value</div><div class="v">${fmt(tot)}</div></div><div><div class="k">Assets</div><div class="v">${list.length}</div></div><div><div class="k">Classes</div><div class="v">${Object.keys(cls).length}</div></div><div><div class="k">Networks</div><div class="v">${new Set(list.flatMap(a=>a.chains)).size}</div></div></div>`;
   h+=`<div class="msec">Managed assets</div>`+list.slice(0,15).map(a=>`<div class="mrow" style="cursor:pointer" onclick="closeDetail();openDetail('${a.slug}')"><span class="k">${a.name} <span style="color:var(--ink-faint)">${a.symbol}</span></span><span class="v">${fmt(a.tvl)}</span></div>`).join('');
   h+=`</div>`;md.innerHTML=h;ov.classList.add('on');
@@ -981,7 +983,7 @@ function openNetwork(chain){
   const net=NW.find(n=>n.chain===chain);if(!net)return;
   const list=D.assets.filter(a=>a.chains.includes(chain)).sort((a,b)=>b.tvl-a.tvl);
   const cls={};list.forEach(a=>cls[a.cls]=(cls[a.cls]||0)+1);
-  let h=`<div class="mhd"><button class="x" onclick="closeDetail()"></button><div><span class="nm">${chain}</span></div><div class="chips"><span class="chip">Blockchain network</span></div></div><div class="mbody">`;
+  let h=`<div class="mhd"><button class="x" onclick="closeDetail()" aria-label="Close">&times;</button><div><span class="nm">${chain}</span></div><div class="chips"><span class="chip">Blockchain network</span></div></div><div class="mbody">`;
   h+=`<div class="mgrid"><div><div class="k">RWA value</div><div class="v">${fmt(net.value)}</div></div><div><div class="k">Assets hosted</div><div class="v">${list.length}</div></div><div><div class="k">Share of RWA</div><div class="v">${(net.value/nwTot*100).toFixed(1)}%</div></div><div><div class="k">Classes</div><div class="v">${Object.keys(cls).length}</div></div></div>`;
   h+=`<div class="msec">Assets on ${chain} (top 15)</div>`;
   h+=list.slice(0,15).map(a=>`<div class="mrow" style="cursor:pointer" onclick="closeDetail();openDetail('${a.slug}')"><span class="k">${a.name} <span style="color:var(--ink-faint)">${a.symbol}</span></span><span class="v">${fmt(a.tvl)}</span></div>`).join('');
@@ -1002,7 +1004,7 @@ const bySlug={};D.assets.forEach(a=>bySlug[a.slug]=a);
 const ov=document.getElementById('detailOverlay'),md=document.getElementById('detailModal');
 function openDetail(slug){
   const a=bySlug[slug];if(!a)return;const s=a.sig,yg=a.yg,fv=a.fv;
-  let h=`<div class="mhd"><button class="x" onclick="closeDetail()"></button><div><span class="nm">${a.name}</span><span class="sym">${a.symbol}</span></div><div class="chips"><span class="chip ${a.cls==='Private credit'?'credit':''}">${a.cls}</span>${a.apac?`<span class="chip" style="color:var(--accent)"> ${a.apac}</span>`:''}<button class="memobtn" onclick="creditMemo('${slug}')"> Credit Memo</button></div></div><div class="mbody">`;
+  let h=`<div class="mhd"><button class="x" onclick="closeDetail()" aria-label="Close">&times;</button><div><span class="nm">${a.name}</span><span class="sym">${a.symbol}</span></div><div style="margin:6px 0 2px;display:flex;gap:8px"><a class="memobtn" style="text-decoration:none" href="fund/${a.slug}/" target="_blank" rel="noopener">Full report</a><button class="memobtn" onclick="navigator.clipboard&&navigator.clipboard.writeText(location.origin+location.pathname.replace(/index\.html$/,'')+'fund/${a.slug}/').then(()=>{this.textContent='Link copied'})">Copy link</button></div><div class="chips"><span class="chip ${a.cls==='Private credit'?'credit':''}">${a.cls}</span>${a.apac?`<span class="chip" style="color:var(--accent)"> ${a.apac}</span>`:''}<button class="memobtn" onclick="creditMemo('${slug}')"> Credit Memo</button></div></div><div class="mbody">`;
   h+=`<div class="mgrid"><div><div class="k">TVL on-chain</div><div class="v">${fmt(a.tvl)}</div></div><div><div class="k">LS Score</div><div class="v g-${s.band}">${s.ls}/100${s.stress?' ':''}</div></div><div><div class="k">7d</div><div class="v ${a.chg7d>=0?'up':'down'}">${pct(a.chg7d)}</div></div><div><div class="k">1d</div><div class="v ${a.chg1d>=0?'up':'down'}">${pct(a.chg1d)}</div></div></div>`;
   h+=`<div class="msec">Analytics</div><div class="mrow"><span class="k">Quality (LS)</span><span class="v g-${s.band}">${s.ls} · ${s.note}</span></div>`;
   if(yg){h+=`<div class="mrow"><span class="k">Offered yield</span><span class="v">${yg.apy.toFixed(2)}%</span></div><div class="mrow"><span class="k">Fair yield (signal)</span><span class="v">${yg.fair.toFixed(2)}%</span></div><div class="mrow"><span class="k">NAV gap (signal)</span><span class="v ${yg.gap_bps<=-75?'g-red':yg.gap_bps>=150?'g-green':''}">${yg.gap_bps>=0?'+':''}${yg.gap_bps} bps · ${yg.verdict}</span></div>`;}
@@ -1025,7 +1027,7 @@ function creditMemo(slug){
   const today=new Date().toISOString().slice(0,10);
   const val=gu?`The fund offers <b>${gu.apy.toFixed(2)}%</b> against a required yield of <b>${gu.fair.toFixed(2)}%</b> (${gu.src==='fond.'?'fundamental model':'on-chain signal'}), a gap of <b class="${gu.gap_bps<=-75?'g-red':gu.gap_bps>=150?'g-green':''}">${gu.gap_bps>=0?'+':''}${gu.gap_bps} bps</b>. ${gu.verdict==='unverified'?'The on-chain yield is below the floor for its rating, which usually means income accrues in the NAV and is not captured on-chain: treated as unverified, no valuation call.':gu.gap_bps<=-75?'The token under-pays its risk: NAV is likely overstated.':gu.gap_bps>=150?'Yield cushion above risk: check for hidden risk.':'Yield is in line with risk.'}`:'No observable on-chain yield for this fund: assessed on signals only.';
   const struct=fv?`Rating <b>${fv.rating}</b>, seniority <b>${(fv.seniority||'').replace('_',' ')}</b>, liquidity <b>${fv.liquidity}</b>, manager tier <b>${fv.manager_tier}</b>. ${fv.note||''} <span class="sub">(jurisdiction: ${fv.jurisdiction||'n/a'} · data confidence: ${fv.conf})</span>`:'Fundamentals not yet curated for this fund.';
-  let h=`<div class="mhd"><button class="x" onclick="closeDetail()"></button><div class="memohd"><span class="memo-eyebrow"> LEDGERSCOPE · CREDIT MEMO</span><span class="nm">${a.name} <span class="sym">${a.symbol}</span></span></div><div class="chips"><button class="memobtn" onclick="openDetail('${slug}')">← Profile</button><button class="memobtn" onclick="window.print()">Print / PDF</button></div></div><div class="mbody memo">`;
+  let h=`<div class="mhd"><button class="x" onclick="closeDetail()" aria-label="Close">&times;</button><div class="memohd"><span class="memo-eyebrow"> LEDGERSCOPE · CREDIT MEMO</span><span class="nm">${a.name} <span class="sym">${a.symbol}</span></span></div><div class="chips"><button class="memobtn" onclick="openDetail('${slug}')">← Profile</button><button class="memobtn" onclick="window.print()">Print / PDF</button></div></div><div class="mbody memo">`;
   h+=`<div class="memo-reco"><div><span class="k">Recommendation</span><div class="reco ${rc}">${reco}</div></div><div style="text-align:right"><span class="k">LS Score</span><div class="reco g-${s.band}">${s.ls}/100</div></div></div>`;
   h+=`<div class="mgrid"><div><div class="k">Class</div><div class="v" style="font-size:14px">${a.cls}</div></div><div><div class="k">TVL on-chain</div><div class="v">${fmt(a.tvl)}</div></div><div><div class="k">NAV gap</div><div class="v ${gu&&gu.verdict==='rich'?'g-red':gu&&gu.verdict==='cheap'?'g-green':''}">${gu?(gu.gap_bps>=0?'+':'')+gu.gap_bps+' bps':'–'}</div></div><div><div class="k">7d trend</div><div class="v ${a.chg7d>=0?'up':'down'}">${pct(a.chg7d)}</div></div></div>`;
   h+=`<div class="msec">1 · Summary</div><p>${a.name} is a tokenized <b>${a.cls.toLowerCase()}</b> asset on ${a.chains.join(', ')}, with <b>${fmt(a.tvl)}</b> on-chain. Our proprietary LS Score is <b class="g-${s.band}">${s.ls}/100</b> (${s.note}).</p>`;
@@ -1178,6 +1180,9 @@ document.getElementById('ra-sub').textContent=R.first?`${R.dates} daily rating${
 document.getElementById('rawatch').innerHTML=(R.watch||[]).map(w=>`<tr data-slug="${w.slug}" style="cursor:pointer"><td class="asset">${w.name}</td><td class="sub">${w.cls}</td><td class="num">${fmt(w.tvl)}</td><td class="num"><b class="${BC[w.band]}">${w.ls}</b></td><td>${w.why.join(', ')}</td></tr>`).join('')||'<tr><td colspan="5" class="sub">No fund on watch.</td></tr>';
 document.getElementById('raacts').innerHTML=(R.actions||[]).map(a=>`<tr data-slug="${a.slug}" style="cursor:pointer"><td class="mono">${a.date}</td><td class="asset">${a.name}</td><td class="sub">${a.cls}</td><td><b class="${a.kind==='upgrade'?'g-green':'g-red'}">${a.kind==='upgrade'?'Upgrade':'Downgrade'}</b> <span class="sub">${BN[a.from]} → ${BN[a.to]}</span></td><td class="num">${a.ls_from} → ${a.ls_to}</td><td class="num">${fmt(a.tvl)}</td></tr>`).join('')||`<tr><td colspan="6" class="sub">No band change yet. Rating actions are counted from ${R.since?R.since:'the next daily rating'}, the first day the ledger stores each score's components, so changes caused only by newly discovered networks are not reported as upgrades.</td></tr>`;
 document.querySelectorAll('#rawatch tr[data-slug],#raacts tr[data-slug]').forEach(r=>r.addEventListener('click',()=>openDetail(r.dataset.slug)));})();
+/* deep links: #method, #fund=<slug> */
+(function(){const h=location.hash;if(h==='#method'){const b=document.querySelector('.nav button[data-v=method]');b&&b.click();}
+const m=h.match(/^#fund=([a-z0-9-]+)$/);if(m&&typeof openDetail==='function')setTimeout(()=>openDetail(m[1]),0);})();
 /* asset classes dans la sidebar (cliquables → ouvrent la page de classe) */
 document.getElementById('clsnav').innerHTML=D.byclass.map(c=>`<button class="clsbtn" data-cls="${c[0]}"><span class="csw" style="background:${clr(c[0])}"></span>${c[0]}</button>`).join('');
 function showView(v){document.querySelectorAll('.view').forEach(x=>x.classList.remove('on'));document.getElementById('v-'+v).classList.add('on');window.scrollTo(0,0);}
