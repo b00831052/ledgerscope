@@ -312,6 +312,16 @@ tbody tr:hover{background:var(--hover)!important;}
  .main,.content{padding-left:16px!important;padding-right:16px!important;}
  .tablewrap .scroll{overflow-x:auto;}
 }
+
+#vtip{position:fixed;z-index:200;display:none;pointer-events:none;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:8px 11px;font-size:12.5px;line-height:1.5;box-shadow:0 6px 24px rgba(0,0,0,.18);max-width:320px;}
+#vtip .vt-dot{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:6px;}
+#vtip .vt-row{display:flex;align-items:center;gap:2px;white-space:nowrap;}#vtip .vt-v{margin-left:auto;padding-left:14px;font-variant-numeric:tabular-nums;color:var(--ink-soft);}
+#nwpie,#mgpie{cursor:pointer;}#perfChart{cursor:crosshair;}
+.app.mini{grid-template-columns:64px 1fr!important;}
+.app.mini .sidebar{padding:16px 8px!important;overflow:hidden;}
+.app.mini .sidebar>*:not(.brand){display:none!important;}
+.app.mini .brand{flex-direction:column;align-items:center;gap:10px;padding:6px 0 0!important;}
+.app.mini .collapse{transform:rotate(180deg);}
 </style>
 
 <div class="mnav"><span class="mk" style="background:var(--accent);color:var(--on-accent);border-radius:4px;width:22px;height:22px;display:grid;place-items:center;font-size:13px">L</span>Ledgerscope<button type="button" id="mnavBtn">Menu</button></div>
@@ -814,12 +824,23 @@ perfRender();
   const base=Math.max(0,PN-13);const series=HIST.series.filter(s=>s.values[base]>0);
   const css=getComputedStyle(document.documentElement),line=css.getPropertyValue('--line').trim(),faint=css.getPropertyValue('--ink-faint').trim();
   const idx=s=>s.values.slice(base).map(v=>v/s.values[base]*100);
-  let maxY=100;series.forEach(s=>idx(s).forEach(v=>{if(v>maxY)maxY=v;}));maxY=Math.min(maxY*1.05,600);
-  const M=PN-base;const X=i=>pL+i*(W-pL-pR)/(M-1);const Y=v=>pT+(1-(v-80)/(maxY-80))*(H-pT-pB);
-  c.clearRect(0,0,W,H);c.strokeStyle=line;c.fillStyle=faint;c.font='11px -apple-system,sans-serif';c.lineWidth=1;
-  for(let g=0;g<=4;g++){const y=pT+g*(H-pT-pB)/4;c.beginPath();c.moveTo(pL,y);c.lineTo(W-pR,y);c.stroke();c.fillText(Math.round(maxY-(maxY-80)*g/4)+'',10,y+4);}
-  series.forEach(s=>{const d=idx(s);c.beginPath();d.forEach((v,i)=>{const p=Y(v);i?c.lineTo(X(i),p):c.moveTo(X(i),p);});c.strokeStyle=clr(s.cls);c.lineWidth=2;c.stroke();});
-  c.fillStyle=faint;const st=Math.max(1,Math.floor(M/6));for(let i=0;i<M;i+=st)c.fillText(PL[base+i],X(i)-12,H-8);
+  let maxY=100,minY=100;series.forEach(s=>idx(s).forEach(v=>{if(v>maxY)maxY=v;if(v<minY)minY=v;}));
+  const LOG=maxY>300;const lo=LOG?Math.max(10,minY*0.9):Math.min(80,Math.floor(minY*0.95)),hi=maxY*1.05;
+  const M=PN-base;const X=i=>pL+i*(W-pL-pR)/(M-1);
+  const Y=v=>LOG?pT+(1-(Math.log(v)-Math.log(lo))/(Math.log(hi)-Math.log(lo)))*(H-pT-pB):pT+(1-(v-lo)/(hi-lo))*(H-pT-pB);
+  const ticks=LOG?[25,50,100,200,400,800,1600,3200,6400].filter(v=>v>=lo&&v<=hi):[0,1,2,3,4].map(g=>lo+(hi-lo)*g/4);
+  function paint(hi_i){c.clearRect(0,0,W,H);c.strokeStyle=line;c.fillStyle=faint;c.font='11px Inter,-apple-system,sans-serif';c.lineWidth=1;
+   ticks.forEach(v=>{const y=Y(v);c.beginPath();c.moveTo(pL,y);c.lineTo(W-pR,y);c.stroke();c.fillText(Math.round(v)+'',8,y+4);});
+   c.save();c.beginPath();c.rect(pL,pT-2,W-pL-pR,H-pT-pB+4);c.clip();
+   series.forEach(s=>{const d=idx(s);c.beginPath();d.forEach((v,i)=>{const p=Y(v);i?c.lineTo(X(i),p):c.moveTo(X(i),p);});c.strokeStyle=clr(s.cls);c.lineWidth=2;c.stroke();});
+   if(hi_i!=null){c.strokeStyle=faint;c.lineWidth=1;c.beginPath();c.moveTo(X(hi_i),pT);c.lineTo(X(hi_i),H-pB);c.stroke();series.forEach(s=>{const v=idx(s)[hi_i];c.beginPath();c.arc(X(hi_i),Y(v),3.5,0,7);c.fillStyle=clr(s.cls);c.fill();});}
+   c.restore();c.fillStyle=faint;const st=Math.max(1,Math.floor(M/6));for(let i=0;i<M;i+=st)c.fillText(PL[base+i],X(i)-12,H-8);}
+  paint(null);
+  cvp.addEventListener('mousemove',e=>{const b=cvp.getBoundingClientRect(),px=(e.clientX-b.left)*W/b.width;if(px<pL||px>W-pR){paint(null);vtHide();return;}
+   const i=Math.max(0,Math.min(M-1,Math.round((px-pL)/((W-pL-pR)/(M-1)))));paint(i);
+   const rows=series.map(s=>[s.cls,idx(s)[i],s.values[base+i]]).sort((a,b)=>b[1]-a[1]);
+   vtShow(`<b>${PL[base+i]}</b>`+rows.map(r=>`<div class="vt-row"><span class="vt-dot" style="background:${clr(r[0])}"></span>${r[0]}<span class="vt-v">${r[1]>=100?'+':''}${(r[1]-100).toFixed(0)}% · ${fmt(r[2])}</span></div>`).join(''),e);});
+  cvp.addEventListener('mouseleave',()=>{paint(null);vtHide();});
   document.getElementById('perfLegend').innerHTML=series.map(s=>{const d=idx(s);const g=d[d.length-1]-100;return `<div class="li"><span class="dot" style="background:${clr(s.cls)}"></span>${s.cls} · ${g>=0?'+':''}${g.toFixed(0)}%</div>`;}).join('');
 })();
 document.querySelectorAll('#clsSeg button').forEach(b=>b.addEventListener('click',()=>{
@@ -896,8 +917,11 @@ document.getElementById('apbody').innerHTML=apac.sort((a,b)=>b.tvl-a.tvl).map(a=
 
 /* alerts */
 const AL=D.alerts||[];
-document.getElementById('navalertn').textContent=AL.length||'';
-if(!AL.length)document.getElementById('navalertn').style.display='none';
+const alKey=x=>x.slug+'|'+x.reasons.map(r=>r.split(/[(:]/)[0].trim()).sort().join(';');
+let alSeen=[];try{alSeen=JSON.parse(localStorage.getItem('ls-alerts-seen')||'[]');}catch(e){}
+const alNew=AL.filter(x=>!alSeen.includes(alKey(x)));const nb=document.getElementById('navalertn');
+nb.textContent=alNew.length||'';nb.style.display=alNew.length?'':'none';nb.title=alNew.length+' new since your last visit';
+document.querySelector('.nav button[data-v=alerts]').addEventListener('click',()=>{try{localStorage.setItem('ls-alerts-seen',JSON.stringify(AL.map(alKey)));}catch(e){}nb.style.display='none';});
 document.getElementById('al-sub').textContent=`${AL.length} active signals (all classes, value $20M+) · sorted by severity · ${D.generated}`;
 document.getElementById('al-cards').innerHTML=[['Signals',AL.length],['High',AL.filter(a=>a.level==='high').length],['Medium',AL.filter(a=>a.level==='med').length],['Classes affected',new Set(AL.map(a=>a.cls)).size]].map(c=>`<div class="card"><div class="k">${c[0]}</div><div class="v">${c[1]}</div></div>`).join('');
 document.getElementById('al-list').innerHTML=AL.length?AL.map(a=>`<div class="alert ${a.level}" data-slug="${a.slug}" style="cursor:pointer"><div class="top"><span class="nm">${a.name} <span class="sym">${a.symbol}</span></span><span class="chip ${a.cls==='Private credit'?'credit':''}" style="font-size:10px">${a.cls}</span><span class="lvl">${a.level==='high'?'High':a.level==='med'?'Medium':'Info'}</span><span class="meta">LS ${a.ls} · ${fmt(a.tvl)} · sev ${a.sev}</span></div><ul>${a.reasons.map(r=>`<li>${r}</li>`).join('')}</ul></div>`).join(''):'<div class="disc">No active signals.</div>';
@@ -915,7 +939,19 @@ document.getElementById('nw-cards').innerHTML=[['Networks',NW.length],['Top netw
 const nwMax=NW[0]?NW[0].value:1;const NWC=['#4d94f5','#22b8a6','#d0a84a','#a855f7','#38bdf8','#ef5a56','#8b98b0','#3ec37e','#c084fc','#f59e0b'];
 document.getElementById('nwbars').innerHTML=NW.slice(0,10).map((n,i)=>`<div class="barrow"><div class="lbl">${n.chain}</div><div class="bartrack"><div class="barfill" style="width:${n.value/nwMax*100}%;background:${NWC[i%NWC.length]}"></div></div><div class="amt">${fmt(n.value)}</div></div>`).join('');
 document.getElementById('nwbody').innerHTML=NW.map((n,i)=>`<tr data-net="${n.chain}" style="cursor:pointer"><td class="num">${i+1}</td><td class="asset">${n.chain}</td><td class="num">${fmt(n.value)}</td><td class="num">${n.n}</td><td class="num">${(n.value/nwTot*100).toFixed(1)}%</td></tr>`).join('');
-(function(){const cv=document.getElementById('nwpie'), x=cv.getContext('2d');const cx=cv.width/2,cy=cv.height/2,R=110;let a0=-Math.PI/2;const top=NW.slice(0,7);const other=NW.slice(7).reduce((s,n)=>s+n.value,0);const segs=top.map((n,i)=>[n.chain,n.value,NWC[i%NWC.length]]);if(other>0)segs.push(['Other',other,'#5a6782']);const tot=segs.reduce((s,g)=>s+g[1],0)||1;segs.forEach(g=>{const a1=a0+g[1]/tot*Math.PI*2;x.beginPath();x.moveTo(cx,cy);x.arc(cx,cy,R,a0,a1);x.closePath();x.fillStyle=g[2];x.fill();a0=a1;});x.fillStyle=getComputedStyle(document.documentElement).getPropertyValue('--panel').trim();x.beginPath();x.arc(cx,cy,58,0,7);x.fill();})();
+/* shared hover tooltip + donut with hover */
+const VT=(()=>{const d=document.createElement('div');d.id='vtip';document.body.appendChild(d);return d;})();
+function vtShow(html,e){VT.innerHTML=html;VT.style.display='block';const w=VT.offsetWidth,h=VT.offsetHeight;let x=e.clientX+14,y=e.clientY+14;if(x+w>innerWidth-8)x=e.clientX-w-14;if(y+h>innerHeight-8)y=e.clientY-h-14;VT.style.left=x+'px';VT.style.top=y+'px';}
+function vtHide(){VT.style.display='none';}
+function drawDonut(id,segs,hl){const cv=document.getElementById(id),x=cv.getContext('2d');const cx=cv.width/2,cy=cv.height/2,R=110,r0=58;const tot=segs.reduce((s,g)=>s+g[1],0)||1;
+ x.clearRect(0,0,cv.width,cv.height);let a0=-Math.PI/2;const arcs=[];
+ segs.forEach((g,i)=>{const a1=a0+g[1]/tot*Math.PI*2;x.beginPath();x.arc(cx,cy,i===hl?R+6:R,a0,a1);x.arc(cx,cy,r0,a1,a0,true);x.closePath();x.fillStyle=g[2];x.globalAlpha=(hl==null||i===hl)?1:.45;x.fill();arcs.push([a0,a1]);a0=a1;});x.globalAlpha=1;
+ if(!cv._hov){cv._hov=1;cv.addEventListener('mousemove',e=>{const b=cv.getBoundingClientRect(),px=(e.clientX-b.left)*cv.width/b.width-cx,py=(e.clientY-b.top)*cv.height/b.height-cy,d=Math.hypot(px,py);
+  if(d<r0||d>R+8){if(cv._hl!=null){cv._hl=null;drawDonut(id,segs,null);}vtHide();return;}
+  let a=Math.atan2(py,px);if(a<-Math.PI/2)a+=Math.PI*2;const i=arcs.findIndex(([s,e2])=>a>=s&&a<e2);if(i<0)return;
+  if(cv._hl!==i){cv._hl=i;drawDonut(id,segs,i);}const g=segs[i];vtShow(`<span class="vt-dot" style="background:${g[2]}"></span><b>${g[0]}</b><br>${fmt(g[1])} · ${(g[1]/tot*100).toFixed(1)}%`,e);});
+  cv.addEventListener('mouseleave',()=>{cv._hl=null;drawDonut(id,segs,null);vtHide();});}}
+(function(){const top=NW.slice(0,7);const other=NW.slice(7).reduce((s,n)=>s+n.value,0);const segs=top.map((n,i)=>[n.chain,n.value,NWC[i%NWC.length]]);if(other>0)segs.push(['Other',other,'#5a6782']);drawDonut('nwpie',segs,null);})();
 
 /* ===== PLATFORMS VIEW ===== */
 const plats=D.assets.slice();
@@ -938,7 +974,7 @@ function openManager(name){
   h+=`<div class="msec">Managed assets</div>`+list.slice(0,15).map(a=>`<div class="mrow" style="cursor:pointer" onclick="closeDetail();openDetail('${a.slug}')"><span class="k">${a.name} <span style="color:var(--ink-faint)">${a.symbol}</span></span><span class="v">${fmt(a.tvl)}</span></div>`).join('');
   h+=`</div>`;md.innerHTML=h;ov.classList.add('on');
 }
-(function(){const cv=document.getElementById('mgpie'),x=cv.getContext('2d');const cx=cv.width/2,cy=cv.height/2,R=110;let a0=-Math.PI/2;const top=MG.slice(0,7);const other=MG.slice(7).reduce((s,m)=>s+m.value,0);const segs=top.map((m,i)=>[m.name,m.value,NWC[i%NWC.length]]);if(other>0)segs.push(['Other',other,'#5a6782']);const tot=segs.reduce((s,g)=>s+g[1],0)||1;segs.forEach(g=>{const a1=a0+g[1]/tot*Math.PI*2;x.beginPath();x.moveTo(cx,cy);x.arc(cx,cy,R,a0,a1);x.closePath();x.fillStyle=g[2];x.fill();a0=a1;});x.fillStyle=getComputedStyle(document.documentElement).getPropertyValue('--panel').trim();x.beginPath();x.arc(cx,cy,58,0,7);x.fill();})();
+(function(){const top=MG.slice(0,7);const other=MG.slice(7).reduce((s,m)=>s+m.value,0);const segs=top.map((m,i)=>[m.name,m.value,NWC[i%NWC.length]]);if(other>0)segs.push(['Other',other,'#5a6782']);drawDonut('mgpie',segs,null);})();
 
 /* ===== NETWORK DETAIL (fiche réseau) ===== */
 function openNetwork(chain){
