@@ -153,5 +153,5 @@ def flags_for(lb):
             if p["top_borrower_pct"] >= 50 and p["outstanding"] >= 50e6: out["proto-maple"].append(f"{p['pool']}: top borrower {p['top_borrower_pct']}% of loans")
     for f in ((lb or {}).get("centrifuge") or {}).get("funds", []):
         if f["slug"] and f["queue_pct"] >= 10:
-            out[f["slug"]].append(f"Redemption queue {f['queue_pct']}% of fund (${f['queue_usd']/1e6:.1f}M waiting)")
+            out[f["slug"]].append(f"Redemption queue {f['queue_pct']}% of Centrifuge-issued shares (${f['queue_usd']/1e6:.1f}M waiting)")
     return dict(out)

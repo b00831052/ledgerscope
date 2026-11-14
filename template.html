@@ -561,7 +561,7 @@ tbody tr:hover{background:var(--hover)!important;}
       <div class="view" id="v-loanbook">
         <div class="crumb">RWA Credit Intelligence · Inside the funds</div><div class="h-title">Loan Books</div>
         <div class="h-sub" id="lb-sub"></div>
-        <div class="methodbox">Market value tells you how big a fund is. The loan book tells you what it owns. <b>Maple:</b> every active loan read from Maple's public API: who borrowed, at what rate, against what collateral, and whether any loan is past its on-chain payment deadline. <b>Cover</b> = collateral value / loans outstanding. <b>Crypto drop to 1.0x</b> = how far crypto collateral can fall before the cover hits 1.0x. <b>Centrifuge:</b> redemption orders waiting to be paid, as a share of the fund.</div>
+        <div class="methodbox">Market value tells you how big a fund is. The loan book tells you what it owns. <b>Maple:</b> every active loan read from Maple's public API: who borrowed, at what rate, against what collateral, and whether any loan is past its on-chain payment deadline. <b>Cover</b> = collateral value / loans outstanding. <b>Crypto drop to 1.0x</b> = how far crypto collateral can fall before the cover hits 1.0x. <b>Centrifuge:</b> redemption orders waiting to be paid, as a share of the tokens issued through Centrifuge (the same fund can also exist on other platforms).</div>
         <div class="cards" id="lb-cards"></div>
         <div class="panelhd"><h3>Maple pools: active loans</h3></div>
         <div class="tablewrap"><div class="scroll"><table>
@@ -569,14 +569,14 @@ tbody tr:hover{background:var(--hover)!important;}
           <tbody id="lbmaple"></tbody></table></div></div>
         <div class="panelhd"><h3>Centrifuge funds: redemption queue</h3></div>
         <div class="tablewrap"><div class="scroll"><table>
-          <thead><tr><th>Fund</th><th class="num">Fund value</th><th class="num">NAV per share</th><th class="num">Waiting to redeem</th><th class="num">Share of fund</th></tr></thead>
+          <thead><tr><th>Fund</th><th class="num">Fund value</th><th class="num">NAV per share</th><th class="num">Waiting to redeem</th><th class="num">Share of Centrifuge shares</th></tr></thead>
           <tbody id="lbcfg"></tbody></table></div></div>
       </div>
 
       <div class="view" id="v-actions">
         <div class="crumb">RWA Credit Intelligence · Ratings</div><div class="h-title">Rating Actions</div>
         <div class="h-sub" id="ra-sub"></div>
-        <div class="methodbox">Every band change (Green / Amber / Red) between two daily ratings, read from the hash-chained ratings ledger. The watch list holds funds of $5M+ with redemption stress or an LS Score down 10+ points in a week.</div>
+        <div class="methodbox">Every band change (Green / Amber / Red) between two daily ratings, read from the hash-chained ratings ledger, counted from the first day the ledger stores score components. Changes caused only by newly discovered networks are excluded. The watch list holds funds of $5M+ with redemption stress or an LS Score down 10+ points in a week.</div>
         <div class="panelhd"><h3>Watch list</h3></div>
         <div class="tablewrap"><div class="scroll"><table>
           <thead><tr><th>Fund</th><th>Class</th><th class="num">Value</th><th class="num">LS Score</th><th>Why</th></tr></thead>

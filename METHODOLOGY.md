@@ -60,7 +60,7 @@ Peer-relative value: within each class with 4 or more valued funds, each fund's 
 ## 5. Loan books
 
 - Maple (public GraphQL `api.maple.finance/v2/graphql`): every active open-term loan. Per pool: principal outstanding, loans, borrowers, top borrower's share, rate weighted by principal, collateral value (CoinGecko prices) / principal ("cover"), share of crypto collateral, and the crypto price fall that would bring cover to 1.0x: (collateral - principal) / crypto collateral. Maple's `defaultDate` field is the next payment deadline, not a default; an active loan past that deadline is flagged "past deadline".
-- Centrifuge (public GraphQL `api.centrifuge.io`): token supply, NAV per share and pending redemption orders. Queue = pending shares / shares outstanding. A queue of 10% or more raises an alert.
+- Centrifuge (public GraphQL `api.centrifuge.io`): token supply, NAV per share and pending redemption orders. Queue = pending shares / shares issued through Centrifuge (a fund can also have tokens on other platforms, so this is not the whole fund). A queue of 10% or more raises an alert.
 - Alert weights: past deadline or impaired +3, redemption queue or cover under 1.2x +2, top borrower 50%+ of a $50M+ pool +0.7.
 
 ## 6. Key Risk (contract control)
@@ -72,7 +72,7 @@ For each fund token with an EVM contract: who can upgrade the code, and who hold
 - Ledger: every run writes each fund's LS score, band, stress flag, fundamental rating and key-risk grade to `snapshots/ratings_ledger.ndjson`. Each day's entries carry a SHA-256 hash of the previous day's hash plus that day's rows, and are committed to the public git repository. A past grade cannot be changed without breaking the chain.
 - Outcome test: a "bad outcome" is a loss of 20% or more of the fund's value at any point in the next 30 days.
 - Live scorecard: grades become scorable 30 days after they are issued. First live readout: 13 December 2026.
-- Rating actions: every band change between consecutive daily ratings, plus a watch list (redemption stress, or LS down 10+ points in a week, funds of $5M+).
+- Rating actions: every band change between consecutive daily ratings, counted from the first day the ledger stores score components (size, stability, resilience); changes caused only by newly discovered networks are excluded, plus a watch list (redemption stress, or LS down 10+ points in a week, funds of $5M+).
 - Backtest: the same LS rules replayed every 14 days on 12 months of CoinGecko history. Labelled as a backtest, never as live.
 
 ## 8. Limits

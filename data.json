@@ -2618,7 +2618,7 @@
    "gapu": null,
    "gaprel": null,
    "credit_flags": [
-    "Redemption queue 33.0% of fund ($7.6M waiting)"
+    "Redemption queue 33.0% of Centrifuge-issued shares ($7.6M waiting)"
    ]
   },
   {
@@ -14312,7 +14312,7 @@
    "level": "med",
    "sev": 2.0,
    "reasons": [
-    "Loan book: Redemption queue 33.0% of fund ($7.6M waiting)"
+    "Loan book: Redemption queue 33.0% of Centrifuge-issued shares ($7.6M waiting)"
    ]
   },
   {
