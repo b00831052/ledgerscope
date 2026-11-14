@@ -616,6 +616,26 @@ def write_keyrisk_snapshot(ds):
             fh.write(json.dumps({"snapshot_date": date, **r}, ensure_ascii=False) + "\n")
     print(f"→ key-risk snapshot {date}: {len(ds.get('keyrisk', []))} lignes")
 
+def merge_credit_flags(ds, flags):
+    """Loan-book findings (late loans, redemption queues, concentration) become alert reasons."""
+    by = {a["slug"]: a for a in ds["assets"]}
+    al = {x["slug"]: x for x in ds["alerts"]}
+    for slug, reasons in flags.items():
+        a = by.get(slug)
+        if not a: continue
+        w = sum(3 if "past payment deadline" in r or "impaired" in r else 2 if "queue" in r or "cover" in r else 0.7 for r in reasons)
+        x = al.get(slug)
+        if not x:
+            s = a["sig"]
+            x = {"name": a["name"], "symbol": a["symbol"], "tvl": a["tvl"], "slug": slug, "cls": a["cls"],
+                 "ls": s["ls"], "band": s["band"], "level": "low", "sev": 0.0, "reasons": []}
+            ds["alerts"].append(x); al[slug] = x
+        x["reasons"] += ["Loan book: " + r for r in reasons]
+        x["sev"] = round(x["sev"] + w, 1)
+        x["level"] = "high" if x["sev"] >= 4 else "med" if x["sev"] >= 2 else "low"
+        a["credit_flags"] = reasons
+    ds["alerts"].sort(key=lambda x: -x["sev"])
+
 def main():
     import cg
     raw, cg_hist = cg.raw_records()
@@ -630,6 +650,9 @@ def main():
     import keyrisk
     print("→ Launch & Key Risk (contract control X-ray) …")
     ds["keyrisk"] = keyrisk.run(ds["assets"])
+    import loanbook
+    ds["loanbook"] = loanbook.run()
+    merge_credit_flags(ds, loanbook.flags_for(ds["loanbook"]))
     import trackrecord
     print("→ Track record (ledger + backtest) …")
     ds["track"] = trackrecord.run(ds, cg_hist)

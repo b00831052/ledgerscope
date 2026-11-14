@@ -166,7 +166,14 @@
  },
  "amd-ondo-tokenized-stock": {
   "first_seen": null,
-  "resolved": false
+  "homepage": "https://app.ondo.finance/assets/amdon",
+  "platforms": {
+   "binance-smart-chain": "0x9f16e46c73b43bdb70861247d537bee4ea18f639",
+   "ethereum": "0x0c1f3412a44ff99e40bf14e06e5ea321ae7b3938",
+   "hyperevm": "0x33706203a7a7c82b6f6c09dd9ae4e6e881d36386",
+   "solana": "14diAn5z8kjrKwSC8WLqvBqqe5YmihJhjxRxd8Z6ondo"
+  },
+  "resolved": true
  },
  "amd-robinhood-tokenized-stock": {
   "first_seen": null,
@@ -284,7 +291,11 @@
  },
  "applovin-bstocks-tokenized-stock": {
   "first_seen": null,
-  "resolved": false
+  "homepage": "https://www.bstocks.finance/",
+  "platforms": {
+   "binance-smart-chain": "0x15ec59551096d5ae2df8cde08618035145828548"
+  },
+  "resolved": true
  },
  "applovin-xstock": {
   "first_seen": null,
@@ -338,7 +349,11 @@
  },
  "axt-bstocks-tokenized-stock": {
   "first_seen": null,
-  "resolved": false
+  "homepage": "https://www.binance.com/bstocks-landing",
+  "platforms": {
+   "binance-smart-chain": "0x9bdc8b470dbf89dbcb123587c6f5e49cca3463be"
+  },
+  "resolved": true
  },
  "backed-coinbase-global": {
   "first_seen": null,
@@ -370,7 +385,17 @@
  },
  "backed-ibta-treasury-bond-1-3yr": {
   "first_seen": null,
-  "resolved": false
+  "homepage": "https://backed.fi/",
+  "platforms": {
+   "arbitrum-one": "0x52d134c6db5889fad3542a09eaf7aa90c0fdf9e4",
+   "avalanche": "0x52d134c6db5889fad3542a09eaf7aa90c0fdf9e4",
+   "base": "0x52d134c6db5889fad3542a09eaf7aa90c0fdf9e4",
+   "binance-smart-chain": "0x52d134c6db5889fad3542a09eaf7aa90c0fdf9e4",
+   "ethereum": "0x52d134c6db5889fad3542a09eaf7aa90c0fdf9e4",
+   "polygon-pos": "0x52d134c6db5889fad3542a09eaf7aa90c0fdf9e4",
+   "xdai": "0x52d134c6db5889fad3542a09eaf7aa90c0fdf9e4"
+  },
+  "resolved": true
  },
  "berkshire-hathaway-xstock": {
   "first_seen": null,
@@ -544,7 +569,13 @@
  },
  "chevron-ondo-tokenized-stock": {
   "first_seen": null,
-  "resolved": false
+  "homepage": "https://app.ondo.finance/assets/cvxon",
+  "platforms": {
+   "binance-smart-chain": "0xd3113a0ad20a46f6a662c63fe8e637f7713e59c7",
+   "ethereum": "0x8f3e41b378ae010c46d255f36bfc1d303b52dceb",
+   "solana": "7tgKziACteG26VjV5xKufojKxwTgCFyTwmWUmz5ondo"
+  },
+  "resolved": true
  },
  "chipotle-ondo-tokenized-stock": {
   "first_seen": null,
@@ -653,7 +684,11 @@
  },
  "coinbase-robinhood-tokenized-stock": {
   "first_seen": null,
-  "resolved": false
+  "homepage": "https://robinhood.com/us/en/",
+  "platforms": {
+   "robinhood": "0x6330d8c3178a418788df01a47479c0ce7ccf450b"
+  },
+  "resolved": true
  },
  "coinbase-rstock": {
   "first_seen": null,
@@ -895,7 +930,11 @@
  },
  "gamestop-robinhood-tokenized-stock": {
   "first_seen": null,
-  "resolved": false
+  "homepage": "https://robinhood.com/us/en/",
+  "platforms": {
+   "robinhood": "0x1b0e319c6a659f002271b69db8a7df2f911c153e"
+  },
+  "resolved": true
  },
  "gamestop-xstock": {
   "first_seen": null,
@@ -1022,7 +1061,13 @@
  },
  "ibm-ondo-tokenized-stock": {
   "first_seen": null,
-  "resolved": false
+  "homepage": "https://app.ondo.finance/assets/ibmon",
+  "platforms": {
+   "binance-smart-chain": "0xe8ff70859ce4cbd72e4352b4fb45f5bf39d07464",
+   "ethereum": "0x25d3f236b2d61656eebdea86ac6d42168e340011",
+   "solana": "C8bZkgSxXkyT1RgxByp2teJ24hgimPLoyEYoNa9ondo"
+  },
+  "resolved": true
  },
  "iboxx-high-yield-corporate-bond-etf-ondo-tokenized-etf": {
   "first_seen": null,
@@ -1416,7 +1461,13 @@
  },
  "jpmorgan-chase-ondo-tokenized-stock": {
   "first_seen": null,
-  "resolved": false
+  "homepage": "https://app.ondo.finance/assets/jpmon",
+  "platforms": {
+   "binance-smart-chain": "0x317bf42b43a394860718266dec445dcc9fd9da49",
+   "ethereum": "0x03c1ec4ca9dbb168e6db0def827c085999cbffaf",
+   "solana": "E5Gczsavxcomqf6Cw1sGCKLabL1xYD2FzKxVoB4ondo"
+  },
+  "resolved": true
  },
  "kinesis-gold": {
   "first_seen": null,
@@ -1436,11 +1487,21 @@
  },
  "kraneshares-star-market-50-etf-bstocks-tokenized-etf": {
   "first_seen": null,
-  "resolved": false
+  "homepage": "https://www.bstocks.finance/",
+  "platforms": {
+   "binance-smart-chain": "0x5f1668b592cdf695b0c8e643a5a0078bb94cd80c"
+  },
+  "resolved": true
  },
  "kraq-xstock": {
   "first_seen": null,
-  "resolved": false
+  "homepage": "https://xstocks.fi/",
+  "platforms": {
+   "ethereum": "0x0ebe5fad0998765187fc695b75d4115c27c953a1",
+   "solana": "XsAiRejKuvLAdq9KtedrMSrabz7SWdzKoVK6Qgac1Ki",
+   "the-open-network": "EQBXEbNIl8MQREuu5NyVQmGxw2ZmTkLCUyCkz4-uu7oFUFVo"
+  },
+  "resolved": true
  },
  "latam-residential-sstl": {
   "first_seen": null,
@@ -1478,7 +1539,12 @@
  },
  "marvell-technology-rstock": {
   "first_seen": null,
-  "resolved": false
+  "homepage": "https://realityfinance.xyz/",
+  "platforms": {
+   "arbitrum-one": "0x0ee2b4c14e7d3016db60a25241d656a7cfb1d12b",
+   "morph-l2": "0x86c03a4d544df4df380fb12cc034adaa3e48b765"
+  },
+  "resolved": true
  },
  "marvell-xstock": {
   "first_seen": null,
@@ -1525,11 +1591,24 @@
  },
  "mcdonald-s-ondo-tokenized-stock": {
   "first_seen": null,
-  "resolved": false
+  "homepage": "https://app.ondo.finance/assets/mcdon",
+  "platforms": {
+   "binance-smart-chain": "0x995add4ba29a628a57930a8a185c62ca044ec090",
+   "ethereum": "0x4c82c8cd9a218612dce60b156b73a36705645e3b",
+   "solana": "EUbJjmDt8JA222M91bVLZs211siZ2jzbFArH9N3ondo"
+  },
+  "resolved": true
  },
  "mcdonald-s-xstock": {
   "first_seen": null,
-  "resolved": false
+  "homepage": "https://xstocks.com/",
+  "platforms": {
+   "arbitrum-one": "0x80a77a372c1e12accda84299492f404902e2da67",
+   "binance-smart-chain": "0x80a77a372c1e12accda84299492f404902e2da67",
+   "ethereum": "0x80a77a372c1e12accda84299492f404902e2da67",
+   "solana": "XsqE9cRRpzxcGKDXj1BJ7Xmg4GRhZoyY1KpmGSxAWT2"
+  },
+  "resolved": true
  },
  "meta-coinbase-tokenized-stock": {
   "first_seen": null,
@@ -1762,7 +1841,13 @@
  },
  "nebius-group-ondo-tokenized": {
   "first_seen": null,
-  "resolved": false
+  "homepage": "https://app.ondo.finance/",
+  "platforms": {
+   "binance-smart-chain": "0xee268780473e7a0e47bac41547c6e01512555a16",
+   "ethereum": "0xe4babaa960ba7d37860f3fe00d7b95d3868e8edc",
+   "solana": "DiRshqNDE68bWbGdLHm1GwQ76MvWQG3af6w1NdQondo"
+  },
+  "resolved": true
  },
  "nest-treasury-vault": {
   "first_seen": null,
@@ -1807,7 +1892,11 @@
  },
  "nvidia-backpack-securities": {
   "first_seen": null,
-  "resolved": false
+  "homepage": "https://backpack.exchange/stocks/NVDA",
+  "platforms": {
+   "solana": "NVDAVuiB7hwd3m5Wa1JuHNovPaPG6BH1QNztbKFxNjv"
+  },
+  "resolved": true
  },
  "nvidia-bstocks": {
   "first_seen": null,
@@ -1915,7 +2004,11 @@
  },
  "openai-prestocks-2": {
   "first_seen": null,
-  "resolved": false
+  "homepage": "https://prestocks.com/openai",
+  "platforms": {
+   "solana": "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF"
+  },
+  "resolved": true
  },
  "openai-republic-pre-ipo": {
   "first_seen": null,
@@ -2009,7 +2102,14 @@
  },
  "palantir-xstock": {
   "first_seen": null,
-  "resolved": false
+  "homepage": "https://xstocks.com/",
+  "platforms": {
+   "arbitrum-one": "0x6d482cec5f9dd1f05ccee9fd3ff79b246170f8e2",
+   "binance-smart-chain": "0x6d482cec5f9dd1f05ccee9fd3ff79b246170f8e2",
+   "ethereum": "0x6d482cec5f9dd1f05ccee9fd3ff79b246170f8e2",
+   "solana": "XsoBhf2ufR8fTyNSjqfU71DYGaE6Z3SUGAidpzriAA4"
+  },
+  "resolved": true
  },
  "palo-alto-networks-ondo-tokenized-stock": {
   "first_seen": null,
@@ -2146,7 +2246,13 @@
  },
  "qualcomm-ondo-tokenized-stock": {
   "first_seen": null,
-  "resolved": false
+  "homepage": "https://app.ondo.finance/assets/qcomon",
+  "platforms": {
+   "binance-smart-chain": "0xfbd4d681c92ead6af0e49950c8b2e47eeacbb2db",
+   "ethereum": "0xe3419710c1f77d44b4dab02316d3f048818c4e59",
+   "solana": "hrmX7MV5hifoaBVjnrdpz698yABxrbBNAcWtWo9ondo"
+  },
+  "resolved": true
  },
  "reddit-robinhood-tokenized-stock": {
   "first_seen": null,
@@ -2498,7 +2604,12 @@
  },
  "spdr-s-p-500-etf-rstock": {
   "first_seen": null,
-  "resolved": false
+  "homepage": "https://realityfinance.xyz/",
+  "platforms": {
+   "arbitrum-one": "0x9a0fda21276f245b89d2b7f1120f42e4466b1cb5",
+   "morph-l2": "0xaf2e56d0b27e819d24a6d3638a609e5a129b2c63"
+  },
+  "resolved": true
  },
  "spdr-s-p-500-etf-trust-eqx-tokenized-etf": {
   "first_seen": null,
@@ -2570,7 +2681,11 @@
  },
  "strategy-inc-var-rt-ser-a-perp-stretch-preferred-stk-rstock": {
   "first_seen": null,
-  "resolved": false
+  "homepage": "https://realityfinance.xyz/",
+  "platforms": {
+   "arbitrum-one": "0x04586dc15d791a9bc918f7183f0f1a3d490773c3"
+  },
+  "resolved": true
  },
  "strategy-pp-variable-xstock": {
   "first_seen": null,
@@ -2712,7 +2827,11 @@
  },
  "tesla-coinbase-tokenized-stocks": {
   "first_seen": null,
-  "resolved": false
+  "homepage": "https://coinbase.com/tokenize",
+  "platforms": {
+   "base": "0xb2000000000000000000001e800a7f5189430cd0"
+  },
+  "resolved": true
  },
  "tesla-eqx-tokenized-stock": {
   "first_seen": null,
@@ -2745,7 +2864,12 @@
  },
  "tesla-rstock-2": {
   "first_seen": null,
-  "resolved": false
+  "homepage": "https://realityfinance.xyz/",
+  "platforms": {
+   "arbitrum-one": "0xf912911c9c8d5131929c758e66e6dc54e65cf3ba",
+   "morph-l2": "0xa09c9598a7ef2be720cb8e6f0920561931323735"
+  },
+  "resolved": true
  },
  "tesla-xstock": {
   "first_seen": null,
@@ -3062,7 +3186,13 @@
  },
  "walmart-ondo-tokenized-stock": {
   "first_seen": null,
-  "resolved": false
+  "homepage": "https://app.ondo.finance/assets/wmton",
+  "platforms": {
+   "binance-smart-chain": "0xa7d1e886acf66ec0656df2decb4b7c893a3bab4c",
+   "ethereum": "0x82106347ddbb23ce44cf4ce4053ef1adf8b9323b",
+   "solana": "LZddqAqKqJW9oMZSjTxCUmbmzBRQtv9gMkD9hZ3ondo"
+  },
+  "resolved": true
  },
  "wells-fargo-ondo-tokenized-stock": {
   "first_seen": null,
@@ -3096,7 +3226,15 @@
  },
  "wrapped-nvidia-xstock": {
   "first_seen": null,
-  "resolved": false
+  "homepage": "https://xstocks.com/",
+  "platforms": {
+   "arbitrum-one": "0x93e62845c1dd5822ebc807ab71a5fb750decd15a",
+   "ethereum": "0x93e62845c1dd5822ebc807ab71a5fb750decd15a",
+   "mantle": "0x93e62845c1dd5822ebc807ab71a5fb750decd15a",
+   "monad": "0xa8ddb5cd96b5222afe198316e9a57caa642850d5",
+   "x-layer": "0xa8ddb5cd96b5222afe198316e9a57caa642850d5"
+  },
+  "resolved": true
  },
  "wrapped-sp500-xstock": {
   "first_seen": null,

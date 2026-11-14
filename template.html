@@ -340,6 +340,8 @@ tbody tr:hover{background:var(--hover)!important;}
       <button data-v="analytics"><span class="lbl">Credit Signals</span></button>
       <button data-v="valuation"><span class="lbl">Valuation</span></button>
       <button data-v="keyrisk"><span class="lbl">Key Risk</span></button>
+      <button data-v="loanbook"><span class="lbl">Loan Books</span></button>
+      <button data-v="actions"><span class="lbl">Rating Actions</span></button>
       <button data-v="track"><span class="lbl">Track Record</span></button>
     </div>
     <div class="navsec">Market Intelligence</div>
@@ -544,14 +546,45 @@ tbody tr:hover{background:var(--hover)!important;}
           <li><b>Credit funds:</b> risk-free rate plus a credit spread by rating, adjusted for seniority, liquidity and manager tier.</li>
           <li><b>Unobserved yield:</b> tokens that pay under 0.5% on-chain usually accrue income inside the NAV. They get no valuation call.</li>
           <li><b>Unverified yield:</b> a credit fund paying less than T-bills + 2% on-chain (T-bills + 0.5% for AAA/AA credit) is flagged unverified, not RICH. Its income most likely accrues off-chain. The gap is shown greyed out.</li></ul>
-          <h3>4. Key Risk</h3>
+          <h3>4. Loan books</h3>
+          <p><b>Maple:</b> every active loan from Maple's public API. Per pool: amount lent out, number of loans and borrowers, top borrower's share, rate-weighted average, collateral value (priced daily) divided by loans outstanding, and how far crypto collateral can fall before cover reaches 1.0x. A loan whose on-chain payment deadline has passed is flagged "past deadline". <b>Centrifuge:</b> pending redemption orders divided by tokens outstanding. A queue of 10% or more of a fund raises an alert.</p>
+          <h3>5. Key Risk</h3>
           <p>Who can upgrade, mint, pause or freeze each token, read from the chain. A key held by a single address is not called unsafe (institutions use MPC custody), but its governance cannot be verified on-chain, so the grade is capped at C.</p>
-          <h3>5. Track record</h3>
-          <p>Every day each fund's band is written to a public ledger. Each day's entries are hash-chained to the previous day and committed to git, so a past grade cannot be edited without breaking the chain. Outcome test: did the fund lose 20% or more of its value within 30 days? The backtest replays the same rules on 12 months of history and is labelled as such.</p>
-          <h3>6. Limits</h3>
+          <h3>6. Track record</h3>
+          <p>Every day each fund's band is written to a public ledger. Each day's entries are hash-chained to the previous day and committed to git, so a past grade cannot be edited without breaking the chain. Band changes appear on the Rating Actions page, and each fund profile shows its grade history. Outcome test: did the fund lose 20% or more of its value within 30 days? The backtest replays the same rules on 12 months of history and is labelled as such.</p>
+          <h3>7. Limits</h3>
           <ul><li>History covers funds that exist today (survivorship bias).</li><li>Value change mixes flows and NAV moves.</li><li>On-chain yield can miss income that accrues off-chain.</li><li>Curated fundamentals are reviewed by hand and carry a confidence level.</li></ul>
           <p class="sub">Independent research based on public data and proprietary models. Not investment advice, not a credit rating under any regulation, not a solicitation.</p>
         </div>
+      </div>
+
+      <div class="view" id="v-loanbook">
+        <div class="crumb">RWA Credit Intelligence · Inside the funds</div><div class="h-title">Loan Books</div>
+        <div class="h-sub" id="lb-sub"></div>
+        <div class="methodbox">Market value tells you how big a fund is. The loan book tells you what it owns. <b>Maple:</b> every active loan read from Maple's public API: who borrowed, at what rate, against what collateral, and whether any loan is past its on-chain payment deadline. <b>Cover</b> = collateral value / loans outstanding. <b>Crypto drop to 1.0x</b> = how far crypto collateral can fall before the cover hits 1.0x. <b>Centrifuge:</b> redemption orders waiting to be paid, as a share of the fund.</div>
+        <div class="cards" id="lb-cards"></div>
+        <div class="panelhd"><h3>Maple pools: active loans</h3></div>
+        <div class="tablewrap"><div class="scroll"><table>
+          <thead><tr><th>Pool</th><th class="num">Lent out</th><th class="num">Loans</th><th class="num">Borrowers</th><th class="num">Top borrower</th><th class="num">Avg rate</th><th class="num">Cover</th><th class="num">Crypto drop to 1.0x</th><th>Collateral mix</th><th>Flags</th></tr></thead>
+          <tbody id="lbmaple"></tbody></table></div></div>
+        <div class="panelhd"><h3>Centrifuge funds: redemption queue</h3></div>
+        <div class="tablewrap"><div class="scroll"><table>
+          <thead><tr><th>Fund</th><th class="num">Fund value</th><th class="num">NAV per share</th><th class="num">Waiting to redeem</th><th class="num">Share of fund</th></tr></thead>
+          <tbody id="lbcfg"></tbody></table></div></div>
+      </div>
+
+      <div class="view" id="v-actions">
+        <div class="crumb">RWA Credit Intelligence · Ratings</div><div class="h-title">Rating Actions</div>
+        <div class="h-sub" id="ra-sub"></div>
+        <div class="methodbox">Every band change (Green / Amber / Red) between two daily ratings, read from the hash-chained ratings ledger. The watch list holds funds of $5M+ with redemption stress or an LS Score down 10+ points in a week.</div>
+        <div class="panelhd"><h3>Watch list</h3></div>
+        <div class="tablewrap"><div class="scroll"><table>
+          <thead><tr><th>Fund</th><th>Class</th><th class="num">Value</th><th class="num">LS Score</th><th>Why</th></tr></thead>
+          <tbody id="rawatch"></tbody></table></div></div>
+        <div class="panelhd"><h3>Upgrades and downgrades</h3></div>
+        <div class="tablewrap"><div class="scroll"><table>
+          <thead><tr><th>Date</th><th>Fund</th><th>Class</th><th>Action</th><th class="num">LS Score</th><th class="num">Value</th></tr></thead>
+          <tbody id="raacts"></tbody></table></div></div>
       </div>
 
       <!-- PRIVATE CREDIT -->
@@ -941,6 +974,8 @@ function openDetail(slug){
   if(yg){h+=`<div class="mrow"><span class="k">Offered yield</span><span class="v">${yg.apy.toFixed(2)}%</span></div><div class="mrow"><span class="k">Fair yield (signal)</span><span class="v">${yg.fair.toFixed(2)}%</span></div><div class="mrow"><span class="k">NAV gap (signal)</span><span class="v ${yg.gap_bps<=-75?'g-red':yg.gap_bps>=150?'g-green':''}">${yg.gap_bps>=0?'+':''}${yg.gap_bps} bps · ${yg.verdict}</span></div>`;}
   if(fv){h+=`<div class="msec">Fundamental valuation</div><div class="mrow"><span class="k">Rating / seniority</span><span class="v">${fv.rating} · ${(fv.seniority||'').replace('_',' ')}</span></div><div class="mrow"><span class="k">Liquidity / manager</span><span class="v">${fv.liquidity} · T${fv.manager_tier}</span></div><div class="mrow"><span class="k">Required yield</span><span class="v">${fv.req.toFixed(2)}%</span></div>${fv.gap_bps!=null?`<div class="mrow"><span class="k">NAV gap (fundamental)</span><span class="v ${fv.gap_bps<=-75?'g-red':fv.gap_bps>=150?'g-green':''}">${fv.gap_bps>=0?'+':''}${fv.gap_bps} bps</span></div>`:''}<div class="mrow"><span class="k">Data confidence</span><span class="v">${confDot[fv.conf]||''} ${fv.conf}</span></div><div class="mrow"><span class="k">Note</span><span class="v" style="font-weight:400">${fv.note||''}</span></div>`;}
   if(a.gaprel){h+=`<div class="msec">Relative value (peers)</div><div class="mrow"><span class="k">Position vs ${a.gaprel.n} peers</span><span class="v ${a.gaprel.rv==='cheap'?'g-green':a.gaprel.rv==='rich'?'g-red':''}">${a.gaprel.rv.toUpperCase()} · ${a.gaprel.pctile}th pctile · z=${a.gaprel.z}</span></div><div class="mrow"><span class="k">Peer median</span><span class="v">${a.gaprel.peer_med>=0?'+':''}${a.gaprel.peer_med} bps</span></div>`;}
+  if(a.credit_flags&&a.credit_flags.length){h+=`<div class="msec">Loan book</div>`+a.credit_flags.map(f=>`<div class="mrow"><span class="k g-red">Flag</span><span class="v" style="font-weight:400">${f}</span></div>`).join('');}
+  {const gh=(((D.track||{}).ratings||{}).hist||{})[a.slug];if(gh&&gh.length){h+=`<div class="msec">Grade history</div>`+gh.slice(-8).reverse().map(g=>`<div class="mrow"><span class="k mono">${g[0]}</span><span class="v g-${g[2]}">${g[1]} · ${({green:'Green',amber:'Amber',red:'Red'})[g[2]]}</span></div>`).join('');}}
   h+=`<div class="msec">On-chain</div><div class="mrow"><span class="k">Networks</span><span class="v">${a.chains.join(', ')}</span></div><div class="mrow"><span class="k">First seen</span><span class="v">${a.listedAt?new Date(a.listedAt*1000).toISOString().slice(0,10):'–'}</span></div>${a.url?`<div class="mrow"><span class="k">Website</span><span class="v" style="font-weight:400">${a.url.replace(/^https?:\/\//,'').slice(0,40)}</span></div>`:''}`;
   h+=`</div>`;md.innerHTML=h;ov.classList.add('on');
 }
@@ -1093,6 +1128,22 @@ document.documentElement.setAttribute('data-theme',dark?'light':'dark');location
 (function(){const sb=document.getElementById('sidebar'),b=document.getElementById('mnavBtn');if(!b)return;
 b.addEventListener('click',()=>sb.classList.toggle('open'));
 sb.addEventListener('click',e=>{if(e.target.closest('button[data-v],.clsbtn'))sb.classList.remove('open');});})();
+
+/* ===== LOAN BOOKS ===== */
+(function(){const LB=D.loanbook||{},M=LB.maple,C=(LB.centrifuge||{}).funds||[];const pct=x=>x==null?'–':x+'%';
+document.getElementById('lb-sub').textContent=M?`${M.loans} active Maple loans · ${fmt(M.outstanding)} lent out · collateral cover ${M.cover}x · ${C.length} Centrifuge funds · ${LB.as_of||D.generated}`:'Loan-book sources unavailable on this run.';
+if(M){const q=C.reduce((a,f)=>a+f.queue_usd,0);document.getElementById('lb-cards').innerHTML=[['Maple lent out',fmt(M.outstanding)],['Collateral cover',M.cover+'x'],['Loans past deadline',M.late_n?`${M.late_n} (${fmt(M.late_amt)})`:'0'],['Impaired loans',M.impaired],['Centrifuge redemptions waiting',fmt(q)]].map(c=>`<div class="card"><div class="k">${c[0]}</div><div class="v">${c[1]}</div></div>`).join('');
+document.getElementById('lbmaple').innerHTML=M.pools.map(p=>{const fl=[];if(p.late_n)fl.push(`<span class="g-red">${p.late_n} past deadline</span>`);if(p.impaired)fl.push(`<span class="g-red">${p.impaired} impaired</span>`);if(!p.collateral)fl.push('<span class="g-amber">unsecured</span>');if(p.top_borrower_pct>=50&&p.outstanding>=50e6)fl.push(`<span class="g-amber">concentrated</span>`);
+return `<tr><td class="asset">${p.pool}</td><td class="num">${fmt(p.outstanding)}</td><td class="num">${p.loans}</td><td class="num">${p.borrowers}</td><td class="num">${p.top_borrower_pct}%</td><td class="num">${p.rate.toFixed(2)}%</td><td class="num">${p.collateral?p.cover.toFixed(2)+'x':'–'}</td><td class="num">${p.crypto_drop_to_1x==null?'–':'-'+p.crypto_drop_to_1x+'%'}</td><td class="sub">${Object.entries(p.mix).map(([k,v])=>k+' '+v+'%').join(', ')||'–'}</td><td style="font-size:12px">${fl.join(' · ')||'<span class="sub">none</span>'}</td></tr>`;}).join('');}
+document.getElementById('lbcfg').innerHTML=C.map(f=>`<tr${f.slug?` data-slug="${f.slug}" style="cursor:pointer"`:''}><td class="asset">${f.name} <span class="sub">${f.symbol}</span></td><td class="num">${fmt(f.value)}</td><td class="num">${f.nav_per_share.toLocaleString('en-US',{maximumFractionDigits:4})}</td><td class="num">${f.queue_usd?fmt(f.queue_usd):'–'}</td><td class="num"><b class="${f.queue_pct>=10?'g-red':''}">${f.queue_pct}%</b></td></tr>`).join('');
+document.querySelectorAll('#lbcfg tr[data-slug]').forEach(r=>r.addEventListener('click',()=>openDetail(r.dataset.slug)));})();
+
+/* ===== RATING ACTIONS ===== */
+(function(){const R=(D.track||{}).ratings||{},BN={green:'Green',amber:'Amber',red:'Red'},BC={green:'g-green',amber:'g-amber',red:'g-red'};
+document.getElementById('ra-sub').textContent=R.first?`${R.dates} daily rating${R.dates>1?'s':''} in the ledger (${R.first} to ${R.last}) · ${(R.actions||[]).length} band changes · ${(R.watch||[]).length} on watch`:'Ledger not available.';
+document.getElementById('rawatch').innerHTML=(R.watch||[]).map(w=>`<tr data-slug="${w.slug}" style="cursor:pointer"><td class="asset">${w.name}</td><td class="sub">${w.cls}</td><td class="num">${fmt(w.tvl)}</td><td class="num"><b class="${BC[w.band]}">${w.ls}</b></td><td>${w.why.join(', ')}</td></tr>`).join('')||'<tr><td colspan="5" class="sub">No fund on watch.</td></tr>';
+document.getElementById('raacts').innerHTML=(R.actions||[]).map(a=>`<tr data-slug="${a.slug}" style="cursor:pointer"><td class="mono">${a.date}</td><td class="asset">${a.name}</td><td class="sub">${a.cls}</td><td><b class="${a.kind==='upgrade'?'g-green':'g-red'}">${a.kind==='upgrade'?'Upgrade':'Downgrade'}</b> <span class="sub">${BN[a.from]} → ${BN[a.to]}</span></td><td class="num">${a.ls_from} → ${a.ls_to}</td><td class="num">${fmt(a.tvl)}</td></tr>`).join('')||`<tr><td colspan="6" class="sub">No band change yet. Rating actions are counted from ${R.since?R.since:'the next daily rating'}, the first day the ledger stores each score's components, so changes caused only by newly discovered networks are not reported as upgrades.</td></tr>`;
+document.querySelectorAll('#rawatch tr[data-slug],#raacts tr[data-slug]').forEach(r=>r.addEventListener('click',()=>openDetail(r.dataset.slug)));})();
 /* asset classes dans la sidebar (cliquables → ouvrent la page de classe) */
 document.getElementById('clsnav').innerHTML=D.byclass.map(c=>`<button class="clsbtn" data-cls="${c[0]}"><span class="csw" style="background:${clr(c[0])}"></span>${c[0]}</button>`).join('');
 function showView(v){document.querySelectorAll('.view').forEach(x=>x.classList.remove('on'));document.getElementById('v-'+v).classList.add('on');window.scrollTo(0,0);}

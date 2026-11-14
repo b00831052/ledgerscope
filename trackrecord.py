@@ -43,7 +43,8 @@ def append_ledger(ds):
         s = a.get("sig") or {}
         new.append({"date": date, "slug": a["slug"], "name": a["name"], "symbol": a.get("symbol"),
                     "cls": a["cls"], "tvl": round(a["tvl"]), "ls": s.get("ls"), "band": s.get("band"),
-                    "stress": bool(s.get("stress")), "fv_rating": (a.get("fv") or {}).get("rating"),
+                    "stress": bool(s.get("stress")), "size": s.get("size"), "stab": s.get("stability"),
+                    "resil": s.get("resil"), "fv_rating": (a.get("fv") or {}).get("rating"),
                     "key_grade": kr.get(a["slug"])})
     body = json.dumps(new, sort_keys=True, ensure_ascii=False)
     h = hashlib.sha256((prev + body).encode()).hexdigest()
@@ -133,4 +134,47 @@ def run(ds, hist):
     print(f"  backtest: {bt['n']} point-in-time grades on {bt['funds']} funds · "
           f"30d drawdown≥20%: green {g['green'].get('hit_dd')}% / amber {g['amber'].get('hit_dd')}% / red {g['red'].get('hit_dd')}%")
     print(f"  live: {lv['grades']} grades over {lv['days']} day(s), first 30d readout {lv['first_readout']}")
-    return {"horizon": HORIZON, "dd_event": DD_EVENT, "backtest": bt, "live": lv}
+    ac = actions(rows)
+    print(f"  rating actions: {len(ac['actions'])} band changes over {ac['dates']} day(s) · watch list {len(ac['watch'])}")
+    return {"horizon": HORIZON, "dd_event": DD_EVENT, "backtest": bt, "live": lv, "ratings": ac}
+
+
+# ---------------------------------------------------------------- grade history
+def actions(rows, keep_days=120):
+    """Per-fund grade history + rating actions (band changes) + watch list, from the ledger."""
+    by = {}
+    for r in rows:
+        by.setdefault(r["slug"], []).append(r)
+    dates = sorted({r["date"] for r in rows})
+    hist, acts = {}, []
+    order = {"red": 0, "amber": 1, "green": 2}
+    for slug, rs in by.items():
+        rs.sort(key=lambda r: r["date"])
+        hist[slug] = [[r["date"], r["ls"], r["band"]] for r in rs][-keep_days:]
+        for a, b in zip(rs, rs[1:]):
+            # a rating action must come from the fund, not from our data coverage: skip pairs without
+            # components, and band changes explained only by newly discovered networks (resilience)
+            if a["band"] != b["band"] and a.get("resil") is not None and b.get("resil") is not None:
+                core = lambda r: 0.42 * (r["size"] or 0) + 0.40 * (r["stab"] or 0)
+                if abs(core(b) - core(a)) * 100 < 3 and a["resil"] != b["resil"]:
+                    continue
+                acts.append({"date": b["date"], "slug": slug, "name": b["name"], "cls": b["cls"],
+                             "from": a["band"], "to": b["band"], "ls_from": a["ls"], "ls_to": b["ls"],
+                             "kind": "upgrade" if order[b["band"]] > order[a["band"]] else "downgrade",
+                             "tvl": b["tvl"]})
+    acts.sort(key=lambda x: (x["date"], -x["tvl"]), reverse=True)
+    # watch list: latest grade has stress, or LS fell 10+ points vs 7 grades ago
+    watch = []
+    for slug, rs in by.items():
+        last = rs[-1]
+        prev = rs[-8] if len(rs) >= 8 else rs[0]
+        why = []
+        if last.get("stress"): why.append("redemption stress")
+        if prev is not last and (prev["ls"] or 0) - (last["ls"] or 0) >= 10: why.append(f"LS down {prev['ls'] - last['ls']} pts")
+        if why and last["tvl"] >= 5e6:
+            watch.append({"slug": slug, "name": last["name"], "cls": last["cls"], "ls": last["ls"],
+                          "band": last["band"], "tvl": last["tvl"], "why": why})
+    watch.sort(key=lambda x: -x["tvl"])
+    comp = sorted({r["date"] for r in rows if r.get("resil") is not None})
+    return {"dates": len(dates), "since": comp[0] if comp else None, "first": dates[0] if dates else None, "last": dates[-1] if dates else None,
+            "actions": acts[:200], "watch": watch, "hist": hist}
