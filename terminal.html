@@ -2,6 +2,9 @@
 <html lang="en">
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Ledgerscope</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg"><link rel="icon" type="image/png" href="logo.png"><link rel="apple-touch-icon" href="logo.png">
+<meta name="description" content="Independent ratings for tokenized private credit and real-world-asset funds: LS Score, NAV gap, loan books, contract risk and a public track record.">
+<meta property="og:title" content="Ledgerscope: independent ratings for tokenized funds"><meta property="og:description" content="Independent ratings for tokenized private credit and RWA funds, by RWA Credit Intelligence, Singapore."><meta property="og:image" content="https://b00831052.github.io/ledgerscope/logo.png"><meta property="og:url" content="https://b00831052.github.io/ledgerscope/"><meta name="twitter:card" content="summary">
 <script>try{document.documentElement.setAttribute("data-theme",localStorage.getItem("ls-theme")==="dark"?"dark":"light");}catch(e){document.documentElement.setAttribute("data-theme","light");}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -331,12 +334,13 @@ span.lsdot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-ri
 .score[data-tip]{cursor:help;}
 .mhd .chips{align-items:center;}
 .mhd .chips>*,.mhd .memobtn{display:inline-flex!important;align-items:center;justify-content:center;height:26px;line-height:1;padding-top:0!important;padding-bottom:0!important;box-sizing:border-box;vertical-align:middle;}
+img.mk{width:26px!important;height:26px!important;border-radius:6px!important;background:none!important;display:block;}
 </style>
 
-<div class="mnav"><span class="mk" style="background:var(--accent);color:var(--on-accent);border-radius:4px;width:22px;height:22px;display:grid;place-items:center;font-size:13px">L</span>Ledgerscope<button type="button" id="mnavBtn">Menu</button></div>
+<div class="mnav"><img src="logo.svg" alt="Ledgerscope" style="width:24px;height:24px;border-radius:5px">Ledgerscope<button type="button" id="mnavBtn">Menu</button></div>
 <div class="app">
   <aside class="sidebar" id="sidebar">
-    <div class="brand"><span class="mk">L</span><span class="bname">Ledger<em>scope</em></span>
+    <div class="brand"><img class="mk" src="logo.svg" alt="Ledgerscope"><span class="bname">Ledger<em>scope</em></span>
       <button class="collapse" id="collapseBtn" title="Collapse">«</button></div>
     <div class="tagline bname">RWA Credit Intelligence</div>
     <button class="sidesearch" id="sideSearch"><span class="ss-t">Search…</span><span class="kbd">⌘K</span></button>
@@ -691,7 +695,7 @@ span.lsdot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-ri
   <!-- LOGIN MODAL -->
   <div class="overlay" id="loginOverlay"><div class="loginbox">
     <button class="x" id="loginX" aria-label="Close">&times;</button>
-    <div class="lg-brand"><span class="mk">L</span>Ledger<em>scope</em></div>
+    <div class="lg-brand"><img class="mk" src="logo.svg" alt="Ledgerscope">Ledger<em>scope</em></div>
     <div class="lg-t" id="lg-title">Sign in</div>
     <div class="lg-sub">Unlock premium columns: rating, regulator, jurisdiction and full league tables.</div>
     <input class="lg-in" id="lgEmail" placeholder="email@institution.com" autocomplete="off">
