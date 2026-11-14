@@ -826,7 +826,7 @@ perfRender();
   const idx=s=>s.values.slice(base).map(v=>v/s.values[base]*100);
   let maxY=100,minY=100;series.forEach(s=>idx(s).forEach(v=>{if(v>maxY)maxY=v;if(v<minY)minY=v;}));
   const LOG=maxY>300;const lo=LOG?Math.max(10,minY*0.9):Math.min(80,Math.floor(minY*0.95)),hi=maxY*1.05;
-  const M=PN-base;const X=i=>pL+i*(W-pL-pR)/(M-1);
+  const M=PN-base;const X=i=>pL+i*(W-pL-pR)/Math.max(1,M-1);
   const Y=v=>LOG?pT+(1-(Math.log(v)-Math.log(lo))/(Math.log(hi)-Math.log(lo)))*(H-pT-pB):pT+(1-(v-lo)/(hi-lo))*(H-pT-pB);
   const ticks=LOG?[25,50,100,200,400,800,1600,3200,6400].filter(v=>v>=lo&&v<=hi):[0,1,2,3,4].map(g=>lo+(hi-lo)*g/4);
   function paint(hi_i){c.clearRect(0,0,W,H);c.strokeStyle=line;c.fillStyle=faint;c.font='11px Inter,-apple-system,sans-serif';c.lineWidth=1;
@@ -837,7 +837,7 @@ perfRender();
    c.restore();c.fillStyle=faint;const st=Math.max(1,Math.floor(M/6));for(let i=0;i<M;i+=st)c.fillText(PL[base+i],X(i)-12,H-8);}
   paint(null);
   cvp.addEventListener('mousemove',e=>{const b=cvp.getBoundingClientRect(),px=(e.clientX-b.left)*W/b.width;if(px<pL||px>W-pR){paint(null);vtHide();return;}
-   const i=Math.max(0,Math.min(M-1,Math.round((px-pL)/((W-pL-pR)/(M-1)))));paint(i);
+   const i=Math.max(0,Math.min(M-1,Math.round((px-pL)/((W-pL-pR)/Math.max(1,M-1)))));paint(i);
    const rows=series.map(s=>[s.cls,idx(s)[i],s.values[base+i]]).sort((a,b)=>b[1]-a[1]);
    vtShow(`<b>${PL[base+i]}</b>`+rows.map(r=>`<div class="vt-row"><span class="vt-dot" style="background:${clr(r[0])}"></span>${r[0]}<span class="vt-v">${r[1]>=100?'+':''}${(r[1]-100).toFixed(0)}% · ${fmt(r[2])}</span></div>`).join(''),e);});
   cvp.addEventListener('mouseleave',()=>{paint(null);vtHide();});
@@ -917,7 +917,7 @@ document.getElementById('apbody').innerHTML=apac.sort((a,b)=>b.tvl-a.tvl).map(a=
 
 /* alerts */
 const AL=D.alerts||[];
-const alKey=x=>x.slug+'|'+x.reasons.map(r=>r.split(/[(:]/)[0].trim()).sort().join(';');
+const alKey=x=>x.slug+'|'+x.reasons.map(r=>r.replace(/\([^)]*\)/g,'').replace(/[-+$]?[\d.,]+%?[MBK]?/g,'#').replace(/\s+/g,' ').trim()).sort().join(';');
 let alSeen=[];try{alSeen=JSON.parse(localStorage.getItem('ls-alerts-seen')||'[]');}catch(e){}
 const alNew=AL.filter(x=>!alSeen.includes(alKey(x)));const nb=document.getElementById('navalertn');
 nb.textContent=alNew.length||'';nb.style.display=alNew.length?'':'none';nb.title=alNew.length+' new since your last visit';
