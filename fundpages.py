@@ -69,7 +69,7 @@ HEAD = """<!doctype html>
 <link rel="canonical" href="{url}">
 <meta property="og:type" content="website"><meta property="og:title" content="{title}"><meta property="og:description" content="{desc}"><meta property="og:url" content="{url}"><meta property="og:site_name" content="Ledgerscope">
 <meta name="twitter:card" content="summary"><meta property="og:image" content="https://b00831052.github.io/ledgerscope/logo.png">
-<link rel="icon" type="image/svg+xml" href="{root}favicon.svg"><link rel="icon" type="image/png" href="{root}logo.png"><link rel="apple-touch-icon" href="{root}logo.png"><meta name="twitter:title" content="{title}"><meta name="twitter:description" content="{desc}">
+<link rel="icon" type="image/svg+xml" href="{root}favicon.svg"><link rel="icon" type="image/png" href="{root}logo.png"><link rel="apple-touch-icon" href="{root}apple-touch-icon.png"><meta name="twitter:title" content="{title}"><meta name="twitter:description" content="{desc}">
 <script>try{{document.documentElement.setAttribute("data-theme",localStorage.getItem("ls-theme")==="dark"?"dark":"light");}}catch(e){{document.documentElement.setAttribute("data-theme","light");}}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>{css}</style></head><body>
