@@ -705,7 +705,7 @@ span.lsdot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-ri
 <script>
 /*__DATA__*/
 const D=window.DATA;
-const fmt=n=>{n=n||0;const a=Math.abs(n);return a>=1e9?'$'+(n/1e9).toFixed(2)+'B':a>=1e6?'$'+(n/1e6).toFixed(1)+'M':a>=1e3?'$'+(n/1e3).toFixed(0)+'K':'$'+n.toFixed(0);};
+const fmt=n=>{n=n||0;const a=Math.abs(n),s=n<0?'-':'';return s+(a>=1e9?'$'+(a/1e9).toFixed(2)+'B':a>=1e6?'$'+(a/1e6).toFixed(1)+'M':a>=1e3?'$'+(a/1e3).toFixed(0)+'K':'$'+a.toFixed(0));};
 const pct=v=>v==null?'–':(v>=0?'+':'')+v.toFixed(1)+'%';
 const CLR={'U.S. Treasuries':'#3b82f6','Private credit':'#22b8a6','Commodities':'#d0a84a','Tokenized stocks / equity':'#a855f7','Cash / yield stablecoin':'#38bdf8','Real estate':'#ef5a56','Other (carbon/insurance/art)':'#64748b','Other RWA':'#94a3b8'};
 const clr=c=>CLR[c]||'#8b929b';
@@ -742,7 +742,7 @@ document.addEventListener('mousemove',e=>{const t=e.target.closest&&e.target.clo
 document.addEventListener('mouseout',e=>{const t=e.target.closest&&e.target.closest('[data-tip]');if(t&&!t.contains(e.relatedTarget)&&typeof vtHide==='function')vtHide();});
 const maxC=Math.max(...D.byclass.map(c=>c[1]));
 document.getElementById('classbars').innerHTML=D.byclass.map(c=>`<div class="barrow" data-v="${c[1]}"><div class="lbl">${c[0]}</div><div class="bartrack"><div class="barfill" style="width:${Math.max(2,c[1]/maxC*100)}%;background:${clr(c[0])}"></div></div><div class="amt">${fmt(c[1])}</div></div>`).join('');
-barScale('classbars',D.total_tvl,'Bar = value vs the largest class (full bar). Hover a row for its share of total RWA value (stablecoins excluded).');
+barScale('classbars',D.total_tvl,'Bar = value vs the largest class (full bar). Hover a row for its share of total RWA value (payment stablecoins like USDT/USDC excluded).');
 /* flow bars */
 const maxF=Math.max(...D.flows.map(f=>Math.abs(f[1])))||1;
 document.getElementById('flowbars').innerHTML=D.flows.map(f=>`<div class="barrow" data-v="${f[1]}"><div class="lbl">${f[0]}</div><div class="bartrack"><div class="barfill" style="width:${Math.abs(f[1])/maxF*100}%;background:${f[1]>=0?'var(--up)':'var(--down)'}"></div></div><div class="amt ${f[1]>=0?'up':'down'}">${f[1]>=0?'+':''}${fmt(f[1])}</div></div>`).join('');
@@ -963,7 +963,7 @@ document.getElementById('nw-sub').textContent=`${NW.length} networks · ${fmt(nw
 document.getElementById('nw-cards').innerHTML=[['Networks',NW.length],['Top network',NW[0]?NW[0].chain:'–'],['Top value',NW[0]?fmt(NW[0].value):'–'],['Total RWA',fmt(D.total_tvl)]].map(c=>`<div class="card"><div class="k">${c[0]}</div><div class="v" style="font-size:${(''+c[1]).length>9?'19px':'25px'}">${c[1]}</div></div>`).join('');
 const nwMax=NW[0]?NW[0].value:1;const NWC=['#4d94f5','#22b8a6','#d0a84a','#a855f7','#38bdf8','#ef5a56','#8b98b0','#3ec37e','#c084fc','#f59e0b'];
 document.getElementById('nwbars').innerHTML=NW.slice(0,10).map((n,i)=>`<div class="barrow" data-v="${n.value}"><div class="lbl">${n.chain}</div><div class="bartrack"><div class="barfill" style="width:${n.value/nwMax*100}%;background:${NWC[i%NWC.length]}"></div></div><div class="amt">${fmt(n.value)}</div></div>`).join('');
-barScale('nwbars',nwTot,'Bar = value vs the largest network (full bar). A multi-chain token's value is split across its chains (no double count). Hover for share.');
+barScale('nwbars',nwTot,'Bar = value vs the largest network (full bar). The value of a multi-chain token is split across its chains (no double count). Hover for share.');
 document.getElementById('nwbody').innerHTML=NW.map((n,i)=>`<tr data-net="${n.chain}" style="cursor:pointer"><td class="num">${i+1}</td><td class="asset">${n.chain}</td><td class="num">${fmt(n.value)}</td><td class="num">${n.n}</td><td class="num">${(n.value/nwTot*100).toFixed(1)}%</td></tr>`).join('');
 /* shared hover tooltip + donut with hover */
 const VT=(()=>{const d=document.createElement('div');d.id='vtip';document.body.appendChild(d);return d;})();
