@@ -323,6 +323,14 @@ tbody tr:hover{background:var(--hover)!important;}
 .app.mini .brand{flex-direction:column;align-items:center;gap:10px;padding:6px 0 0!important;}
 .app.mini .collapse{transform:rotate(180deg);}
 span.lsdot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;vertical-align:middle;}
+
+.barscale .axis{display:flex;justify-content:space-between;font:500 10.5px "IBM Plex Mono",Menlo,monospace;color:var(--ink-faint);border-top:1px solid var(--line);padding-top:4px;}
+.barnote{font-size:11.5px;color:var(--ink-faint);margin-top:6px;line-height:1.45;}
+.barrow[data-tip]{cursor:default;}.barrow[data-tip]:hover .lbl{color:var(--ink);}
+.info{display:inline-grid;place-items:center;width:14px;height:14px;border-radius:50%;border:1px solid var(--ink-faint);font:600 9px Inter,sans-serif;color:var(--ink-faint);margin-left:4px;vertical-align:1px;text-transform:none;cursor:help;}
+.score[data-tip]{cursor:help;}
+.mhd .chips{align-items:center;}
+.mhd .chips>*,.mhd .memobtn{display:inline-flex!important;align-items:center;justify-content:center;height:26px;line-height:1;padding-top:0!important;padding-bottom:0!important;box-sizing:border-box;vertical-align:middle;}
 </style>
 
 <div class="mnav"><span class="mk" style="background:var(--accent);color:var(--on-accent);border-radius:4px;width:22px;height:22px;display:grid;place-items:center;font-size:13px">L</span>Ledgerscope<button type="button" id="mnavBtn">Menu</button></div>
@@ -720,11 +728,25 @@ document.getElementById('ov-cards').innerHTML=[
 ].map(c=>`<div class="card"><div class="k">${c[0]}</div><div class="v">${c[1]}</div></div>`).join('');
 
 /* class bars */
+/* bar charts: scale axis + explainer + hover share */
+function barScale(id,total,note,signed){const box=document.getElementById(id);if(!box)return;
+ const rows=[...box.querySelectorAll('.barrow[data-v]')];if(!rows.length)return;const vals=rows.map(r=>+r.dataset.v);const mx=Math.max(...vals.map(Math.abs))||1;
+ const tot=total||vals.reduce((s,v)=>s+Math.abs(v),0)||1;
+ rows.forEach((r,i)=>{const v=vals[i];const nm=r.querySelector('.lbl').textContent;r.setAttribute('data-tip',`<b>${nm}</b><br>${signed&&v>=0?'+':''}${fmt(v)}<br>${(Math.abs(v)/tot*100).toFixed(1)}% of ${signed?'all 7-day moves':'total'} · ${(Math.abs(v)/mx*100).toFixed(0)}% of largest`);});
+ const sc=document.createElement('div');sc.className='barrow barscale';const h=signed?'±':'';
+ sc.innerHTML=`<div class="lbl"></div><div class="axis"><span>0</span><span>${h}${fmt(mx/2)}</span><span>${h}${fmt(mx)}</span></div><div class="amt"></div>`;box.appendChild(sc);
+ const n=document.createElement('div');n.className='barnote';n.textContent=note;box.appendChild(n);}
+/* hover tips for any [data-tip] */
+document.addEventListener('mouseover',e=>{const t=e.target.closest&&e.target.closest('[data-tip]');if(t&&typeof vtShow==='function')vtShow(t.getAttribute('data-tip'),e);});
+document.addEventListener('mousemove',e=>{const t=e.target.closest&&e.target.closest('[data-tip]');if(t&&typeof vtShow==='function')vtShow(t.getAttribute('data-tip'),e);});
+document.addEventListener('mouseout',e=>{const t=e.target.closest&&e.target.closest('[data-tip]');if(t&&!t.contains(e.relatedTarget)&&typeof vtHide==='function')vtHide();});
 const maxC=Math.max(...D.byclass.map(c=>c[1]));
-document.getElementById('classbars').innerHTML=D.byclass.map(c=>`<div class="barrow"><div class="lbl">${c[0]}</div><div class="bartrack"><div class="barfill" style="width:${Math.max(2,c[1]/maxC*100)}%;background:${clr(c[0])}"></div></div><div class="amt">${fmt(c[1])}</div></div>`).join('');
+document.getElementById('classbars').innerHTML=D.byclass.map(c=>`<div class="barrow" data-v="${c[1]}"><div class="lbl">${c[0]}</div><div class="bartrack"><div class="barfill" style="width:${Math.max(2,c[1]/maxC*100)}%;background:${clr(c[0])}"></div></div><div class="amt">${fmt(c[1])}</div></div>`).join('');
+barScale('classbars',D.total_tvl,'Bar = value vs the largest class (full bar). Hover a row for its share of all tokenized assets.');
 /* flow bars */
 const maxF=Math.max(...D.flows.map(f=>Math.abs(f[1])))||1;
-document.getElementById('flowbars').innerHTML=D.flows.map(f=>`<div class="barrow"><div class="lbl">${f[0]}</div><div class="bartrack"><div class="barfill" style="width:${Math.abs(f[1])/maxF*100}%;background:${f[1]>=0?'var(--up)':'var(--down)'}"></div></div><div class="amt ${f[1]>=0?'up':'down'}">${f[1]>=0?'+':''}${fmt(f[1])}</div></div>`).join('');
+document.getElementById('flowbars').innerHTML=D.flows.map(f=>`<div class="barrow" data-v="${f[1]}"><div class="lbl">${f[0]}</div><div class="bartrack"><div class="barfill" style="width:${Math.abs(f[1])/maxF*100}%;background:${f[1]>=0?'var(--up)':'var(--down)'}"></div></div><div class="amt ${f[1]>=0?'up':'down'}">${f[1]>=0?'+':''}${fmt(f[1])}</div></div>`).join('');
+barScale('flowbars',null,'Bar = size of the 7-day net change vs the largest move (full bar). Red = money out, green = money in.',true);
 
 /* ===== STACKED AREA CHART (vrai historique + survol interactif) ===== */
 const HIST=D.history||{labels:[],series:[]};
@@ -871,7 +893,8 @@ const dt=t=>t?new Date(t*1000).toISOString().slice(0,10):'–';
 document.getElementById('mbody').innerHTML=D.recent.map(a=>`<tr data-slug="${a.slug}"><td class="asset">${a.name} <span class="sub">${a.symbol}</span></td><td><span class="chip ${a.cls==='Private credit'?'credit':''}">${a.cls}</span></td><td class="sub">${a.chains.slice(0,3).join(', ')}</td><td class="num">${fmt(a.tvl)}</td><td class="sub">${dt(a.listedAt)}</td></tr>`).join('');
 
 const pc=D.assets.filter(a=>a.cls==='Private credit');
-const scoreCell=s=>`<span class="score g-${s.band}"><span class="lsdot bg-${s.band}"></span>${s.ls}</span>${s.stress?'<span class="stressflag">STRESS</span>':''}`;
+const LSTIP='<b>LS Score (0-100)</b><br>42% size: log scale, full at $2B<br>40% stability: falls to 0 at a 25% weekly move<br>18% resilience: networks, full at 3<br>Green 68+ · Amber 48-67 · Red under 48';
+const scoreCell=s=>`<span class="score g-${s.band}" data-tip="<b>LS ${s.ls} · ${({green:'Green',amber:'Amber',red:'Red'})[s.band]}</b><br>Size ${s.size} x 42%<br>Stability ${s.stability} x 40%<br>Resilience ${s.resil} x 18%<br><span style=&quot;color:var(--ink-faint)&quot;>= ${s.ls}/100. Green 68+, Amber 48-67, Red under 48</span>"><span class="lsdot bg-${s.band}"></span>${s.ls}</span>${s.stress?'<span class="stressflag">STRESS</span>':''}`;
 
 /* risk & value signals · TOUTES CLASSES */
 const sigAssets=D.assets.filter(a=>a.tvl>=2e6);
@@ -939,7 +962,8 @@ const NW=D.networks||[];const nwTot=NW.reduce((s,n)=>s+n.value,0)||1;
 document.getElementById('nw-sub').textContent=`${NW.length} networks · ${fmt(nwTot)} RWA value on-chain · ${D.generated}`;
 document.getElementById('nw-cards').innerHTML=[['Networks',NW.length],['Top network',NW[0]?NW[0].chain:'–'],['Top value',NW[0]?fmt(NW[0].value):'–'],['Total RWA',fmt(D.total_tvl)]].map(c=>`<div class="card"><div class="k">${c[0]}</div><div class="v" style="font-size:${(''+c[1]).length>9?'19px':'25px'}">${c[1]}</div></div>`).join('');
 const nwMax=NW[0]?NW[0].value:1;const NWC=['#4d94f5','#22b8a6','#d0a84a','#a855f7','#38bdf8','#ef5a56','#8b98b0','#3ec37e','#c084fc','#f59e0b'];
-document.getElementById('nwbars').innerHTML=NW.slice(0,10).map((n,i)=>`<div class="barrow"><div class="lbl">${n.chain}</div><div class="bartrack"><div class="barfill" style="width:${n.value/nwMax*100}%;background:${NWC[i%NWC.length]}"></div></div><div class="amt">${fmt(n.value)}</div></div>`).join('');
+document.getElementById('nwbars').innerHTML=NW.slice(0,10).map((n,i)=>`<div class="barrow" data-v="${n.value}"><div class="lbl">${n.chain}</div><div class="bartrack"><div class="barfill" style="width:${n.value/nwMax*100}%;background:${NWC[i%NWC.length]}"></div></div><div class="amt">${fmt(n.value)}</div></div>`).join('');
+barScale('nwbars',nwTot,'Bar = value vs the largest network (full bar). A multi-chain token counts on each chain it lives on. Hover for share.');
 document.getElementById('nwbody').innerHTML=NW.map((n,i)=>`<tr data-net="${n.chain}" style="cursor:pointer"><td class="num">${i+1}</td><td class="asset">${n.chain}</td><td class="num">${fmt(n.value)}</td><td class="num">${n.n}</td><td class="num">${(n.value/nwTot*100).toFixed(1)}%</td></tr>`).join('');
 /* shared hover tooltip + donut with hover */
 const VT=(()=>{const d=document.createElement('div');d.id='vtip';document.body.appendChild(d);return d;})();
@@ -966,7 +990,8 @@ const MG=D.managers||[];const mgTot=MG.reduce((s,m)=>s+m.value,0)||1;
 document.getElementById('mg-sub').textContent=`${MG.length} managers · ${fmt(mgTot)} tokenized · ${D.generated}`;
 document.getElementById('mg-cards').innerHTML=[['Managers',MG.length],['Top manager',MG[0]?MG[0].name:'–'],['Top AUM',MG[0]?fmt(MG[0].value):'–'],['Top-5 share',(MG.slice(0,5).reduce((s,m)=>s+m.value,0)/mgTot*100).toFixed(0)+'%']].map(c=>`<div class="card"><div class="k">${c[0]}</div><div class="v" style="font-size:${(''+c[1]).length>10?'18px':'25px'}">${c[1]}</div></div>`).join('');
 const mgMax=MG[0]?MG[0].value:1;
-document.getElementById('mgbars').innerHTML=MG.slice(0,10).map((m,i)=>`<div class="barrow"><div class="lbl">${m.name}</div><div class="bartrack"><div class="barfill" style="width:${m.value/mgMax*100}%;background:${NWC[i%NWC.length]}"></div></div><div class="amt">${fmt(m.value)}</div></div>`).join('');
+document.getElementById('mgbars').innerHTML=MG.slice(0,10).map((m,i)=>`<div class="barrow" data-v="${m.value}"><div class="lbl">${m.name}</div><div class="bartrack"><div class="barfill" style="width:${m.value/mgMax*100}%;background:${NWC[i%NWC.length]}"></div></div><div class="amt">${fmt(m.value)}</div></div>`).join('');
+barScale('mgbars',mgTot,'Bar = tokenized value vs the largest manager (full bar). Hover a row for its share of all managers.');
 document.getElementById('mgbody').innerHTML=MG.map((m,i)=>`<tr data-mgr="${m.name.replace(/"/g,'&quot;')}" style="cursor:pointer"><td class="num">${i+1}</td><td class="asset">${m.name}</td><td class="num">${fmt(m.value)}</td><td class="num">${m.n}</td><td class="sub">${m.classes.join(', ')}</td><td class="num">${m.nchains}</td></tr>`).join('');
 function openManager(name){
   const list=D.assets.filter(a=>a.manager===name).sort((a,b)=>b.tvl-a.tvl);if(!list.length)return;
@@ -1115,7 +1140,8 @@ function openClass(cls){
   // network breakdown
   const nb={};list.forEach(a=>a.chains.forEach(ch=>nb[ch]=(nb[ch]||0)+a.tvl/a.chains.length));
   const nbA=Object.entries(nb).sort((a,b)=>b[1]-a[1]).slice(0,8);const nbMax=nbA[0]?nbA[0][1]:1;
-  document.getElementById('clnw').innerHTML=nbA.map((n,i)=>`<div class="barrow"><div class="lbl">${n[0]}</div><div class="bartrack"><div class="barfill" style="width:${n[1]/nbMax*100}%;background:${NWC[i%NWC.length]}"></div></div><div class="amt">${fmt(n[1])}</div></div>`).join('');
+  document.getElementById('clnw').innerHTML=nbA.map((n,i)=>`<div class="barrow" data-v="${n[1]}"><div class="lbl">${n[0]}</div><div class="bartrack"><div class="barfill" style="width:${n[1]/nbMax*100}%;background:${NWC[i%NWC.length]}"></div></div><div class="amt">${fmt(n[1])}</div></div>`).join('');
+  barScale('clnw',nbA.reduce((s,x)=>s+x[1],0),'Bar = class value on each chain vs the largest chain (full bar). Hover for share of this class.');
   // assets table (colonnes premium verrouillées)
   document.getElementById('clbody').innerHTML=list.map(a=>`<tr data-slug="${a.slug}"><td class="asset">${a.name} <span class="sub">${a.symbol}</span></td><td class="sub">${a.chains.slice(0,3).join(', ')}</td><td class="num">${fmt(a.tvl)}</td><td class="num ${a.chg7d>=0?'up':'down'}">${pct(a.chg7d)}</td><td class="num">${lockCell(a.fv?a.fv.rating:'NR')}</td><td class="num">${lockCell(a.apac?'MAS':(a.fv&&a.fv.jurisdiction?a.fv.jurisdiction.split(' ')[0]:'–'))}</td></tr>`).join('');
   renderLeague('platform');
@@ -1184,6 +1210,8 @@ document.querySelectorAll('#rawatch tr[data-slug],#raacts tr[data-slug]').forEac
 (function(){const h=location.hash;if(h==='#method'){const b=document.querySelector('.nav button[data-v=method]');b&&b.click();}
 const m=h.match(/^#fund=([a-z0-9-]+)$/);if(m&&typeof openDetail==='function')setTimeout(()=>openDetail(m[1]),0);})();
 addEventListener('hashchange',()=>{const m=location.hash.match(/^#fund=([a-z0-9-]+)$/);if(m)openDetail(m[1]);else if(location.hash==='#method'){const b=document.querySelector('.nav button[data-v=method]');b&&b.click();}});
+/* LS header explainer */
+document.querySelectorAll('th').forEach(th=>{if(/^\s*LS( SCORE| Score)?\s*$/i.test(th.textContent)){th.setAttribute('data-tip',LSTIP);th.innerHTML=th.textContent.trim()+' <span class="info">i</span>';}});
 /* asset classes dans la sidebar (cliquables → ouvrent la page de classe) */
 document.getElementById('clsnav').innerHTML=D.byclass.map(c=>`<button class="clsbtn" data-cls="${c[0]}"><span class="csw" style="background:${clr(c[0])}"></span>${c[0]}</button>`).join('');
 function showView(v){document.querySelectorAll('.view').forEach(x=>x.classList.remove('on'));document.getElementById('v-'+v).classList.add('on');window.scrollTo(0,0);}
