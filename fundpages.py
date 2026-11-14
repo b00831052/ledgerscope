@@ -74,7 +74,7 @@ HEAD = """<!doctype html>
 <script>try{{document.documentElement.setAttribute("data-theme",localStorage.getItem("ls-theme")==="dark"?"dark":"light");}}catch(e){{document.documentElement.setAttribute("data-theme","light");}}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>{css}</style></head><body>
-<div class="top"><a href="{root}" style="display:flex;align-items:center;gap:9px;text-decoration:none"><img src="{root}logo.svg" alt="Ledgerscope" style="width:26px;height:26px;border-radius:6px;display:block"><span class="brand">Ledger<em>scope</em></span></a>
+<div class="top"><a href="{root}" style="display:flex;align-items:center;gap:9px;text-decoration:none"><img src="{root}mark.svg" alt="Ledgerscope" style="width:28px;height:28px;border-radius:7px;display:block"><span class="brand">Ledger<em>scope</em></span></a>
 <span class="sp"></span><a class="btn noprint" href="{root}fund/">All funds</a><button class="btn noprint" onclick="navigator.clipboard&&navigator.clipboard.writeText(location.href).then(()=>{{this.textContent='Link copied'}})">Copy link</button><button class="btn noprint" onclick="window.print()">PDF</button><button class="btn noprint" id="tb">Dark mode</button></div>
 """
 

@@ -334,17 +334,17 @@ span.lsdot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-ri
 .score[data-tip]{cursor:help;}
 .mhd .chips{align-items:center;}
 .mhd .chips>*,.mhd .memobtn{display:inline-flex!important;align-items:center;justify-content:center;height:26px;line-height:1;padding-top:0!important;padding-bottom:0!important;box-sizing:border-box;vertical-align:middle;}
-img.mk{width:26px!important;height:26px!important;border-radius:6px!important;background:none!important;display:block;}
+.sidebar .brand img.mk,.brand img.mk,img.mk{width:28px!important;height:28px!important;border-radius:7px!important;background:transparent!important;box-shadow:none!important;border:0!important;padding:0!important;display:block;object-fit:cover;}
 
 /* hidden page + sidebar scrollbars (still scrollable) */
 html,body,.sidebar{scrollbar-width:none!important;-ms-overflow-style:none;}
 html::-webkit-scrollbar,body::-webkit-scrollbar,.sidebar::-webkit-scrollbar{display:none!important;width:0!important;height:0!important;}
 </style>
 
-<div class="mnav"><img src="logo.svg" alt="Ledgerscope" style="width:24px;height:24px;border-radius:5px">Ledgerscope<button type="button" id="mnavBtn">Menu</button></div>
+<div class="mnav"><img src="mark.svg" alt="Ledgerscope" style="width:26px;height:26px;border-radius:7px;display:block">Ledgerscope<button type="button" id="mnavBtn">Menu</button></div>
 <div class="app">
   <aside class="sidebar" id="sidebar">
-    <div class="brand"><img class="mk" src="logo.svg" alt="Ledgerscope"><span class="bname">Ledger<em>scope</em></span>
+    <div class="brand"><img class="mk" src="mark.svg" alt="Ledgerscope"><span class="bname">Ledger<em>scope</em></span>
       <button class="collapse" id="collapseBtn" title="Collapse">«</button></div>
     <div class="tagline bname">RWA Credit Intelligence</div>
     <button class="sidesearch" id="sideSearch"><span class="ss-t">Search…</span><span class="kbd">⌘K</span></button>
@@ -699,7 +699,7 @@ html::-webkit-scrollbar,body::-webkit-scrollbar,.sidebar::-webkit-scrollbar{disp
   <!-- LOGIN MODAL -->
   <div class="overlay" id="loginOverlay"><div class="loginbox">
     <button class="x" id="loginX" aria-label="Close">&times;</button>
-    <div class="lg-brand"><img class="mk" src="logo.svg" alt="Ledgerscope">Ledger<em>scope</em></div>
+    <div class="lg-brand"><img class="mk" src="mark.svg" alt="Ledgerscope">Ledger<em>scope</em></div>
     <div class="lg-t" id="lg-title">Sign in</div>
     <div class="lg-sub">Unlock premium columns: rating, regulator, jurisdiction and full league tables.</div>
     <input class="lg-in" id="lgEmail" placeholder="email@institution.com" autocomplete="off">
