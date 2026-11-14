@@ -732,7 +732,7 @@ document.getElementById('ov-cards').innerHTML=[
 function barScale(id,total,note,signed){const box=document.getElementById(id);if(!box)return;
  const rows=[...box.querySelectorAll('.barrow[data-v]')];if(!rows.length)return;const vals=rows.map(r=>+r.dataset.v);const mx=Math.max(...vals.map(Math.abs))||1;
  const tot=total||vals.reduce((s,v)=>s+Math.abs(v),0)||1;
- rows.forEach((r,i)=>{const v=vals[i];const nm=r.querySelector('.lbl').textContent;r.setAttribute('data-tip',`<b>${nm}</b><br>${signed&&v>=0?'+':''}${fmt(v)}<br>${(Math.abs(v)/tot*100).toFixed(1)}% of ${signed?'all 7-day moves':'total'} · ${(Math.abs(v)/mx*100).toFixed(0)}% of largest`);});
+ rows.forEach((r,i)=>{const v=vals[i];const nm=r.querySelector('.lbl').textContent;r.setAttribute('data-tip',`<b>${nm}</b><br>${v<0?'-':(signed?'+':'')}${fmt(Math.abs(v))}<br>${(Math.abs(v)/tot*100).toFixed(1)}% of ${signed?'all 7-day moves':'total'} · ${(Math.abs(v)/mx*100).toFixed(0)}% of largest`);});
  const sc=document.createElement('div');sc.className='barrow barscale';const h=signed?'±':'';
  sc.innerHTML=`<div class="lbl"></div><div class="axis"><span>0</span><span>${h}${fmt(mx/2)}</span><span>${h}${fmt(mx)}</span></div><div class="amt"></div>`;box.appendChild(sc);
  const n=document.createElement('div');n.className='barnote';n.textContent=note;box.appendChild(n);}
@@ -742,7 +742,7 @@ document.addEventListener('mousemove',e=>{const t=e.target.closest&&e.target.clo
 document.addEventListener('mouseout',e=>{const t=e.target.closest&&e.target.closest('[data-tip]');if(t&&!t.contains(e.relatedTarget)&&typeof vtHide==='function')vtHide();});
 const maxC=Math.max(...D.byclass.map(c=>c[1]));
 document.getElementById('classbars').innerHTML=D.byclass.map(c=>`<div class="barrow" data-v="${c[1]}"><div class="lbl">${c[0]}</div><div class="bartrack"><div class="barfill" style="width:${Math.max(2,c[1]/maxC*100)}%;background:${clr(c[0])}"></div></div><div class="amt">${fmt(c[1])}</div></div>`).join('');
-barScale('classbars',D.total_tvl,'Bar = value vs the largest class (full bar). Hover a row for its share of all tokenized assets.');
+barScale('classbars',D.total_tvl,'Bar = value vs the largest class (full bar). Hover a row for its share of total RWA value (stablecoins excluded).');
 /* flow bars */
 const maxF=Math.max(...D.flows.map(f=>Math.abs(f[1])))||1;
 document.getElementById('flowbars').innerHTML=D.flows.map(f=>`<div class="barrow" data-v="${f[1]}"><div class="lbl">${f[0]}</div><div class="bartrack"><div class="barfill" style="width:${Math.abs(f[1])/maxF*100}%;background:${f[1]>=0?'var(--up)':'var(--down)'}"></div></div><div class="amt ${f[1]>=0?'up':'down'}">${f[1]>=0?'+':''}${fmt(f[1])}</div></div>`).join('');
@@ -893,7 +893,7 @@ const dt=t=>t?new Date(t*1000).toISOString().slice(0,10):'–';
 document.getElementById('mbody').innerHTML=D.recent.map(a=>`<tr data-slug="${a.slug}"><td class="asset">${a.name} <span class="sub">${a.symbol}</span></td><td><span class="chip ${a.cls==='Private credit'?'credit':''}">${a.cls}</span></td><td class="sub">${a.chains.slice(0,3).join(', ')}</td><td class="num">${fmt(a.tvl)}</td><td class="sub">${dt(a.listedAt)}</td></tr>`).join('');
 
 const pc=D.assets.filter(a=>a.cls==='Private credit');
-const LSTIP='<b>LS Score (0-100)</b><br>42% size: log scale, full at $2B<br>40% stability: falls to 0 at a 25% weekly move<br>18% resilience: networks, full at 3<br>Green 68+ · Amber 48-67 · Red under 48';
+const LSTIP='<b>LS Score (0-100)</b><br>42% size: log scale, full at $2B<br>40% stability: falls to 0 at a 25% weekly move (0.5 when the 7-day change is unknown)<br>18% resilience: networks, full at 3<br>Green 68+ · Amber 48-67 · Red under 48';
 const scoreCell=s=>`<span class="score g-${s.band}" data-tip="<b>LS ${s.ls} · ${({green:'Green',amber:'Amber',red:'Red'})[s.band]}</b><br>Size ${s.size} x 42%<br>Stability ${s.stability} x 40%<br>Resilience ${s.resil} x 18%<br><span style=&quot;color:var(--ink-faint)&quot;>= ${s.ls}/100. Green 68+, Amber 48-67, Red under 48</span>"><span class="lsdot bg-${s.band}"></span>${s.ls}</span>${s.stress?'<span class="stressflag">STRESS</span>':''}`;
 
 /* risk & value signals · TOUTES CLASSES */
@@ -963,7 +963,7 @@ document.getElementById('nw-sub').textContent=`${NW.length} networks · ${fmt(nw
 document.getElementById('nw-cards').innerHTML=[['Networks',NW.length],['Top network',NW[0]?NW[0].chain:'–'],['Top value',NW[0]?fmt(NW[0].value):'–'],['Total RWA',fmt(D.total_tvl)]].map(c=>`<div class="card"><div class="k">${c[0]}</div><div class="v" style="font-size:${(''+c[1]).length>9?'19px':'25px'}">${c[1]}</div></div>`).join('');
 const nwMax=NW[0]?NW[0].value:1;const NWC=['#4d94f5','#22b8a6','#d0a84a','#a855f7','#38bdf8','#ef5a56','#8b98b0','#3ec37e','#c084fc','#f59e0b'];
 document.getElementById('nwbars').innerHTML=NW.slice(0,10).map((n,i)=>`<div class="barrow" data-v="${n.value}"><div class="lbl">${n.chain}</div><div class="bartrack"><div class="barfill" style="width:${n.value/nwMax*100}%;background:${NWC[i%NWC.length]}"></div></div><div class="amt">${fmt(n.value)}</div></div>`).join('');
-barScale('nwbars',nwTot,'Bar = value vs the largest network (full bar). A multi-chain token counts on each chain it lives on. Hover for share.');
+barScale('nwbars',nwTot,'Bar = value vs the largest network (full bar). A multi-chain token's value is split across its chains (no double count). Hover for share.');
 document.getElementById('nwbody').innerHTML=NW.map((n,i)=>`<tr data-net="${n.chain}" style="cursor:pointer"><td class="num">${i+1}</td><td class="asset">${n.chain}</td><td class="num">${fmt(n.value)}</td><td class="num">${n.n}</td><td class="num">${(n.value/nwTot*100).toFixed(1)}%</td></tr>`).join('');
 /* shared hover tooltip + donut with hover */
 const VT=(()=>{const d=document.createElement('div');d.id='vtip';document.body.appendChild(d);return d;})();
