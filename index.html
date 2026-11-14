@@ -1183,6 +1183,7 @@ document.querySelectorAll('#rawatch tr[data-slug],#raacts tr[data-slug]').forEac
 /* deep links: #method, #fund=<slug> */
 (function(){const h=location.hash;if(h==='#method'){const b=document.querySelector('.nav button[data-v=method]');b&&b.click();}
 const m=h.match(/^#fund=([a-z0-9-]+)$/);if(m&&typeof openDetail==='function')setTimeout(()=>openDetail(m[1]),0);})();
+addEventListener('hashchange',()=>{const m=location.hash.match(/^#fund=([a-z0-9-]+)$/);if(m)openDetail(m[1]);else if(location.hash==='#method'){const b=document.querySelector('.nav button[data-v=method]');b&&b.click();}});
 /* asset classes dans la sidebar (cliquables → ouvrent la page de classe) */
 document.getElementById('clsnav').innerHTML=D.byclass.map(c=>`<button class="clsbtn" data-cls="${c[0]}"><span class="csw" style="background:${clr(c[0])}"></span>${c[0]}</button>`).join('');
 function showView(v){document.querySelectorAll('.view').forEach(x=>x.classList.remove('on'));document.getElementById('v-'+v).classList.add('on');window.scrollTo(0,0);}

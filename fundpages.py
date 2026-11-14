@@ -21,7 +21,9 @@ def fmt(n):
 
 
 def pct(x, d=1):
-    return "–" if x is None else f"{'+' if x >= 0 else ''}{x:.{d}f}%"
+    if x is None: return "–"
+    if round(x, d) == 0: x = 0.0
+    return f"{'+' if x >= 0 else ''}{x:.{d}f}%"
 
 
 CSS = """
@@ -87,7 +89,8 @@ def page(a, ds, kr, al, hist, lb):
     slug, s = a["slug"], a.get("sig") or {}
     band = s.get("band", "amber")
     url = f"{SITE}fund/{slug}/"
-    title = f"{a['name']} ({a.get('symbol') or ''}) rating report | Ledgerscope"
+    title = (f"{a['name']} rating report | Ledgerscope" if a['name'].endswith(")") or not a.get('symbol')
+             else f"{a['name']} ({a['symbol']}) rating report | Ledgerscope")
     desc = (f"{a['name']}: LS Score {s.get('ls')}/100 ({BAND.get(band, band)}), {fmt(a['tvl'])} on-chain, "
             f"{a['cls']}. Independent rating by Ledgerscope, {ds['generated']}.")
     h = [HEAD.format(title=E(title), desc=E(desc), url=E(url), css=CSS, root="../../")]
@@ -108,7 +111,7 @@ def page(a, ds, kr, al, hist, lb):
     cards = [("On-chain value", fmt(a["tvl"])),
              ("7-day change", f"<span class='{'up' if (c7 or 0) >= 0 else 'down'}'>{pct(c7)}</span>"),
              ("1-day change", f"<span class='{'up' if (c1 or 0) >= 0 else 'down'}'>{pct(c1)}</span>"),
-             ("Networks", str(len(a.get("chains") or [])))]
+             ("Networks", str(len(a.get("chains") or [])) if a.get("chains") else "–")]
     h.append("<div class='grid'>" + "".join(f"<div class='card'><div class='k'>{k}</div><div class='v'>{v}</div></div>" for k, v in cards) + "</div>")
     # alerts
     if al:
