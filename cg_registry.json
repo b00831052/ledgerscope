@@ -17,7 +17,12 @@
  },
  "advanced-micro-devices-rstock": {
   "first_seen": null,
-  "resolved": false
+  "homepage": "https://realityfinance.xyz/",
+  "platforms": {
+   "arbitrum-one": "0x3fde83d2d577f21f1c0f61c7a53f4f578f8d800f",
+   "morph-l2": "0x7d221afb07957a27e52b60d99dcac18822ba6b75"
+  },
+  "resolved": true
  },
  "airbnb-ondo-tokenized-stock": {
   "first_seen": null,
@@ -132,7 +137,11 @@
  },
  "amazon-coinbase-tokenized-stock": {
   "first_seen": null,
-  "resolved": false
+  "homepage": "https://www.coinbase.com/tokenize",
+  "platforms": {
+   "base": "0xb200000000000000000000d9192b6b456483c2e8"
+  },
+  "resolved": true
  },
  "amazon-eqx-tokenized-stock": {
   "first_seen": null,
@@ -192,7 +201,11 @@
  },
  "amd-robinhood-tokenized-stock": {
   "first_seen": null,
-  "resolved": false
+  "homepage": "https://robinhood.com/us/en/",
+  "platforms": {
+   "robinhood": "0x86923f96303d656e4aa86d9d42d1e57ad2023fdc"
+  },
+  "resolved": true
  },
  "amd-xstock": {
   "first_seen": null,
@@ -322,7 +335,11 @@
  },
  "aptusd": {
   "first_seen": null,
-  "resolved": false
+  "homepage": "https://apyx.fi",
+  "platforms": {
+   "ethereum": "0x093df218d70ea6036afa26704a1c70d12010b908"
+  },
+  "resolved": true
  },
  "arm-bstocks-tokenized-stock": {
   "first_seen": null,
@@ -493,7 +510,13 @@
  },
  "blackrock-inc-ondo-tokenized-stock": {
   "first_seen": null,
-  "resolved": false
+  "homepage": "https://app.ondo.finance/assets/blkon",
+  "platforms": {
+   "binance-smart-chain": "0x24f5471183ea549987f245d6ce236b6108869c92",
+   "ethereum": "0x7a0f89c1606f71499950aa2590d547c3975b728e",
+   "solana": "5H1VpMzRuoNtRbPTRCz35ETtEUtnkt8hJuQb9v7ondo"
+  },
+  "resolved": true
  },
  "blackrock-usd-institutional-digital-liquidity-fund": {
   "first_seen": null,
@@ -564,7 +587,12 @@
  },
  "broadcom-rstock": {
   "first_seen": null,
-  "resolved": false
+  "homepage": "https://realityfinance.xyz/",
+  "platforms": {
+   "arbitrum-one": "0xb79b7b1022fd670f144c9d35af5492d8ba342f45",
+   "morph-l2": "0x5eee3cbbd6d353f98005cd228110c6fccfc281ba"
+  },
+  "resolved": true
  },
  "broadcom-xstock": {
   "first_seen": null,
@@ -703,7 +731,11 @@
  },
  "coherent-bstocks-tokenized-stock": {
   "first_seen": null,
-  "resolved": false
+  "homepage": "https://www.bstocks.finance/en/",
+  "platforms": {
+   "binance-smart-chain": "0x5131859a059b2446abeefe0f5d313b3c54ff3d36"
+  },
+  "resolved": true
  },
  "coherent-ondo-tokenized": {
   "first_seen": null,
@@ -988,7 +1020,14 @@
  },
  "gamestop-xstock": {
   "first_seen": null,
-  "resolved": false
+  "homepage": "https://xstocks.com/",
+  "platforms": {
+   "arbitrum-one": "0xe5f6d3b2405abdfe6f660e63202b25d23763160d",
+   "binance-smart-chain": "0xe5f6d3b2405abdfe6f660e63202b25d23763160d",
+   "ethereum": "0xe5f6d3b2405abdfe6f660e63202b25d23763160d",
+   "solana": "Xsf9mBktVB9BSU5kf4nHxPq5hCBJ2j2ui3ecFGxPRGc"
+  },
+  "resolved": true
  },
  "ge-vernova-bstocks-tokenized-stock": {
   "first_seen": null,
@@ -1093,11 +1132,21 @@
  },
  "herculis-gold-coin": {
   "first_seen": null,
-  "resolved": false
+  "homepage": "https://www.xauh.gold",
+  "platforms": {
+   "ethereum": "0xa9b17f572341219703bc951725bdb3ca756b1a65",
+   "the-open-network": "EQCMk4_OujCnk46jApHnIRbmTtYTkSmfujV9X8Ye0qvsHVKh",
+   "tron": "TJ9x3d4v8Cot4zFLYj8rkH3ZVSaEiXtjyC"
+  },
+  "resolved": true
  },
  "hims-hers-health-inc-robinhood-token": {
   "first_seen": null,
-  "resolved": false
+  "homepage": "https://docs.robinhood.com/rhj",
+  "platforms": {
+   "robinhood": "0xccee82fe024c36fa15e1005ede3e9e4787e23d09"
+  },
+  "resolved": true
  },
  "hims-hers-health-ondo-tokenized-stock": {
   "first_seen": null,
@@ -1145,7 +1194,11 @@
  },
  "intel-robinhood-tokenized-stock": {
   "first_seen": null,
-  "resolved": false
+  "homepage": "https://robinhood.com/us/en/",
+  "platforms": {
+   "robinhood": "0xc72b96e0e48ecd4dc75e1e45396e26300bc39681"
+  },
+  "resolved": true
  },
  "intel-rstock": {
   "first_seen": null,
@@ -1342,7 +1395,14 @@
  },
  "ishares-gold-trust-ondo-tokenized-stock": {
   "first_seen": null,
-  "resolved": false
+  "homepage": "https://app.ondo.finance/assets/iauon",
+  "platforms": {
+   "binance-smart-chain": "0xcb2a0f46f67dc4c58a316f1c008edef5c2311795",
+   "ethereum": "0x4f0ca3df1c2e6b943cf82e649d576ffe7b2fabcf",
+   "hyperevm": "0x83b01ac9e2d1632a70dd1c813c5b8edf29cd707f",
+   "solana": "M77ZvkZ8zW5udRbuJCbuwSwavRa7bGAZYMTwru8ondo"
+  },
+  "resolved": true
  },
  "ishares-international-country-rotation-active-etf-ondo-tokenized": {
   "first_seen": null,
@@ -1487,7 +1547,14 @@
  },
  "janus-henderson-aaa-clo-etf-dinari-tokenized-etf": {
   "first_seen": null,
-  "resolved": false
+  "homepage": "https://dinari.com",
+  "platforms": {
+   "arbitrum-one": "0xb4c9a47952b6beaeb8e675d22c0f9547ff8f5326",
+   "avalanche": "0x869d0329295c4a33076f2bbbd8147db44bc3356b",
+   "base": "0x9e18093caf330b7aac61cf885909772dfb1cc566",
+   "ethereum": "0x52f8e40d08feeb24d2d3521dd147cd9788d630ce"
+  },
+  "resolved": true
  },
  "janus-henderson-anemoy-aaa-clo-fund": {
   "first_seen": null,
@@ -1806,7 +1873,11 @@
  },
  "microsoft-robinhood-tokenized-stock": {
   "first_seen": null,
-  "resolved": false
+  "homepage": "https://robinhood.com/us/en/",
+  "platforms": {
+   "robinhood": "0xe93237c50d904957cf27e7b1133b510c669c2e74"
+  },
+  "resolved": true
  },
  "microsoft-rstock": {
   "first_seen": null,
@@ -1827,7 +1898,11 @@
  },
  "microstrategy-coinbase-tokenized-stock": {
   "first_seen": null,
-  "resolved": false
+  "homepage": "https://www.coinbase.com/tokenize",
+  "platforms": {
+   "base": "0xb2000000000000000000004884b426556b92883d"
+  },
+  "resolved": true
  },
  "microstrategy-ondo-tokenized-stock": {
   "first_seen": null,
@@ -1876,7 +1951,11 @@
  },
  "moderna-bstocks-tokenized-stock": {
   "first_seen": null,
-  "resolved": false
+  "homepage": "https://www.bstocks.finance/en/",
+  "platforms": {
+   "binance-smart-chain": "0x5fd86da9b05abe396fe9d02a4a213a7c00556503"
+  },
+  "resolved": true
  },
  "na-post-settlement-legal-financing-receivables": {
   "first_seen": null,
@@ -1928,7 +2007,11 @@
  },
  "netflix-bstocks-tokenized-stock": {
   "first_seen": null,
-  "resolved": false
+  "homepage": "https://www.bstocks.finance/en/",
+  "platforms": {
+   "binance-smart-chain": "0xd6829ea836b6fa224d099d40e54b31262f874631"
+  },
+  "resolved": true
  },
  "netflix-xstock": {
   "first_seen": null,
@@ -1958,7 +2041,11 @@
  },
  "nokia-bstocks-tokenized-stock": {
   "first_seen": null,
-  "resolved": false
+  "homepage": "https://www.binance.com/bstocks-landing",
+  "platforms": {
+   "binance-smart-chain": "0x7c4d7a180d737dd5a70d8065a90e6746a69c37ea"
+  },
+  "resolved": true
  },
  "novo-nordisk-ondo-tokenized-stock": {
   "first_seen": null,
@@ -1996,7 +2083,15 @@
  },
  "nvidia-dinari-tokenized-stock": {
   "first_seen": null,
-  "resolved": false
+  "homepage": "https://dinari.com",
+  "platforms": {
+   "arbitrum-one": "0x4dafffddea93ddf1e0e7b61e844331455053ce5c",
+   "avalanche": "0x4b16f5251cd4c853f28998809dca61cccbcb898b",
+   "base": "0x92ecf64fdb76e60b76d78a29ad4bf9d38b7b1b97",
+   "ethereum": "0x62ec03c917face0e6841afdafc166bf571e55e4f",
+   "hyperevm": "0x4b16f5251cd4c853f28998809dca61cccbcb898b"
+  },
+  "resolved": true
  },
  "nvidia-eqx-tokenized-stock": {
   "first_seen": null,
@@ -2412,7 +2507,12 @@
  },
  "roblox-rstock": {
   "first_seen": null,
-  "resolved": false
+  "homepage": "https://realityfinance.xyz/",
+  "platforms": {
+   "arbitrum-one": "0x93c1fd913ece21efe1dd353072a2a4403382c921",
+   "morph-l2": "0x204aca82ff67de933c0cecde51c9d4c4681e5586"
+  },
+  "resolved": true
  },
  "rocket-lab-bstocks-tokenized-stock": {
   "first_seen": null,
@@ -2788,7 +2888,13 @@
  },
  "starbucks-ondo-tokenized-stock": {
   "first_seen": null,
-  "resolved": false
+  "homepage": "https://app.ondo.finance/assets/sbuxon",
+  "platforms": {
+   "binance-smart-chain": "0x94d7754541b829a87321d56121bc544167ac490d",
+   "ethereum": "0xf15fbc1349ab99abad63db3f9a510bf413be3bef",
+   "solana": "iPFqjcZQTNMNXA4kbShbMhfAVD8yr8Uq9UtXMV6ondo"
+  },
+  "resolved": true
  },
  "stbl-usst": {
   "first_seen": null,
@@ -2867,7 +2973,14 @@
  },
  "strive-series-a-preferred-dinari-tokenized-stock": {
   "first_seen": null,
-  "resolved": false
+  "homepage": "https://dinari.com",
+  "platforms": {
+   "arbitrum-one": "0xc445d35f74f8cd24a596d4db8228840d0a938f6d",
+   "avalanche": "0xc445d35f74f8cd24a596d4db8228840d0a938f6d",
+   "base": "0xc445d35f74f8cd24a596d4db8228840d0a938f6d",
+   "ethereum": "0xc445d35f74f8cd24a596d4db8228840d0a938f6d"
+  },
+  "resolved": true
  },
  "super-micro-computer-bstocks-tokenized-stock": {
   "first_seen": null,
@@ -3278,7 +3391,14 @@
  },
  "vanguard-xstock": {
   "first_seen": null,
-  "resolved": false
+  "homepage": "https://xstocks.com/",
+  "platforms": {
+   "arbitrum-one": "0xbd730e618bcd88c82ddee52e10275cf2f88a4777",
+   "binance-smart-chain": "0xbd730e618bcd88c82ddee52e10275cf2f88a4777",
+   "ethereum": "0xbd730e618bcd88c82ddee52e10275cf2f88a4777",
+   "solana": "XsssYEQjzxBCFgvYFFNuhJFBeHNdLWYeUSP8F45cDr9"
+  },
+  "resolved": true
  },
  "verified-emeralds": {
   "first_seen": null,
@@ -3335,7 +3455,11 @@
  },
  "western-digital-bstocks-tokenized-stock": {
   "first_seen": null,
-  "resolved": false
+  "homepage": "https://www.bstocks.finance/en/",
+  "platforms": {
+   "binance-smart-chain": "0xebe29695f8047c13d36e7a790ca8c1b239ffad1c"
+  },
+  "resolved": true
  },
  "wisdomtree-floating-rate-treasury-fund-dinari-tokenized-etf": {
   "first_seen": null,
@@ -3394,6 +3518,13 @@
  },
  "wrapped-tesla-xstock": {
   "first_seen": null,
-  "resolved": false
+  "homepage": "https://xstocks.com/",
+  "platforms": {
+   "arbitrum-one": "0x43680abf18cf54898be84c6ef78237cfbd441883",
+   "mantle": "0x43680abf18cf54898be84c6ef78237cfbd441883",
+   "monad": "0xc3fdbe3a68ee5de461d30415a8165cf9aefe1171",
+   "x-layer": "0xc3fdbe3a68ee5de461d30415a8165cf9aefe1171"
+  },
+  "resolved": true
  }
 }
