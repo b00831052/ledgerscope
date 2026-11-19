@@ -403,7 +403,11 @@
  },
  "asml-bstocks-tokenized-stock": {
   "first_seen": null,
-  "resolved": false
+  "homepage": "",
+  "platforms": {
+   "binance-smart-chain": "0xfbfb4f79cfb4c34dcd7c82bdee5a0fa199b2e7f9"
+  },
+  "resolved": true
  },
  "asml-holding-nv-ondo-tokenized-stock": {
   "first_seen": null,
@@ -972,6 +976,16 @@
   "first_seen": null,
   "resolved": false
  },
+ "direxion-daily-semi-bull-3x-etf-ondo-tokenized": {
+  "first_seen": "2026-11-19",
+  "homepage": "https://app.ondo.finance/",
+  "platforms": {
+   "binance-smart-chain": "0xb943c8a0d77b656daf5244da060d647fd9152289",
+   "ethereum": "0xd318bbbe6b6e83f74e7acaeb5e94c08ddbdb44c0",
+   "solana": "isRSJECP9yFPv9YejzGUdjzAGHbF2x5DpVeDqAiondo"
+  },
+  "resolved": true
+ },
  "direxion-daily-semiconductor-bear-3x-shares-etf-rstock": {
   "first_seen": null,
   "homepage": "https://realityfinance.xyz/",
@@ -1123,7 +1137,13 @@
  },
  "franklin-us-large-cap-multifactor-index-etf-ondo-tokenized": {
   "first_seen": null,
-  "resolved": false
+  "homepage": "https://app.ondo.finance/",
+  "platforms": {
+   "binance-smart-chain": "0x48187890d16aee64798e02c5bed510f4db5694a9",
+   "ethereum": "0xc53d2e7321ab83b28af2360559aa303676a23f98",
+   "solana": "CZ9GBn1okotqKNUUqoxk4PF2JVi59bw5GWvVo6Dondo"
+  },
+  "resolved": true
  },
  "frax-usd": {
   "first_seen": "2026-11-13",
@@ -1604,6 +1624,26 @@
   },
   "resolved": true
  },
+ "ishares-ethereum-trust-ondo-tokenized": {
+  "first_seen": "2026-11-19",
+  "homepage": "https://app.ondo.finance/",
+  "platforms": {
+   "binance-smart-chain": "0x04b16ff1f9673146f68aa5d5f57aa45adcf068e1",
+   "ethereum": "0x98284fbc11edd7540e29b896a49817bbe52ddcbd",
+   "solana": "LitNUakTges74cjDJm6HHfFNKGPdySkp3MWSYzYondo"
+  },
+  "resolved": true
+ },
+ "ishares-flexible-income-active-etf-ondo-tokenized-etf": {
+  "first_seen": "2026-11-19",
+  "homepage": "https://app.ondo.finance/",
+  "platforms": {
+   "binance-smart-chain": "0x940f442746d9ae699e63c378d52c4494ea02684f",
+   "ethereum": "0x88703c1e71f44a2d329c99e8e112f7a4e7dd6312",
+   "solana": "mhZ69E1vDnAsQJXAwarLYSX5tmgeMajXBJ2rXAcondo"
+  },
+  "resolved": true
+ },
  "ishares-gold-trust-ondo-tokenized-stock": {
   "first_seen": null,
   "homepage": "https://app.ondo.finance/assets/iauon",
@@ -1724,7 +1764,13 @@
  },
  "ishares-systematic-alternatives-active-etf-ondo-tokenized": {
   "first_seen": null,
-  "resolved": false
+  "homepage": "https://app.ondo.finance/",
+  "platforms": {
+   "binance-smart-chain": "0x879fc0d8dfdb13b4af3513d9838f82c4df8f57e8",
+   "ethereum": "0x9ed446b5cc93803291bfda5346a5b634a93a500c",
+   "solana": "gfKuBLive7Q35MYgxPgNx7qx524zQJ9RiDZJFZoondo"
+  },
+  "resolved": true
  },
  "ishares-tips-bond-etf-ondo-tokenized-etf": {
   "first_seen": null,
@@ -2986,6 +3032,14 @@
   },
   "resolved": true
  },
+ "sk-hynix-rstock": {
+  "first_seen": "2026-11-19",
+  "homepage": "https://realityfinance.xyz/",
+  "platforms": {
+   "arbitrum-one": "0x8c61758c719780d62d17470ec94362433bdfd8d5"
+  },
+  "resolved": true
+ },
  "sk-hynix-xstock": {
   "first_seen": null,
   "homepage": "https://xstocks.fi",
@@ -3690,7 +3744,13 @@
  },
  "uber-ondo-tokenized-stock": {
   "first_seen": null,
-  "resolved": false
+  "homepage": "https://app.ondo.finance/assets/uberon",
+  "platforms": {
+   "binance-smart-chain": "0xde9d6036fca870f7efc5a82722ae694c371ac909",
+   "ethereum": "0x5bcd8195e3ef58f677aef9ebc276b5087c027050",
+   "solana": "KJNeFW3kk3ycPjXpC6cbuyckjeYHacc2ekhtAi5ondo"
+  },
+  "resolved": true
  },
  "ugold-inc-2": {
   "first_seen": "2026-11-13",
