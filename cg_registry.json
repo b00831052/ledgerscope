@@ -261,6 +261,14 @@
   },
   "resolved": true
  },
+ "anthropic-pbc-robinhood-token": {
+  "first_seen": "2026-11-20",
+  "homepage": "https://docs.robinhood.com/rhj",
+  "platforms": {
+   "robinhood": "0xbbb6c29bcc3a1028a2b54310df73f4f7a3bcb373"
+  },
+  "resolved": true
+ },
  "anthropic-prestocks-2": {
   "first_seen": null,
   "homepage": "https://prestocks.com/anthropic",
@@ -2822,6 +2830,15 @@
    "hyperevm": "0xf1df92ac8e22763a16bf4bd9a966eebcd70fa5a3",
    "robinhood": "0x43cac729218c62210d71d66b7f0ec93990d8d8cc",
    "solana": "BVdXGvmgi6A9oAiwWvBvP76fyTqcCNRJMM7zMN6ondo"
+  },
+  "resolved": true
+ },
+ "robinhood-rstock": {
+  "first_seen": "2026-11-20",
+  "homepage": "https://realityfinance.xyz/",
+  "platforms": {
+   "arbitrum-one": "0x485cb1ed5662a911eba7f8547eb9e253cf43b8ae",
+   "morph-l2": "0x47d1fba4f6cc82028382d66bc8155fa68a07b286"
   },
   "resolved": true
  },
