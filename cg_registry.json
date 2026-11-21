@@ -261,6 +261,14 @@
   },
   "resolved": true
  },
+ "anthropic-pbc-coinbase-tokenized-stock": {
+  "first_seen": "2026-11-21",
+  "homepage": "https://www.coinbase.com/tokenize",
+  "platforms": {
+   "base": "0xb20000000000000000000016e38fd364d271ba28"
+  },
+  "resolved": true
+ },
  "anthropic-pbc-robinhood-token": {
   "first_seen": "2026-11-20",
   "homepage": "https://docs.robinhood.com/rhj",
@@ -1550,6 +1558,16 @@
   },
   "resolved": true
  },
+ "ishares-aaa-a-rated-corporate-bond-etf-ondo-tokenized": {
+  "first_seen": "2026-11-21",
+  "homepage": "https://app.ondo.finance/",
+  "platforms": {
+   "binance-smart-chain": "0xbc34d36b70e5a256f3d16f9ca9d3ca3838f6cc4f",
+   "ethereum": "0xd175b950b71f623bcd31c430c23e3e4a3487bda3",
+   "solana": "fkznXN9GALK7f9zVr2RwRHWCPhwoima4zB3JbbNondo"
+  },
+  "resolved": true
+ },
  "ishares-bitcoin-trust-ondo-tokenized": {
   "first_seen": null,
   "homepage": "https://app.ondo.finance/",
@@ -2776,6 +2794,14 @@
    "binance-smart-chain": "0xe42cfb20e00912409b77a602b5bdcff3c7acc5f4",
    "ethereum": "0xa45cd7ac9865b9539166ebaf2abc362df4736580",
    "solana": "14W1itEkV7k1W819mLSknFTaMmkCtPokbF2tRkPUondo"
+  },
+  "resolved": true
+ },
+ "proshares-ultrapro-short-qqq-bstocks-tokenized-stock": {
+  "first_seen": "2026-11-21",
+  "homepage": "https://www.bstocks.finance/en/",
+  "platforms": {
+   "binance-smart-chain": "0x25e572b466d152604d9e6c3e53b432b978825342"
   },
   "resolved": true
  },
