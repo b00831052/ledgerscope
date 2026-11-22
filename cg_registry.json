@@ -462,6 +462,15 @@
   },
   "resolved": true
  },
+ "ast-spacemobile-rstock": {
+  "first_seen": "2026-11-22",
+  "homepage": "https://realityfinance.xyz/",
+  "platforms": {
+   "arbitrum-one": "0xe172d18ea50377eee45cd73ee2e122c5a5bb9be6",
+   "morph-l2": "0x9d958bb9c06db96aa578b9838f38eeb75fcb4187"
+  },
+  "resolved": true
+ },
  "axe-compute-bstocks-tokenized-stock": {
   "first_seen": null,
   "homepage": "https://www.bstocks.finance/en/",
