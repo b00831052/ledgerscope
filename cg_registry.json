@@ -399,6 +399,16 @@
   },
   "resolved": true
  },
+ "arista-networks-ondo-tokenized-stocks": {
+  "first_seen": "2026-11-24",
+  "homepage": "https://app.ondo.finance/",
+  "platforms": {
+   "binance-smart-chain": "0x538e2838f9ebc9b891399df4a8dcc42890d9dc20",
+   "ethereum": "0x20e113e9235df6a2a9bfc6f244c2ccc380c8f546",
+   "solana": "Cq6QtvHpXbJWtFaiMhUDtHy8YVZ95gcD1oZ1cohondo"
+  },
+  "resolved": true
+ },
  "arm-bstocks-tokenized-stock": {
   "first_seen": null,
   "homepage": "https://www.binance.com/bstocks-landing",
@@ -717,6 +727,15 @@
   },
   "resolved": true
  },
+ "celestica-rstock": {
+  "first_seen": "2026-11-24",
+  "homepage": "https://realityfinance.xyz/",
+  "platforms": {
+   "arbitrum-one": "0xd3f52891daf56d7cdc70b54d255b45acb6f09c1f",
+   "morph-l2": "0x5c13824183caedee8eb13e9bf0ef85139f0304e6"
+  },
+  "resolved": true
+ },
  "cerebras-bstocks-tokenized-stock": {
   "first_seen": null,
   "homepage": "https://www.bstocks.finance/en/",
@@ -980,6 +999,14 @@
    "avalanche": "0x787b8cad6f6539e90734780f370bfddf299713e1",
    "ethereum": "0x0885f310222f3c8d237b36861d1a84e551cd4aa3",
    "solana": "Db7QEHL5keqhukiPFXo2zw6LXnkkyvToTBazge4aUZbG"
+  },
+  "resolved": true
+ },
+ "cypherpunk-technologies-bstocks-tokenized-stock": {
+  "first_seen": "2026-11-24",
+  "homepage": "https://www.bstocks.finance/",
+  "platforms": {
+   "binance-smart-chain": "0x0393c28065c54e48b45bdb05eff5c401cf891da1"
   },
   "resolved": true
  },
@@ -2109,6 +2136,15 @@
   },
   "resolved": true
  },
+ "meta-platforms-rstock": {
+  "first_seen": "2026-11-24",
+  "homepage": "https://realityfinance.xyz/",
+  "platforms": {
+   "arbitrum-one": "0xb65f3005ab2aeede3707f56223c7c45f68cca008",
+   "morph-l2": "0xb1dd9d126821b578bfc2505ad23cc9f0cf3ee47b"
+  },
+  "resolved": true
+ },
  "meta-xstock": {
   "first_seen": null,
   "homepage": "https://xstocks.com/",
@@ -2341,6 +2377,15 @@
   },
   "resolved": true
  },
+ "nebius-rstock": {
+  "first_seen": "2026-11-24",
+  "homepage": "https://realityfinance.xyz/",
+  "platforms": {
+   "arbitrum-one": "0xb9ed8f34a0b5bf06ee9687a0208dcd708f38e633",
+   "morph-l2": "0x565ac9fca4f65d3d2c8f01dbe48bc21b35ec5c7e"
+  },
+  "resolved": true
+ },
  "nest-treasury-vault": {
   "first_seen": null,
   "homepage": "https://app.nest.credit/nest-treasury-vault",
@@ -2388,6 +2433,15 @@
    "binance-smart-chain": "0x04b5e199f2ec84f78b111035f57b16bee448db6f",
    "ethereum": "0xd8e26fcc879b30cb0a0b543925a2b3500f074d81",
    "solana": "g646pcdG2Rt5DH9WZzL7VVnVDWCCMTTrnktwE74ondo"
+  },
+  "resolved": true
+ },
+ "nike-rstock": {
+  "first_seen": "2026-11-24",
+  "homepage": "https://realityfinance.xyz/",
+  "platforms": {
+   "arbitrum-one": "0x56aed341a693a5f083585108dae0175b2cbbe1ec",
+   "morph-l2": "0x40ff11d9bd7a7c1b1b2f1348494c1a2e34f220b4"
   },
   "resolved": true
  },
@@ -3982,6 +4036,15 @@
    "avalanche": "0x549d49baf4c6f4437826e4e472c9dfab5e5cf58e",
    "base": "0x9f6e2ea64d90f586779ef859ffce18c8fa2fa4f4",
    "ethereum": "0xaeb0a5d56de94479cda178977570fd9079500527"
+  },
+  "resolved": true
+ },
+ "wrapped-circle-xstock": {
+  "first_seen": "2026-11-24",
+  "homepage": "https://xstocks.com/",
+  "platforms": {
+   "mantle": "0xa90872aca656ebe47bdebf3b19ec9dd9c5adc7f8",
+   "x-layer": "0xb11134f14d5b94db60d4599dfdc3bf1bba2150e8"
   },
   "resolved": true
  },
