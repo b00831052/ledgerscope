@@ -261,6 +261,33 @@
   },
   "resolved": true
  },
+ "anthropic-bstocks-tokenized-stock": {
+  "first_seen": "2026-11-25",
+  "homepage": "https://www.bstocks.finance/",
+  "platforms": {
+   "binance-smart-chain": "0x38dd26788cf2d901e3abf04efe3007d459d0fc53"
+  },
+  "resolved": true
+ },
+ "anthropic-eqx-tokenized-stock": {
+  "first_seen": "2026-11-25",
+  "homepage": "https://www.eqxlabs.io/",
+  "platforms": {
+   "hyperevm": "0x5fc54614bc8bc9ab519ff6ea8e0fd56e7859f242",
+   "hyperliquid": "0x1247a62c5c066fe47b0ee8db7b1b9136"
+  },
+  "resolved": true
+ },
+ "anthropic-ondo-tokenized-stock": {
+  "first_seen": "2026-11-25",
+  "homepage": "https://app.ondo.finance/",
+  "platforms": {
+   "binance-smart-chain": "0x343ccbc9f8409f862008b7abebfff20ecf935c75",
+   "ethereum": "0x43a0943893474f246aa58e9921d975ad60adee59",
+   "solana": "5Kz7Xs8iWvEZFBsyAVDVKgEzNc8KTFxE7eX2Q9jondo"
+  },
+  "resolved": true
+ },
  "anthropic-pbc-coinbase-tokenized-stock": {
   "first_seen": "2026-11-21",
   "homepage": "https://www.coinbase.com/tokenize",
@@ -282,6 +309,24 @@
   "homepage": "https://prestocks.com/anthropic",
   "platforms": {
    "solana": "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw"
+  },
+  "resolved": true
+ },
+ "anthropic-xstock": {
+  "first_seen": "2026-11-25",
+  "homepage": "https://xstocks.fi",
+  "platforms": {
+   "arbitrum-one": "0x909369940f22dc1c143ac78753a33f41597138b1",
+   "binance-smart-chain": "0x909369940f22dc1c143ac78753a33f41597138b1",
+   "ethereum": "0x909369940f22dc1c143ac78753a33f41597138b1",
+   "hyperevm": "0x909369940f22dc1c143ac78753a33f41597138b1",
+   "ink": "0x909369940f22dc1c143ac78753a33f41597138b1",
+   "mantle": "0x909369940f22dc1c143ac78753a33f41597138b1",
+   "monad": "0x909369940f22dc1c143ac78753a33f41597138b1",
+   "optimistic-ethereum": "0x909369940f22dc1c143ac78753a33f41597138b1",
+   "solana": "XsYzw7XHj8K2WHeoeNQVyevMmzjzXfcJ8tQ4FmdN1DL",
+   "the-open-network": "EQBfYiMWCUDvFdzfVt-0QcsUMOUTQlS6HdNKh429jsq4AkvH",
+   "x-layer": "0x909369940f22dc1c143ac78753a33f41597138b1"
   },
   "resolved": true
  },
