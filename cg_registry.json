@@ -3038,7 +3038,13 @@
  },
  "s-p-global-ondo-tokenized-stock": {
   "first_seen": null,
-  "resolved": false
+  "homepage": "https://app.ondo.finance/assets/spgion",
+  "platforms": {
+   "binance-smart-chain": "0x55b370b704240a914f42b5bbb3195431c031f9f8",
+   "ethereum": "0xbc843b147db4c7e00721d76037b8b92e13afe13f",
+   "solana": "JrTYw7A9jihX5TwpRStYviEbsYf2X2VJpZ13719ondo"
+  },
+  "resolved": true
  },
  "sandisk-backpack-securities": {
   "first_seen": null,
