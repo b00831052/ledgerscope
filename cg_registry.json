@@ -1277,6 +1277,14 @@
   },
   "resolved": true
  },
+ "freedom-holding-corp-bstocks-tokenized-stock": {
+  "first_seen": "2026-11-27",
+  "homepage": "https://www.bstocks.finance/en/",
+  "platforms": {
+   "binance-smart-chain": "0x091d185e0702131a3047beb6460454f43d667e80"
+  },
+  "resolved": true
+ },
  "gamestop-bstocks-tokenized-stock": {
   "first_seen": null,
   "homepage": "https://www.bstocks.finance/en/",
@@ -1847,6 +1855,14 @@
    "binance-smart-chain": "0xf54b94ea21e1da5d51ef00fd4502225e5394f874",
    "ethereum": "0x9dcf7f739b8c0270e2fc0cc8d0dabe355a150dba",
    "solana": "DX7g7WNjDpVzNK9CG81v7wb6ZbiNzYfkdzH2Xs5ondo"
+  },
+  "resolved": true
+ },
+ "ishares-semiconductor-etf-bstocks-tokenized-etf": {
+  "first_seen": "2026-11-27",
+  "homepage": "https://www.bstocks.finance/en/",
+  "platforms": {
+   "binance-smart-chain": "0xcd1e9a6d7416674347c44e7a95b1f5954540fffd"
   },
   "resolved": true
  },
@@ -3943,6 +3959,14 @@
   "homepage": "https://uranium.io/en",
   "platforms": {
    "etherlink": "0x79052ab3c166d4899a1e0dd033ac3b379af0b1fd"
+  },
+  "resolved": true
+ },
+ "usa-rare-earth-bstocks-tokenized-stock": {
+  "first_seen": "2026-11-27",
+  "homepage": "https://www.bstocks.finance/en/",
+  "platforms": {
+   "binance-smart-chain": "0xcd345d4450e04cdef422a60b97d9265d24e0bcee"
   },
   "resolved": true
  },
